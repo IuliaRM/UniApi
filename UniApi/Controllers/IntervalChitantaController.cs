@@ -1,62 +1,76 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class IntervalChitantaController
+    public class IntervalChitantaController : DnnApiController
     {
-        private readonly IntervalChitantaRepo _repo;
+        private readonly IntervalChitantaRepo _repo = new IntervalChitantaRepo();
 
-        public IntervalChitantaController()
+        [HttpGet]
+        public IHttpActionResult IntervalChitantaGet(long ID_IntervalChitanta)
         {
-            _repo = new IntervalChitantaRepo();
+            var chitanta = _repo.IntervalChitantaGet(ID_IntervalChitanta);
+            return Ok(chitanta);
         }
 
-        public IntervalChitantaInfo GetIntervalChitanta(long iD_IntervalChitanta)
+        [HttpGet]
+        public IHttpActionResult IntervalChitantaByUtilizatorGet(int ID_Utilizator)
         {
-            return _repo.GetIntervalChitanta(iD_IntervalChitanta);
+            var chitanta = _repo.IntervalChitantaByUtilizatorGet(ID_Utilizator);
+            return Ok(chitanta);
         }
 
-        public IntervalChitantaInfo GetIntervalChitantaByUtilizator(int ID_Utilizator)
+        [HttpGet]
+        public IHttpActionResult UltimulNumarDeChitantaGet(int ID_Utilizator)
         {
-            return _repo.GetIntervalChitantaByUtilizator(ID_Utilizator);
+            var numar = _repo.UltimulNumarDeChitantaGet(ID_Utilizator);
+            return Ok(numar);
         }
 
-        public IntervalChitantaInfo GetUltimulNumarDeChitanta(int ID_Utilizator)
+        [HttpGet]
+        public IHttpActionResult IntervalChitantaListGet()
         {
-            return _repo.GetUltimulNumarDeChitanta(ID_Utilizator);
+            var chitante = _repo.IntervalChitantaListGet();
+            return Ok(chitante);
         }
 
-        public List<IntervalChitantaInfo> GetIntervalChitantaList()
+        [HttpGet]
+        public IHttpActionResult IntervalChitantaListByUtilizatorGet(int ID_Utilizator)
         {
-            return _repo.GetIntervalChitantaList();
+            var chitante = _repo.IntervalChitantaListByUtilizatorGet(ID_Utilizator);
+            return Ok(chitante);
         }
 
-        public List<IntervalChitantaInfo> GetIntervalChitantaListByUtilizator(int ID_Utilizator)
+        [HttpPost]
+        public IHttpActionResult IntervalChitantaAdd([FromBody] IntervalChitantaInfo objIntervalChitanta)
         {
-            return _repo.GetIntervalChitantaListByUtilizator(ID_Utilizator);
+            var id = _repo.IntervalChitantaAdd(objIntervalChitanta);
+            return Ok(id);
         }
 
-        public long AddIntervalChitanta(IntervalChitantaInfo objIntervalChitanta)
+        [HttpPut]
+        public IHttpActionResult IntervalChitantaUpdate([FromBody] IntervalChitantaInfo objIntervalChitanta)
         {
-            return _repo.AddIntervalChitanta(objIntervalChitanta);
+            _repo.IntervalChitantaUpdate(objIntervalChitanta);
+            return Ok();
         }
 
-        public void UpdateIntervalChitanta(IntervalChitantaInfo objIntervalChitanta)
+        [HttpDelete]
+        public IHttpActionResult IntervalChitantaDelete([FromBody] IntervalChitantaInfo objIntervalChitanta)
         {
-            _repo.UpdateIntervalChitanta(objIntervalChitanta);
+            _repo.IntervalChitantaDelete(objIntervalChitanta);
+            return Ok();
         }
 
-        public void DeleteIntervalChitanta(IntervalChitantaInfo objIntervalChitanta)
+        [HttpPost]
+        public IHttpActionResult SeteazaUrmatorulNumarDeChitanta(int ID_Utilizator)
         {
-            _repo.DeleteIntervalChitanta(objIntervalChitanta);
-        }
-
-        public long SeteazaUrmatorulNumarDeChitanta(int ID_Utilizator)
-        {
-            return _repo.SeteazaUrmatorulNumarDeChitanta(ID_Utilizator);
+            var numar = _repo.SeteazaUrmatorulNumarDeChitanta(ID_Utilizator);
+            return Ok(numar);
         }
     }
 }

@@ -1,37 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniApi.Models;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using Microsoft.ApplicationBlocks.Data;
+using DotNetNuke.Common.Utilities;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
     public class DetaliuPlanSemestruRepo
     {
-        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString;
+        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public List<DetaliuPlanSemestruInfo> CentralizatorStatFListByCatedra(
-            long ID_Catedra,
-            long ID_AnUniv,
-            long NumarSemestruDinAn,
-            bool AfiseazaMateriiCatedraCoordonatoare,
-            bool AfiseazaMateriiCatedraPrestatoareCurs,
-            bool AfiseazaMateriiCatedraPrestatoareAplicatii,
-            bool AfiseazaNumaiMateriiCuOreDisponibile,
-            string FiltruTipCicluInvatamant,
-            string FiltruTipFormaInvatamant,
-            bool AfiseazaNumaiMateriiIndividualePerStudent,
-            long ID_Scenariu)
+        public DetaliuPlanSemestruInfo DetaliuPlanSemestruGet(long idDetaliuPlanSemestru)
         {
-            // Call to database with SqlHelper (similar to your existing code)
-            return CBO.FillCollection<DetaliuPlanSemestruInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "Centralizator_StatF_ListByCatedra",
-                    new object[] { ID_Catedra, ID_AnUniv, NumarSemestruDinAn, AfiseazaMateriiCatedraCoordonatoare,
-                                   AfiseazaMateriiCatedraPrestatoareCurs, AfiseazaMateriiCatedraPrestatoareAplicatii,
-                                   AfiseazaNumaiMateriiCuOreDisponibile, FiltruTipCicluInvatamant, FiltruTipFormaInvatamant,
-                                   AfiseazaNumaiMateriiIndividualePerStudent, ID_Scenariu }));
+            return CBO.FillObject<DetaliuPlanSemestruInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "DetaliuPlanSemestruGet", idDetaliuPlanSemestru)
+            );
         }
 
-        // Implement other methods following the same structure
+        public List<DetaliuPlanSemestruInfo> DetaliuPlanSemestruListByPlanSemestru(long idPlanSemestru)
+        {
+            return CBO.FillCollection<DetaliuPlanSemestruInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "DetaliuPlanSemestruListByPlanSemestru", idPlanSemestru)
+            );
+        }
+
+        public List<DetaliuPlanSemestruInfo> DetaliuPlanSemestruListByMaterie(long idMaterie)
+        {
+            return CBO.FillCollection<DetaliuPlanSemestruInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "DetaliuPlanSemestruListByMaterie", idMaterie)
+            );
+        }
+
+        public int DetaliuPlanSemestruAdd(DetaliuPlanSemestruInfo objDetaliuPlanSemestru)
+        {
+            return Convert.ToInt32(SqlHelper.ExecuteScalar(
+                _ConnectionString, "DetaliuPlanSemestruAdd",
+                objDetaliuPlanSemestru.ID_PlanSemestru,
+                objDetaliuPlanSemestru.ID_Materie,
+                objDetaliuPlanSemestru.NumarPachet,
+                objDetaliuPlanSemestru.TipDisciplinaCriteriul1,
+                objDetaliuPlanSemestru.TipDisciplinaCriteriul2,
+                objDetaliuPlanSemestru.NrOreCurs,
+                objDetaliuPlanSemestru.NrOreSeminar,
+                objDetaliuPlanSemestru.NrOreLaborator,
+                objDetaliuPlanSemestru.NrOreProiect,
+                objDetaliuPlanSemestru.TipVerificare,
+                objDetaliuPlanSemestru.Ordine,
+                objDetaliuPlanSemestru.NrFormatiiCurs,
+                objDetaliuPlanSemestru.NrFormatiiSeminar,
+                objDetaliuPlanSemestru.NrFormatiiLaborator,
+                objDetaliuPlanSemestru.NrFormatiiProiect
+            ));
+        }
+
+        public void DetaliuPlanSemestruDelete(long idDetaliuPlanSemestru)
+        {
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "DetaliuPlanSemestruDelete", idDetaliuPlanSemestru);
+        }
+
+        public void DetaliuPlanSemestruUpdateMaterieSursaInDestinatie(long idMaterieSursa, long idMaterieDestinatie)
+        {
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "DetaliuPlanSemestruUpdateMaterieSursaInDestinatie",
+                idMaterieSursa,
+                idMaterieDestinatie
+            );
+        }
     }
 }

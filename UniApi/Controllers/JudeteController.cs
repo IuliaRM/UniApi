@@ -1,57 +1,69 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class JudeteController
+    public class JudeteController : DnnApiController
     {
-        private readonly JudeteRepo _repo;
+        private readonly JudeteRepo _repo = new JudeteRepo();
 
-        public JudeteController()
+        [HttpGet]
+        public IHttpActionResult JudeteGet(string ID_Judet)
         {
-            _repo = new JudeteRepo();
+            var judet = _repo.JudeteGet(ID_Judet);
+            return Ok(judet);
         }
 
-        public JudeteInfo JudeteGet(string iD_Judet)
+        [HttpGet]
+        public IHttpActionResult JudeteByID_N_JudetGet(int ID_N_Judet)
         {
-            return _repo.JudeteGet(iD_Judet);
+            var judet = _repo.JudeteByID_N_JudetGet(ID_N_Judet);
+            return Ok(judet);
         }
 
-        public JudeteInfo JudeteGetByID_N_Judet(int iD_N_Judet)
+        [HttpGet]
+        public IHttpActionResult JudeteListGet()
         {
-            return _repo.JudeteGetByID_N_Judet(iD_N_Judet);
+            var judete = _repo.JudeteListGet();
+            return Ok(judete);
         }
 
-        public List<JudeteInfo> JudeteList()
+        [HttpGet]
+        public IHttpActionResult JudeteListByCaractereGet(string Caractere, int TopN)
         {
-            return _repo.JudeteList();
+            var judete = _repo.JudeteListByCaractereGet(Caractere, TopN);
+            return Ok(judete);
         }
 
-        public List<JudeteInfo> JudeteListByCaractere(string Caractere, int TopN)
+        [HttpPost]
+        public IHttpActionResult JudeteAdd([FromBody] JudeteInfo objJudete)
         {
-            return _repo.JudeteListByCaractere(Caractere, TopN);
+            var id = _repo.JudeteAdd(objJudete);
+            return Ok(id);
         }
 
-        public int JudeteAdd(JudeteInfo objJudete)
-        {
-            return _repo.JudeteAdd(objJudete);
-        }
-
-        public void JudeteUpdate(JudeteInfo objJudete)
+        [HttpPut]
+        public IHttpActionResult JudeteUpdate([FromBody] JudeteInfo objJudete)
         {
             _repo.JudeteUpdate(objJudete);
+            return Ok();
         }
 
-        public void JudeteDelete(JudeteInfo objJudete)
+        [HttpDelete]
+        public IHttpActionResult JudeteDelete([FromBody] JudeteInfo objJudete)
         {
             _repo.JudeteDelete(objJudete);
+            return Ok();
         }
 
-        public JudeteInfo JudeteGetJudetByDenumire(string denumireJudet)
+        [HttpGet]
+        public IHttpActionResult JudeteByDenumireGet(string DenumireJudet)
         {
-            return _repo.JudeteGetJudetByDenumire(denumireJudet);
+            var judet = _repo.JudeteByDenumireGet(DenumireJudet);
+            return Ok(judet);
         }
     }
 }

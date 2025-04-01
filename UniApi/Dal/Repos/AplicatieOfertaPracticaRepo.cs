@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using DotNetNuke.Common.Utilities;
-using UniApi;
-using UniApi.Dal.Repos;
-
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
@@ -18,8 +17,17 @@ namespace UniApi.Dal.Repos
                 "AplicatieOfertaPractica_Add",
                 aplicatie.ID_Student,
                 aplicatie.ID_OfertaPracticaFacultate,
-                aplicatie.DataAplicare,
-                aplicatie.Status
+                aplicatie.AdresaFisier,
+                aplicatie.DataAplicatieStudent,
+                aplicatie.AcceptatFacultate,
+                aplicatie.AcceptatFacultateData,
+                aplicatie.AcceptatFirma,
+                aplicatie.AcceptatFirmaData,
+                aplicatie.ConfirmareStagiuFirma,
+                aplicatie.TitluProiectPractica,
+                aplicatie.ID_TipCalificativPractica,
+                aplicatie.DataModificareCalificativ,
+                aplicatie.ID_MentorPracticaFirma
             );
         }
 
@@ -71,8 +79,16 @@ namespace UniApi.Dal.Repos
             SqlHelper.ExecuteNonQuery(
                 ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
                 "AplicatieOfertaPractica_Update",
-                aplicatie.ID_Aplicatie,
-                aplicatie.Status
+                aplicatie.ID_AplicatieOfertaPractica,
+                aplicatie.AcceptatFacultate,
+                aplicatie.AcceptatFacultateData,
+                aplicatie.AcceptatFirma,
+                aplicatie.AcceptatFirmaData,
+                aplicatie.ConfirmareStagiuFirma,
+                aplicatie.TitluProiectPractica,
+                aplicatie.ID_TipCalificativPractica,
+                aplicatie.DataModificareCalificativ,
+                aplicatie.ID_MentorPracticaFirma
             );
         }
 

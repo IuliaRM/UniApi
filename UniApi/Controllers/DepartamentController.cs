@@ -1,47 +1,57 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using UniApi;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class DepartamentController
+    public class DepartamentController : DnnApiController
     {
-        private readonly DepartamentRepo _repo;
+        private readonly DepartamentRepo _repo = new DepartamentRepo();
 
-        public DepartamentController()
+        [HttpGet]
+        public IHttpActionResult DepartamentGet(long idDepartament)
         {
-            _repo = new DepartamentRepo();
+            var departament = _repo.DepartamentGet(idDepartament);
+            if (departament != null)
+            {
+                return Ok(departament);
+            }
+            return NotFound();
         }
 
-        public DepartamentInfo DepartamentGet(long idDepartament)
+        [HttpGet]
+        public IHttpActionResult DepartamentList()
         {
-            return _repo.DepartamentGet(idDepartament);
+            var departamente = _repo.DepartamentList();
+            return Ok(departamente);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Select, true)]
-        public List<DepartamentInfo> DepartamentList()
+        [HttpPost]
+        public IHttpActionResult DepartamentAdd([FromBody] DepartamentInfo objDepartament)
         {
-            return _repo.DepartamentList();
+            int id = _repo.DepartamentAdd(objDepartament);
+            return Ok(id);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Insert, true)]
-        public int DepartamentAdd(DepartamentInfo objDepartament)
-        {
-            return _repo.DepartamentAdd(objDepartament);
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Update, true)]
-        public void DepartamentUpdate(DepartamentInfo objDepartament)
+        [HttpPut]
+        public IHttpActionResult DepartamentUpdate([FromBody] DepartamentInfo objDepartament)
         {
             _repo.DepartamentUpdate(objDepartament);
+            return Ok();
         }
 
-        [DataObjectMethod(DataObjectMethodType.Delete, true)]
-        public void DepartamentDelete(long idDepartament)
+        [HttpDelete]
+        public IHttpActionResult DepartamentDelete(long idDepartament)
         {
+            var departament = _repo.DepartamentGet(idDepartament);
+            if (departament == null)
+            {
+                return NotFound();
+            }
             _repo.DepartamentDelete(idDepartament);
+            return Ok();
         }
     }
 }

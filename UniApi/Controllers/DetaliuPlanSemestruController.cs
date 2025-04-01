@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using UniApi.Models;
+using System.Web.Http;
 using UniApi.Dal.Repos;
-using UniAPI.DAL.Repo;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class DetaliuPlanSemestruController
+    public class DetaliuPlanSemestruController : ApiController
     {
         private readonly DetaliuPlanSemestruRepo _repo;
 
@@ -15,68 +14,54 @@ namespace UniApi
             _repo = new DetaliuPlanSemestruRepo();
         }
 
-        public List<DetaliuPlanSemestruInfo> CentralizatorStatFListByCatedra(
-            long ID_Catedra,
-            long ID_AnUniv,
-            long NumarSemestruDinAn,
-            bool AfiseazaMateriiCatedraCoordonatoare,
-            bool AfiseazaMateriiCatedraPrestatoareCurs,
-            bool AfiseazaMateriiCatedraPrestatoareAplicatii,
-            bool AfiseazaNumaiMateriiCuOreDisponibile,
-            string FiltruTipCicluInvatamant,
-            string FiltruTipFormaInvatamant,
-            bool AfiseazaNumaiMateriiIndividualePerStudent,
-            long ID_Scenariu)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruGet(long idDetaliuPlanSemestru)
         {
-            return _repo.CentralizatorStatFListByCatedra(
-                ID_Catedra,
-                ID_AnUniv,
-                NumarSemestruDinAn,
-                AfiseazaMateriiCatedraCoordonatoare,
-                AfiseazaMateriiCatedraPrestatoareCurs,
-                AfiseazaMateriiCatedraPrestatoareAplicatii,
-                AfiseazaNumaiMateriiCuOreDisponibile,
-                FiltruTipCicluInvatamant,
-                FiltruTipFormaInvatamant,
-                AfiseazaNumaiMateriiIndividualePerStudent,
-                ID_Scenariu
-            );
+            var detaliu = _repo.DetaliuPlanSemestruGet(idDetaliuPlanSemestru);
+            if (detaliu != null)
+            {
+                return Ok(detaliu);
+            }
+            return NotFound();
         }
 
-        public List<DetaliuPlanSemestruInfo> CentralizatorStatFRecalculareOre(long ID_Catedra, long ID_AnUniv)
+
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruListByPlanSemestru(long idPlanSemestru)
         {
-            return _repo.CentralizatorStatFRecalculareOre(ID_Catedra, ID_AnUniv);
+            var detalii = _repo.DetaliuPlanSemestruListByPlanSemestru(idPlanSemestru);
+            return Ok(detalii);
         }
 
-        public int DetaliuPlanSemestruAdd(DetaliuPlanSemestruInfo objDetaliuPlanSemestru)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruListByMaterie(long idMaterie)
         {
-            return _repo.DetaliuPlanSemestruAdd(objDetaliuPlanSemestru);
+            var detalii = _repo.DetaliuPlanSemestruListByMaterie(idMaterie);
+            return Ok(detalii);
         }
 
-        public void DetaliuPlanSemestruDelete(long ID_DetaliuPlanSemestru)
+        [HttpPost]
+        public IHttpActionResult DetaliuPlanSemestruAdd([FromBody] DetaliuPlanSemestruInfo detaliuPlanSemestru)
         {
-            _repo.DetaliuPlanSemestruDelete(ID_DetaliuPlanSemestru);
+            int id = _repo.DetaliuPlanSemestruAdd(detaliuPlanSemestru);
+            if (id > 0)
+                return Ok(id);
+            else
+                return BadRequest("Eroare la adãugarea detaliului planului semestrial.");
         }
 
-        public DetaliuPlanSemestruInfo DetaliuPlanSemestruGet(long iD_DetaliuPlanSemestru)
+        [HttpDelete]
+        public IHttpActionResult DetaliuPlanSemestruDelete(long idDetaliuPlanSemestru)
         {
-            return _repo.DetaliuPlanSemestruGet(iD_DetaliuPlanSemestru);
+            _repo.DetaliuPlanSemestruDelete(idDetaliuPlanSemestru);
+            return Ok();
         }
 
-        public List<DetaliuPlanSemestruInfo> DetaliuPlanSemestruListByPlanSemestru(long iD_PlanSemestru)
+        [HttpPut]
+        public IHttpActionResult DetaliuPlanSemestruUpdateMaterieSursaInDestinatie(long idMaterieSursa, long idMaterieDestinatie)
         {
-            return _repo.DetaliuPlanSemestruListByPlanSemestru(iD_PlanSemestru);
+            _repo.DetaliuPlanSemestruUpdateMaterieSursaInDestinatie(idMaterieSursa, idMaterieDestinatie);
+            return Ok();
         }
-
-        public List<DetaliuPlanSemestruInfo> DetaliuPlanSemestruListByMaterie(long iD_Materie)
-        {
-            return _repo.DetaliuPlanSemestruListByMaterie(iD_Materie);
-        }
-
-        public void DetaliuPlanSemestruUpdateMaterieSursaInDestinatie(long ID_MaterieSursa, long ID_MaterieDestinatie)
-        {
-            _repo.DetaliuPlanSemestruUpdateMaterieSursaInDestinatie(ID_MaterieSursa, ID_MaterieDestinatie);
-        }
-
-       
+    }
 }

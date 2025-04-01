@@ -1,61 +1,76 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class LocalitatiController
+    public class LocalitatiController : DnnApiController
     {
-        private readonly LocalitatiRepo _repo;
+        private readonly LocalitatiRepo _repo = new LocalitatiRepo();
 
-        public LocalitatiController()
+        [HttpGet]
+        public IHttpActionResult LocalitatiGet(string ID_Localitate)
         {
-            _repo = new LocalitatiRepo();
+            var localitate = _repo.LocalitatiGet(ID_Localitate);
+            return Ok(localitate);
         }
 
-        public LocalitatiInfo LocalitatiGet(string iD_Localitate)
+        [HttpGet]
+        public IHttpActionResult LocalitatiByID_N_LocalitateGet(int ID_N_Localitate)
         {
-            return _repo.LocalitatiGet(iD_Localitate);
+            var localitate = _repo.LocalitatiByID_N_LocalitateGet(ID_N_Localitate);
+            return Ok(localitate);
         }
 
-        public LocalitatiInfo LocalitatiGetByID_N_Localitate(int iD_N_Localitate)
+        [HttpGet]
+        public IHttpActionResult LocalitatiListGet()
         {
-            return _repo.LocalitatiGetByID_N_Localitate(iD_N_Localitate);
+            var localitati = _repo.LocalitatiListGet();
+            return Ok(localitati);
         }
 
-        public List<LocalitatiInfo> LocalitatiList()
+        [HttpGet]
+        public IHttpActionResult LocalitatiListByJudetGet(string ID_Judet)
         {
-            return _repo.LocalitatiList();
+            var localitati = _repo.LocalitatiListByJudetGet(ID_Judet);
+            return Ok(localitati);
         }
 
-        public int LocalitatiAdd(LocalitatiInfo objLocalitati)
+        [HttpGet]
+        public IHttpActionResult LocalitatiByDenumireIdJudetGet(string DenumireLocalitate, string ID_Judet)
         {
-            return _repo.LocalitatiAdd(objLocalitati);
+            var localitate = _repo.LocalitatiByDenumireIdJudetGet(DenumireLocalitate, ID_Judet);
+            return Ok(localitate);
         }
 
-        public void LocalitatiUpdate(LocalitatiInfo objLocalitati)
+        [HttpGet]
+        public IHttpActionResult LocalitatiListByCaractereDenumireIdJudetGet(string CaractereDenumireLocalitate, string ID_Judet)
+        {
+            var localitati = _repo.LocalitatiListByCaractereDenumireIdJudetGet(CaractereDenumireLocalitate, ID_Judet);
+            return Ok(localitati);
+        }
+
+        [HttpPost]
+        public IHttpActionResult LocalitatiAdd([FromBody] LocalitatiInfo objLocalitati)
+        {
+            var id = _repo.LocalitatiAdd(objLocalitati);
+            return Ok(id);
+        }
+
+        [HttpPut]
+        public IHttpActionResult LocalitatiUpdate([FromBody] LocalitatiInfo objLocalitati)
         {
             _repo.LocalitatiUpdate(objLocalitati);
+            return Ok();
         }
 
-        public void LocalitatiDelete(LocalitatiInfo objLocalitati)
+        [HttpDelete]
+        public IHttpActionResult LocalitatiDelete([FromBody] LocalitatiInfo objLocalitati)
         {
             _repo.LocalitatiDelete(objLocalitati);
-        }
-
-        public LocalitatiInfo LocalitatiGetBydenumireIdJudet(string denumireLocalitate, string idjudet)
-        {
-            return _repo.LocalitatiGetBydenumireIdJudet(denumireLocalitate, idjudet);
-        }
-
-        public List<LocalitatiInfo> LocalitatiListByJudet(string idjudet)
-        {
-            return _repo.LocalitatiListByJudet(idjudet);
-        }
-
-        public List<LocalitatiInfo> LocalitatiListByCaractereDenumireIdJudet(string CaractereDenumireLocalitate, string idjudet)
-        {
-            return _repo.LocalitatiListByCaractereDenumireIdJudet(CaractereDenumireLocalitate, idjudet);
+            return Ok();
         }
     }
 }

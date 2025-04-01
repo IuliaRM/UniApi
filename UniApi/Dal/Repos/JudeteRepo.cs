@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using UniApi.Info;
+using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
-using Microsoft.ApplicationBlocks.Data;
 
 namespace UniApi.Dal.Repos
 {
@@ -10,44 +11,49 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public JudeteInfo JudeteGet(string iD_Judet)
+        public JudeteInfo JudeteGet(string ID_Judet)
         {
-            return CBO.FillObject<JudeteInfo>(SqlHelper.ExecuteReader(_ConnectionString, "JudeteGet", iD_Judet));
+            return CBO.FillObject<JudeteInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Judete_Get", ID_Judet));
         }
 
-        public JudeteInfo JudeteGetByID_N_Judet(int iD_N_Judet)
+        public JudeteInfo JudeteByID_N_JudetGet(int ID_N_Judet)
         {
-            return CBO.FillObject<JudeteInfo>(SqlHelper.ExecuteReader(_ConnectionString, "JudeteGetByID_N_Judet", iD_N_Judet));
+            return CBO.FillObject<JudeteInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetByID_N_Judet", ID_N_Judet));
         }
 
-        public List<JudeteInfo> JudeteList()
+        public List<JudeteInfo> JudeteListGet()
         {
-            return CBO.FillCollection<JudeteInfo>(SqlHelper.ExecuteReader(_ConnectionString, "JudeteList"));
+            return CBO.FillCollection<JudeteInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetList"));
         }
 
-        public List<JudeteInfo> JudeteListByCaractere(string Caractere, int TopN)
+        public List<JudeteInfo> JudeteListByCaractereGet(string Caractere, int TopN)
         {
-            return CBO.FillCollection<JudeteInfo>(SqlHelper.ExecuteReader(_ConnectionString, "JudeteListByCaractere", Caractere, TopN));
+            return CBO.FillCollection<JudeteInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetListByCaractere", Caractere, TopN));
         }
 
         public int JudeteAdd(JudeteInfo objJudete)
         {
-            return (int)SqlHelper.ExecuteScalar(_ConnectionString, "JudeteAdd", objJudete.Simbol, objJudete.Judet);
+            return (int)SqlHelper.ExecuteScalar(_ConnectionString, "Judete_Add", objJudete);
         }
 
         public void JudeteUpdate(JudeteInfo objJudete)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "JudeteUpdate", objJudete.ID_Judet, objJudete.Simbol, objJudete.Judet);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Judete_Update", objJudete);
         }
 
         public void JudeteDelete(JudeteInfo objJudete)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "JudeteDelete", objJudete.ID_Judet);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Judete_Delete", objJudete);
         }
 
-        public JudeteInfo JudeteGetJudetByDenumire(string denumireJudet)
+        public JudeteInfo JudeteByDenumireGet(string DenumireJudet)
         {
-            return CBO.FillObject<JudeteInfo>(SqlHelper.ExecuteReader(_ConnectionString, "JudeteGetByDenumire", denumireJudet));
+            return CBO.FillObject<JudeteInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetByDenumire", DenumireJudet));
         }
     }
 }

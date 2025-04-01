@@ -1,37 +1,41 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class IntervalPunctajBursaController
+    public class IntervalPunctajBursaController : DnnApiController
     {
-        private readonly IntervalPunctajBursaRepo _repo;
+        private readonly IntervalPunctajBursaRepo _repo = new IntervalPunctajBursaRepo();
 
-        public IntervalPunctajBursaController()
+        [HttpGet]
+        public IHttpActionResult IntervalPunctajBursaListByTipBursaAnUnivFCFDASGet(long ID_TipBursa, long ID_AnUniv, long ID_AnUnivBursa, long NumarSemestruBursa, long NumarSemestruCalculPunctaj, long ID_FC, long ID_FCForma, long ID_Domeniu, long ID_AnStudiu, long ID_Specializare)
         {
-            _repo = new IntervalPunctajBursaRepo();
+            var punctaje = _repo.IntervalPunctajBursaListByTipBursaAnUnivFCFDASGet(ID_TipBursa, ID_AnUniv, ID_AnUnivBursa, NumarSemestruBursa, NumarSemestruCalculPunctaj, ID_FC, ID_FCForma, ID_Domeniu, ID_AnStudiu, ID_Specializare);
+            return Ok(punctaje);
         }
 
-        public List<IntervalPunctajBursaInfo> IntervalPunctajBursaListByTipBursaAnUnivFCFDAS(long iD_TipBursa, long ID_AnUniv, long ID_AnUnivBursa, long NumarSemestruBursa, long NumarSemestruCalculPunctaj, long ID_FC, long ID_FCForma, long ID_Domeniu, long ID_AnStudiu, long ID_Specializare)
-        {
-            return _repo.IntervalPunctajBursaListByTipBursaAnUnivFCFDAS(iD_TipBursa, ID_AnUniv, ID_AnUnivBursa, NumarSemestruBursa, NumarSemestruCalculPunctaj, ID_FC, ID_FCForma, ID_Domeniu, ID_AnStudiu, ID_Specializare);
-        }
-
-        public void IntervalPunctajBursaDelete(IntervalPunctajBursaInfo objIntervalPunctajBursa)
+        [HttpDelete]
+        public IHttpActionResult IntervalPunctajBursaDelete([FromBody] IntervalPunctajBursaInfo objIntervalPunctajBursa)
         {
             _repo.IntervalPunctajBursaDelete(objIntervalPunctajBursa);
+            return Ok();
         }
 
-        public IntervalPunctajBursaInfo IntervalPunctajBursaGet(long iD_IntervalPunctajBursa)
+        [HttpGet]
+        public IHttpActionResult IntervalPunctajBursaGet(long ID_IntervalPunctajBursa)
         {
-            return _repo.IntervalPunctajBursaGet(iD_IntervalPunctajBursa);
+            var punctaj = _repo.IntervalPunctajBursaGet(ID_IntervalPunctajBursa);
+            return Ok(punctaj);
         }
 
-        public long IntervalPunctajBursaAddOrUpdate(IntervalPunctajBursaInfo objIntervalPunctajBursa)
+        [HttpPost]
+        public IHttpActionResult IntervalPunctajBursaAddOrUpdate([FromBody] IntervalPunctajBursaInfo objIntervalPunctajBursa)
         {
-            return _repo.IntervalPunctajBursaAddOrUpdate(objIntervalPunctajBursa);
+            var id = _repo.IntervalPunctajBursaAddOrUpdate(objIntervalPunctajBursa);
+            return Ok(id);
         }
     }
 }

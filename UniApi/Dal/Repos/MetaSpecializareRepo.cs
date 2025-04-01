@@ -7,6 +7,8 @@ using UniApi.Dal.Repos;
 using DotNetNuke.Common.Utilities;
 using System.Configuration;
 using System.ComponentModel;
+using UniApi.Info;
+using Microsoft.ApplicationBlocks.Data;
 
 namespace UniApi.Dal.Repos
 {

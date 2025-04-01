@@ -1,52 +1,61 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
-    public class DiplomaSupplementAdeverintaAbsolvireController
+    public class DiplomaSupplementAdeverintaAbsolvireController : DnnApiController
     {
-        private readonly DiplomaSupplementAdeverintaAbsolvireRepo _repo;
+        private readonly DiplomaSupplementAdeverintaAbsolvireRepo _repo = new DiplomaSupplementAdeverintaAbsolvireRepo();
 
-        public DiplomaSupplementAdeverintaAbsolvireController()
+        [HttpGet]
+        public IHttpActionResult StudentGet(long ID_Student, long ID_Facultate, long ID_TipCiclu)
         {
-            _repo = new DiplomaSupplementAdeverintaAbsolvireRepo();
+            var student = _repo.StudentGet(ID_Student, ID_Facultate, ID_TipCiclu);
+            return Ok(student);
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo GetStudent(long ID_Student, long ID_Facultate, long ID_TipCiclu)
+        [HttpGet]
+        public IHttpActionResult ClasamentGet(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
         {
-            return _repo.GetStudent(ID_Student, ID_Facultate, ID_TipCiclu);
+            var clasament = _repo.ClasamentGet(ID_Student, ID_Facultate, ID_PlanInvatamant);
+            return Ok(clasament);
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo GetClasament(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
+        [HttpGet]
+        public IHttpActionResult MedieGeneralaGet(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
         {
-            return _repo.GetClasament(ID_Student, ID_Facultate, ID_PlanInvatamant);
+            var medie = _repo.MedieGeneralaGet(ID_Student, ID_Facultate, ID_PlanInvatamant);
+            return Ok(medie);
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo MedieGenerala(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
+        [HttpGet]
+        public IHttpActionResult MedieFinalaGet(long ID_Student, long ID_TipCiclu)
         {
-            return _repo.MedieGenerala(ID_Student, ID_Facultate, ID_PlanInvatamant);
+            var medie = _repo.MedieFinalaGet(ID_Student, ID_TipCiclu);
+            return Ok(medie);
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo MedieFinala(long ID_Student, long ID_TipCiclu)
+        [HttpGet]
+        public IHttpActionResult SesiuneAbsolvireGet(long ID_Student, long ID_TipCiclu)
         {
-            return _repo.MedieFinala(ID_Student, ID_TipCiclu);
+            var sesiune = _repo.SesiuneAbsolvireGet(ID_Student, ID_TipCiclu);
+            return Ok(sesiune);
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo SesiuneAbsolvire(long ID_Student, long ID_TipCiclu)
+        [HttpGet]
+        public IHttpActionResult SpecializareGet(long ID_PlanInvatamant, long ID_Student)
         {
-            return _repo.SesiuneAbsolvire(ID_Student, ID_TipCiclu);
+            var specializare = _repo.SpecializareGet(ID_PlanInvatamant, ID_Student);
+            return Ok(specializare);
         }
 
-        public PlanInvatamantInfo GetSpecializare(long ID_PlanInvatamant, long id_student)
+        [HttpGet]
+        public IHttpActionResult MediiAnualeSiCrediteGet(long ID_Student, long ID_PlanInvatamant)
         {
-            return _repo.GetSpecializare(ID_PlanInvatamant, id_student);
-        }
-
-        public DiplomaSupplementAdeverintaAbsolvireInfo MediiInFiecareAnSiCredite(long ID_Student, long ID_PlanInvatamant)
-        {
-            return _repo.MediiInFiecareAnSiCredite(ID_Student, ID_PlanInvatamant);
+            var medii = _repo.MediiAnualeSiCrediteGet(ID_Student, ID_PlanInvatamant);
+            return Ok(medii);
         }
     }
 }

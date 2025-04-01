@@ -1,72 +1,90 @@
-using System;
 using System.Collections.Generic;
-using UniApi.Models;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class DetaliuPlanSemestruProfesorController
+    public class DetaliuPlanSemestruProfesorController : DnnApiController
     {
-        private readonly DetaliuPlanSemestruProfesorRepo _repo;
+        private readonly DetaliuPlanSemestruProfesorRepo _repo = new DetaliuPlanSemestruProfesorRepo();
 
-        public DetaliuPlanSemestruProfesorController()
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorGet(long ID_DetaliuPlanSemestruProfesor)
         {
-            _repo = new DetaliuPlanSemestruProfesorRepo();
+            var detaliu = _repo.DetaliuPlanSemestruProfesorGet(ID_DetaliuPlanSemestruProfesor);
+            return Ok(detaliu);
         }
 
-        public DetaliuPlanSemestruProfesorInfo DetaliuPlanSemestruProfesorGet(long ID_DetaliuPlanSemestruProfesor)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorList()
         {
-            return _repo.DetaliuPlanSemestruProfesorGet(ID_DetaliuPlanSemestruProfesor);
+            var lista = _repo.DetaliuPlanSemestruProfesorList();
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorList()
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorListByProfesor(long ID_Profesor, long ID_AnUniv, long ID_Scenariu)
         {
-            return _repo.DetaliuPlanSemestruProfesorList();
+            var lista = _repo.DetaliuPlanSemestruProfesorListByProfesor(ID_Profesor, ID_AnUniv, ID_Scenariu);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesor(long ID_Profesor, long ID_AnUniv, long ID_Scenariu)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorListByTipOrePredate(long ID_TipOrePredate)
         {
-            return _repo.DetaliuPlanSemestruProfesorListByProfesor(ID_Profesor, ID_AnUniv, ID_Scenariu);
+            var lista = _repo.DetaliuPlanSemestruProfesorListByTipOrePredate(ID_TipOrePredate);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByTipOrePredate(long ID_TipOrePredate)
+        [HttpPost]
+        public IHttpActionResult DetaliuPlanSemestruProfesorAdd([FromBody] DetaliuPlanSemestruProfesorInfo objDetaliuPlanSemestruProfesor)
         {
-            return _repo.DetaliuPlanSemestruProfesorListByTipOrePredate(ID_TipOrePredate);
+            int id = _repo.DetaliuPlanSemestruProfesorAdd(objDetaliuPlanSemestruProfesor);
+            return Ok(id);
         }
 
-        public int DetaliuPlanSemestruProfesorAdd(DetaliuPlanSemestruProfesorInfo objDetaliuPlanSemestruProfesor)
-        {
-            return _repo.DetaliuPlanSemestruProfesorAdd(objDetaliuPlanSemestruProfesor);
-        }
-
-        public void DetaliuPlanSemestruProfesorUpdate(DetaliuPlanSemestruProfesorInfo objDetaliuPlanSemestruProfesor)
+        [HttpPut]
+        public IHttpActionResult DetaliuPlanSemestruProfesorUpdate([FromBody] DetaliuPlanSemestruProfesorInfo objDetaliuPlanSemestruProfesor)
         {
             _repo.DetaliuPlanSemestruProfesorUpdate(objDetaliuPlanSemestruProfesor);
+            return Ok();
         }
 
-        public void DetaliuPlanSemestruProfesorDelete(long ID_DetaliuPlanSemestruProfesor)
+        [HttpDelete]
+        public IHttpActionResult DetaliuPlanSemestruProfesorDelete(long ID_DetaliuPlanSemestruProfesor)
         {
             _repo.DetaliuPlanSemestruProfesorDelete(ID_DetaliuPlanSemestruProfesor);
+            return Ok();
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorComplet(long ID_Profesor, long ID_AnUniv, long ID_Scenariu)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorListByProfesorComplet(long ID_Profesor, long ID_AnUniv, long ID_Scenariu)
         {
-            return _repo.DetaliuPlanSemestruProfesorListByProfesorComplet(ID_Profesor, ID_AnUniv, ID_Scenariu);
+            var lista = _repo.DetaliuPlanSemestruProfesorListByProfesorComplet(ID_Profesor, ID_AnUniv, ID_Scenariu);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(long ID_DetaliuPlanSemestru)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(long ID_DetaliuPlanSemestru)
         {
-            return _repo.DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(ID_DetaliuPlanSemestru);
+            var lista = _repo.DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(ID_DetaliuPlanSemestru);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(long ID_Domeniu, long ID_Specializare, int nrSem)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(long ID_Domeniu, long ID_Specializare, int nrSem)
         {
-            return _repo.DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(ID_Domeniu, ID_Specializare, nrSem);
+            var lista = _repo.DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(ID_Domeniu, ID_Specializare, nrSem);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorSpecializare(long ID_Profesor, long ID_Domeniu, long ID_Specializare, int nrSem)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorListByProfesorSpecializare(long ID_Profesor, long ID_Domeniu, long ID_Specializare, int nrSem)
         {
-            return _repo.DetaliuPlanSemestruProfesorListByProfesorSpecializare(ID_Profesor, ID_Domeniu, ID_Specializare, nrSem);
+            var lista = _repo.DetaliuPlanSemestruProfesorListByProfesorSpecializare(ID_Profesor, ID_Domeniu, ID_Specializare, nrSem);
+            return Ok(lista);
         }
     }
 }

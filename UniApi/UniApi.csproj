@@ -30,7 +30,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Websites\dnndev.me\bin\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\WebSite\dnndev.me\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,14 +45,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetNuke, Version=9.13.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AGSISPortal.WebServiceRef, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Websites\dnndev.me\bin\DotNetNuke.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\WebSite\dnndev.me\bin\AGSISPortal.WebServiceRef.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DotNetNuke.Web, Version=9.13.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Websites\dnndev.me\bin\DotNetNuke.Web.dll</HintPath>
+    <Reference Include="DotNetNuke">
+      <HintPath>..\..\..\..\..\..\WebSite\dnndev.me\bin\DotNetNuke.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\..\..\..\..\WebSite\dnndev.me\bin\DotNetNuke.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data">
+      <HintPath>..\..\..\..\..\..\WebSite\dnndev.me\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -228,9 +235,51 @@
     <Compile Include="Controllers\NotaController.cs" />
     <Compile Include="Controllers\OfertaPracticaController.cs" />
     <Compile Include="Controllers\OfertaPracticaFacultateController.cs" />
+    <Compile Include="Controllers\PachetAbsolvireController.cs" />
+    <Compile Include="Controllers\PenalizariController.cs" />
+    <Compile Include="Controllers\PlataTaxaController.cs" />
+    <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="Controllers\PostProfesorController.cs" />
+    <Compile Include="Controllers\ProfesorController.cs" />
+    <Compile Include="Controllers\ProfesorGradDidacticController.cs" />
+    <Compile Include="Controllers\ProgramareExamenController.cs" />
+    <Compile Include="Controllers\ProgramareExamenProfesorController.cs" />
+    <Compile Include="Controllers\PropunereCandidatController.cs" />
+    <Compile Include="Controllers\RaspunsCriteriuEvaluareMaterieController.cs" />
+    <Compile Include="Controllers\RatePlatiteController.cs" />
+    <Compile Include="Controllers\ReducereTaxaStudentController.cs" />
+    <Compile Include="Controllers\ScenariuController.cs" />
+    <Compile Include="Controllers\SesiuneExameneController.cs" />
+    <Compile Include="Controllers\SesiuneExameneSpecializareController.cs" />
+    <Compile Include="Controllers\SportNeprofilController.cs" />
+    <Compile Include="Controllers\SportNeprofilStudentController.cs" />
+    <Compile Include="Controllers\StudentContController.cs" />
+    <Compile Include="Controllers\StudentInfoSuplimentareController.cs" />
+    <Compile Include="Controllers\StudentOptionalAlesController.cs" />
+    <Compile Include="Controllers\StudentStudiiAnterioareFacultateController.cs" />
+    <Compile Include="Controllers\SumaPerioadaAcordareBursaSpecializareController.cs" />
+    <Compile Include="Controllers\TaxaDeScolarizareController.cs" />
+    <Compile Include="Controllers\TaxeController.cs" />
+    <Compile Include="Controllers\TipAvertismentController.cs" />
+    <Compile Include="Controllers\TipBursaController.cs" />
+    <Compile Include="Controllers\TipCalificativPracticaController.cs" />
+    <Compile Include="Controllers\TipConferintaController.cs" />
+    <Compile Include="Controllers\TipCriteriuEvaluareController.cs" />
+    <Compile Include="Controllers\TipCriteriuEvaluareVarianteRaspunsController.cs" />
+    <Compile Include="Controllers\TipGradDidacticController.cs" />
+    <Compile Include="Controllers\TipLimbaController.cs" />
+    <Compile Include="Controllers\TipNotaController.cs" />
+    <Compile Include="Controllers\TipPracticaController.cs" />
+    <Compile Include="Controllers\TipReducereController.cs" />
+    <Compile Include="Controllers\TipSesiuneExameneController.cs" />
+    <Compile Include="Controllers\TipTaraController.cs" />
+    <Compile Include="Controllers\TrunchiController.cs" />
+    <Compile Include="Controllers\ValoareBursaStudentController.cs" />
+    <Compile Include="Controllers\ValoareTipBursaFacultateController.cs" />
+    <Compile Include="Controllers\VenitCheltuialaDiverseController.cs" />
     <Compile Include="Dal\Repos\AbsolventAlumniDTORepo.cs" />
     <Compile Include="Dal\Repos\AbsolvireProgramProbaRepo.cs" />
-    <Compile Include="Dal\Repos\AbsolvireProgramRepro.cs" />
+    <Compile Include="Dal\Repos\AbsolvireProgramRepo.cs" />
     <Compile Include="Dal\Repos\AbsolvireStudentProbaRepo.cs" />
     <Compile Include="Dal\Repos\AbsolvireStudentRepo.cs" />
     <Compile Include="Dal\Repos\AnUniversitarLunaBursaRepo.cs" />
@@ -275,9 +324,171 @@
     <Compile Include="Dal\Repos\NotaRepo.cs" />
     <Compile Include="Dal\Repos\OfertaPracticaFacultateRepo.cs" />
     <Compile Include="Dal\Repos\OfertaPracticaRepo.cs" />
+    <Compile Include="Dal\Repos\PachetAbsolvireRepo.cs" />
+    <Compile Include="Dal\Repos\PenalizariRepo.cs" />
+    <Compile Include="Dal\Repos\PlataTaxaRepo.cs" />
+    <Compile Include="Dal\Repos\PostProfesorRepo.cs" />
+    <Compile Include="Dal\Repos\PostRepo.cs" />
+    <Compile Include="Dal\Repos\ProfesorGradDidacticRepo.cs" />
+    <Compile Include="Dal\Repos\ProfesorRepo.cs" />
+    <Compile Include="Dal\Repos\ProgramareExamenProfesorRepo.cs" />
+    <Compile Include="Dal\Repos\ProgramareExamenRepo.cs" />
+    <Compile Include="Dal\Repos\PropunereCandidatRepo.cs" />
+    <Compile Include="Dal\Repos\RaspunsCriteriuEvaluareMaterieRepo.cs" />
+    <Compile Include="Dal\Repos\RatePlatiteRepo.cs" />
+    <Compile Include="Dal\Repos\ReducereTaxaStudentRepo.cs" />
+    <Compile Include="Dal\Repos\ScenariuRepo.cs" />
+    <Compile Include="Dal\Repos\SesiuneExameneRepo.cs" />
+    <Compile Include="Dal\Repos\SesiuneExameneSpecializareRepo.cs" />
+    <Compile Include="Dal\Repos\SportNeprofilRepo.cs" />
+    <Compile Include="Dal\Repos\SportNeprofilStudentRepo.cs" />
+    <Compile Include="Dal\Repos\StudentContRepo.cs" />
+    <Compile Include="Dal\Repos\StudentInfoSuplimentareRepo.cs" />
+    <Compile Include="Dal\Repos\StudentOptionalAlesRepo.cs" />
+    <Compile Include="Dal\Repos\StudentStudiiAnterioareFacultateRepo.cs" />
+    <Compile Include="Dal\Repos\SumaPerioadaAcordareBursaSpecializareRepo.cs" />
+    <Compile Include="Dal\Repos\TaxaDeScolarizareRepo.cs" />
+    <Compile Include="Dal\Repos\TaxeRepo.cs" />
+    <Compile Include="Dal\Repos\TipAvertismentRepo.cs" />
+    <Compile Include="Dal\Repos\TipBursaRepo.cs" />
+    <Compile Include="Dal\Repos\TipCalificativPracticaRepo.cs" />
+    <Compile Include="Dal\Repos\TipConferintaRepo.cs" />
+    <Compile Include="Dal\Repos\TipCriteriuEvaluareRepo.cs" />
+    <Compile Include="Dal\Repos\TipCriteriuEvaluareVarianteRaspunsRepo.cs" />
+    <Compile Include="Dal\Repos\TipGradDidacticRepo.cs" />
+    <Compile Include="Dal\Repos\TipLimbaRepo.cs" />
+    <Compile Include="Dal\Repos\TipNotaRepo.cs" />
+    <Compile Include="Dal\Repos\TipPracticaRepo.cs" />
+    <Compile Include="Dal\Repos\TipReducereRepo.cs" />
+    <Compile Include="Dal\Repos\TipSesiuneExameneRepo.cs" />
+    <Compile Include="Dal\Repos\TipTaraRepo.cs" />
+    <Compile Include="Dal\Repos\TrunchiRepo.cs" />
+    <Compile Include="Dal\Repos\ValoareBursaStudentRepo.cs" />
+    <Compile Include="Dal\Repos\ValoareTipBursaFacultateRepo.cs" />
+    <Compile Include="Dal\Repos\VenitCheltuialaDiverseRepo.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Info\AbsolventAlumniDTO.cs" />
+    <Compile Include="Info\AbsolvireInfo.cs" />
+    <Compile Include="Info\AbsolvireProgramInfo.cs" />
+    <Compile Include="Info\AbsolvireProgramProbaInfo.cs" />
+    <Compile Include="Info\AbsolvireStudentInfo.cs" />
+    <Compile Include="Info\AbsolvireStudentProbaInfo.cs" />
+    <Compile Include="Info\AlumniAbsolvent.cs" />
+    <Compile Include="Info\AlumniAbsolventLocDeMunca.cs" />
+    <Compile Include="Info\AlumniAbsolventSpecializareAbsolvita.cs" />
+    <Compile Include="Info\AlumniSpecializareAbsolvita.cs" />
+    <Compile Include="Info\AnUniversitarInfo.cs" />
+    <Compile Include="Info\AnUniversitarLunaBursa.cs" />
+    <Compile Include="Info\AnunturiInfo.cs" />
+    <Compile Include="Info\AplicatieOfertaPractica.cs" />
+    <Compile Include="Info\AvertismentInfo.cs" />
+    <Compile Include="Info\BursaInfo.cs" />
+    <Compile Include="Info\CatedraInfo.cs" />
+    <Compile Include="Info\CatedraProfesorInfo.cs" />
+    <Compile Include="Info\CazareInfo.cs" />
+    <Compile Include="Info\CerereAdeverintaFDSGAInfo.cs" />
+    <Compile Include="Info\CerereAdeverintaInfo.cs" />
+    <Compile Include="Info\CererePrecazareInfo.cs" />
+    <Compile Include="Info\ChestionarInfo.cs" />
+    <Compile Include="Info\CodEvaluareInfo.cs" />
+    <Compile Include="Info\ConferintaDomeniuFundamentalInfo.cs" />
+    <Compile Include="Info\ConferintaInfo.cs" />
+    <Compile Include="Info\ConferintaSectiuneInfo.cs" />
+    <Compile Include="Info\ContUtilizatorInfo.cs" />
+    <Compile Include="Info\CORInfo.cs" />
+    <Compile Include="Info\CriteriuEvaluareInfo.cs" />
+    <Compile Include="Info\CriteriuEvaluareRaspunsInfo.cs" />
+    <Compile Include="Info\CriteriuEvaluareVarianteRaspunsInfo.cs" />
+    <Compile Include="Info\CuplajInfo.cs" />
+    <Compile Include="Info\DepartamentInfo.cs" />
+    <Compile Include="Info\DepartamentProfesorInfo.cs" />
+    <Compile Include="Info\DetaliiTaxa.cs" />
+    <Compile Include="Info\DetaliuCuplajInfo.cs" />
+    <Compile Include="Info\DetaliuPlanSemestruInfo.cs" />
+    <Compile Include="Info\DetaliuPlanSemestruInfoComparer.cs" />
+    <Compile Include="Info\DetaliuPlanSemestruProfesorCuplajInfo.cs" />
+    <Compile Include="Info\DetaliuPlanSemestruProfesorInfo.cs" />
+    <Compile Include="Info\DetaliuPlanSemestruStudentInfo.cs" />
+    <Compile Include="Info\DiplomaSupplement_AdeverintaAbsolvire.cs" />
+    <Compile Include="Info\DocumentRegistraturaInfo.cs" />
+    <Compile Include="Info\EvaluareComentariiInfo.cs" />
+    <Compile Include="Info\EvaluareProfesorInfo.cs" />
+    <Compile Include="Info\EvaluariMateriiInfo.cs" />
+    <Compile Include="Info\FacultateCameraInfo.cs" />
+    <Compile Include="Info\Firma.cs" />
+    <Compile Include="Info\FluxDocumentRegistraturaInfo.cs" />
+    <Compile Include="Info\IntervalChitantaInfo.cs" />
+    <Compile Include="Info\IntervalPunctajBursaInfo.cs" />
+    <Compile Include="Info\JudeteInfo.cs" />
+    <Compile Include="Info\LegitTransportCFRInfo.cs" />
+    <Compile Include="Info\LichidareInfo.cs" />
+    <Compile Include="Info\ListaColoanaInfo.cs" />
+    <Compile Include="Info\LocalitatiInfo.cs" />
+    <Compile Include="Info\LocuriCameraInfo.cs" />
+    <Compile Include="Info\MateriePachetAbsolvireInfo.cs" />
+    <Compile Include="Info\MaterieStudentDetaliiInfo.cs" />
+    <Compile Include="Info\MaterieStudentInfo.cs" />
+    <Compile Include="Info\MedieEvaluariInfo.cs" />
+    <Compile Include="Info\MentorPracticaFirma.cs" />
+    <Compile Include="Info\MetaSpecializareInfo.cs" />
+    <Compile Include="Info\MotivCerereAdevInfo.cs" />
+    <Compile Include="Info\NotaInfo.cs" />
+    <Compile Include="Info\NotaStudentMateriePachetAbsolvireInfo.cs" />
+    <Compile Include="Info\OfertaPractica.cs" />
+    <Compile Include="Info\OfertaPracticaFacultate.cs" />
+    <Compile Include="Info\PachetAbsolvireInfo.cs" />
+    <Compile Include="Info\PenalizariInfo.cs" />
+    <Compile Include="Info\PlanInvatamantInfo.cs" />
+    <Compile Include="Info\PostInfo.cs" />
+    <Compile Include="Info\PostProfesorInfo.cs" />
+    <Compile Include="Info\ProfesorGradDidacticInfo.cs" />
+    <Compile Include="Info\ProfesorInfo.cs" />
+    <Compile Include="Info\ProfesorMaterieInfo.cs" />
+    <Compile Include="Info\ProgramareExamenInfo.cs" />
+    <Compile Include="Info\ProgramareExamenProfesorInfo.cs" />
+    <Compile Include="Info\ProgramStudiuRMU.cs" />
+    <Compile Include="Info\PropunereCandidatInfo.cs" />
+    <Compile Include="Info\RaspunsCriteriuEvaluareMaterieInfo.cs" />
+    <Compile Include="Info\RatePlatiteInfo.cs" />
+    <Compile Include="Info\ReducereTaxaStudentInfo.cs" />
+    <Compile Include="Info\SalaInfo.cs" />
+    <Compile Include="Info\ScenariuInfo.cs" />
+    <Compile Include="Info\SesiuneExameneDeschidereSpecialaInfo.cs" />
+    <Compile Include="Info\SesiuneExameneInfo.cs" />
+    <Compile Include="Info\SesiuneExameneSpecializareInfo.cs" />
+    <Compile Include="Info\SportNeprofilInfo.cs" />
+    <Compile Include="Info\SportNeprofilStudentInfo.cs" />
+    <Compile Include="Info\StudentAnUniversitarInfo.cs" />
+    <Compile Include="Info\StudentDatePersonaleInfo.cs" />
+    <Compile Include="Info\StudentInfo.cs" />
+    <Compile Include="Info\StudentInfoSuplimentare.cs" />
+    <Compile Include="Info\StudentOptionalAlesInfo.cs" />
+    <Compile Include="Info\StudentPachetAbsolvireInfo.cs" />
+    <Compile Include="Info\StudentStudiiAnterioareFacultateInfo.cs" />
+    <Compile Include="Info\SumaPerioadaAcordareBursaSpecializareInfo.cs" />
+    <Compile Include="Info\TaxaStudentInfo.cs" />
+    <Compile Include="Info\TaxeInfo.cs" />
+    <Compile Include="Info\TipAvertismentInfo.cs" />
+    <Compile Include="Info\TipBursaInfo.cs" />
+    <Compile Include="Info\TipCalificativPractica.cs" />
+    <Compile Include="Info\TipCerereAdeverintaInfo.cs" />
+    <Compile Include="Info\TipConferintaInfo.cs" />
+    <Compile Include="Info\TipCriteriuEvaluareInfo.cs" />
+    <Compile Include="Info\TipCriteriuEvaluareVarianteRaspunsInfo.cs" />
+    <Compile Include="Info\TipGradDidacticInfo.cs" />
+    <Compile Include="Info\TipLimbaInfo.cs" />
+    <Compile Include="Info\TipNotaInfo.cs" />
+    <Compile Include="Info\TipPractica.cs" />
+    <Compile Include="Info\TipReducereInfo.cs" />
+    <Compile Include="Info\TipSesiuneExameneInfo.cs" />
+    <Compile Include="Info\TipTaraInfo.cs" />
+    <Compile Include="Info\TrunchiInfo.cs" />
+    <Compile Include="Info\UsernameInfo.cs" />
+    <Compile Include="Info\ValoareBursaStudentInfo.cs" />
+    <Compile Include="Info\ValoareTipBursaFacultateInfo.cs" />
+    <Compile Include="Info\VenitCheltuialaDiverseInfo.cs" />
     <Compile Include="Models\Facultate.cs" />
     <Compile Include="Models\Specializare.cs" />
     <Compile Include="Models\Student.cs" />
@@ -423,6 +634,9 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

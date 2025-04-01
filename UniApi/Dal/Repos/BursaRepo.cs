@@ -1,9 +1,12 @@
+using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 
 namespace UniApi.Dal.Repos
@@ -47,13 +50,15 @@ namespace UniApi.Dal.Repos
             return Convert.ToInt32(SqlHelper.ExecuteScalar(
                 ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
                 "BursaAddOrUpdate",
-                bursa.ID_Bursa,
-                bursa.ID_Student,
-                bursa.ID_AnUniv,
-                bursa.NumarSemestru,
-                bursa.Valoare,
-                bursa.Tip));
+                bursa.ID_TipBursa, // Updated from ID_Bursa
+               // bursa.ID_Student, am eroare 
+                bursa.ID_AnUnivBursa, // Updated from ID_AnUniv
+                bursa.NumarSemestruBursa, // Updated from NumarSemestru
+                bursa.BugetBursaDisponibil, // Updated from Valoare
+                bursa.TipBursa // Updated from Tip
+            ));
         }
+
 
         public void BursaDelete(long idBursa)
         {

@@ -1,56 +1,59 @@
-using DotNetNuke.Common.Utilities;
-using Microsoft.ApplicationBlocks.Data;
 using System;
 using System.Collections.Generic;
+using UniApi.Info;
+using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using DotNetNuke.Common.Utilities;
 
-namespace UniTBv.AGSIS.Dal.Repos
+namespace UniApi.Dal.Repos
 {
     public class OfertaPracticaFacultateRepo
     {
-        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public OfertaPracticaFacultate OfertaPracticaFacultateGet(long iD_OfertaPracticaFacultate)
+        public OfertaPracticaFacultate OfertaPracticaFacultateGet(long ID_OfertaPracticaFacultate)
         {
-            return CBO.FillObject<OfertaPracticaFacultate>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultateGet", iD_OfertaPracticaFacultate));
+            return CBO.FillObject<OfertaPracticaFacultate>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_Get", ID_OfertaPracticaFacultate));
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetList()
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListGet()
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultateList"));
+            return CBO.FillCollection<OfertaPracticaFacultate>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetList"));
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetListByFacAnStudSpecializDomFC(long iD_Facultate, long iD_AnStudiu, long iD_Specializare, long iD_Domeniu, long iD_FC, int status, DateTime dataValabilitate)
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudSpecializDomFCGet(long ID_Facultate, long ID_AnStudiu, long ID_Specializare, long ID_Domeniu, long ID_FC, int Status, DateTime DataValabilitate)
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultateListByFacAnStudSpecializDomFC", iD_Facultate, iD_AnStudiu, iD_Specializare, iD_Domeniu, iD_FC, status, dataValabilitate));
+            return CBO.FillCollection<OfertaPracticaFacultate>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetListByFacAnStudSpecializDomFC", ID_Facultate, ID_AnStudiu, ID_Specializare, ID_Domeniu, ID_FC, Status, DataValabilitate));
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetListByFacAnStudFC(long iD_Facultate, long iD_AnStudiu, long iD_FC, int status, DateTime dataValabilitate)
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudFCGet(long ID_Facultate, long ID_AnStudiu, long ID_FC, int Status, DateTime DataValabilitate)
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultateListByFacAnStudFC", iD_Facultate, iD_AnStudiu, iD_FC, status, dataValabilitate));
+            return CBO.FillCollection<OfertaPracticaFacultate>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetListByFacAnStudFC", ID_Facultate, ID_AnStudiu, ID_FC, Status, DataValabilitate));
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetListByIdOfertaPractica(long iD_OfertaPractica)
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByIdOfertaPracticaGet(long ID_OfertaPractica)
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultateListByIdOfertaPractica", iD_OfertaPractica));
+            return CBO.FillCollection<OfertaPracticaFacultate>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetListByIdOfertaPractica", ID_OfertaPractica));
         }
 
         public void OfertaPracticaFacultateAdd(OfertaPracticaFacultate objOfertaPracticaFacultate)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaFacultateAdd",
-              objOfertaPracticaFacultate.ID_OfertaPractica, objOfertaPracticaFacultate.ID_Facultate, objOfertaPracticaFacultate.ID_AnStudiu, objOfertaPracticaFacultate.ID_Specializare, objOfertaPracticaFacultate.ID_Domeniu, objOfertaPracticaFacultate.ID_FC, objOfertaPracticaFacultate.ID_FCForma, objOfertaPracticaFacultate.DataModificare, objOfertaPracticaFacultate.Status, objOfertaPracticaFacultate.NrLocuri);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPracticaFacultate_Add", objOfertaPracticaFacultate);
         }
 
         public void OfertaPracticaFacultateUpdate(OfertaPracticaFacultate objOfertaPracticaFacultate)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaFacultateUpdate",
-              objOfertaPracticaFacultate.ID_OfertaPracticaFacultate, objOfertaPracticaFacultate.ID_OfertaPractica, objOfertaPracticaFacultate.ID_Facultate, objOfertaPracticaFacultate.ID_AnStudiu, objOfertaPracticaFacultate.ID_Specializare,
-              objOfertaPracticaFacultate.ID_Domeniu, objOfertaPracticaFacultate.ID_FC, objOfertaPracticaFacultate.ID_FCForma, objOfertaPracticaFacultate.DataModificare, objOfertaPracticaFacultate.Status, objOfertaPracticaFacultate.NrLocuri);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPracticaFacultate_Update", objOfertaPracticaFacultate);
         }
 
-        public void OfertaPracticaFacultateDelete(long iD_OfertaPracticaFacultate)
+        public void OfertaPracticaFacultateDelete(long ID_OfertaPracticaFacultate)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaFacultateDelete", iD_OfertaPracticaFacultate);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPracticaFacultate_Delete", ID_OfertaPracticaFacultate);
         }
     }
 }

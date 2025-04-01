@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UniApi.Info;
 using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
@@ -10,51 +11,54 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public IntervalChitantaInfo GetIntervalChitanta(long iD_IntervalChitanta)
+        public IntervalChitantaInfo IntervalChitantaGet(long ID_IntervalChitanta)
         {
-            return CBO.FillObject<IntervalChitantaInfo>(SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitantaGet", iD_IntervalChitanta));
+            return CBO.FillObject<IntervalChitantaInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitanta", ID_IntervalChitanta));
         }
 
-        public IntervalChitantaInfo GetIntervalChitantaByUtilizator(int ID_Utilizator)
+        public IntervalChitantaInfo IntervalChitantaByUtilizatorGet(int ID_Utilizator)
         {
-            return CBO.FillObject<IntervalChitantaInfo>(SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitantaGetIntervalActiv", ID_Utilizator));
+            return CBO.FillObject<IntervalChitantaInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitantaByUtilizator", ID_Utilizator));
         }
 
-        public IntervalChitantaInfo GetUltimulNumarDeChitanta(int ID_Utilizator)
+        public IntervalChitantaInfo UltimulNumarDeChitantaGet(int ID_Utilizator)
         {
-            return CBO.FillObject<IntervalChitantaInfo>(SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitantaGetUltimulNumarDeChitanta", ID_Utilizator));
+            return CBO.FillObject<IntervalChitantaInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetUltimulNumarDeChitanta", ID_Utilizator));
         }
 
-        public List<IntervalChitantaInfo> GetIntervalChitantaList()
+        public List<IntervalChitantaInfo> IntervalChitantaListGet()
         {
-            return CBO.FillCollection<IntervalChitantaInfo>(SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitantaList"));
+            return CBO.FillCollection<IntervalChitantaInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitantaList"));
         }
 
-        public List<IntervalChitantaInfo> GetIntervalChitantaListByUtilizator(int ID_Utilizator)
+        public List<IntervalChitantaInfo> IntervalChitantaListByUtilizatorGet(int ID_Utilizator)
         {
-            return CBO.FillCollection<IntervalChitantaInfo>(SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitantaListByID_Utilizator", ID_Utilizator));
+            return CBO.FillCollection<IntervalChitantaInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitantaListByUtilizator", ID_Utilizator));
         }
 
-        public long AddIntervalChitanta(IntervalChitantaInfo objIntervalChitanta)
+        public long IntervalChitantaAdd(IntervalChitantaInfo objIntervalChitanta)
         {
-            object o = SqlHelper.ExecuteScalar(_ConnectionString, "IntervalChitantaAdd", objIntervalChitanta.NrInitialInterval, objIntervalChitanta.NrFinalInterval, objIntervalChitanta.ID_UtilizatorAsociat, objIntervalChitanta.UltimulNrChitantaID_Utilizator, objIntervalChitanta.UltimaDataChitantaID_Utilizator, objIntervalChitanta.NrChitantaDeFolosit, objIntervalChitanta.ID_Utilizator, objIntervalChitanta.DataModificare, objIntervalChitanta.Status, objIntervalChitanta.Activ, objIntervalChitanta.Ordine);
-            return Convert.ToInt64(o);
+            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "IntervalChitanta_AddIntervalChitanta", objIntervalChitanta);
         }
 
-        public void UpdateIntervalChitanta(IntervalChitantaInfo objIntervalChitanta)
+        public void IntervalChitantaUpdate(IntervalChitantaInfo objIntervalChitanta)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalChitantaUpdate", objIntervalChitanta.ID_IntervalChitanta, objIntervalChitanta.NrInitialInterval, objIntervalChitanta.NrFinalInterval, objIntervalChitanta.ID_UtilizatorAsociat, objIntervalChitanta.UltimulNrChitantaID_Utilizator, objIntervalChitanta.UltimaDataChitantaID_Utilizator, objIntervalChitanta.NrChitantaDeFolosit, objIntervalChitanta.ID_Utilizator, objIntervalChitanta.DataModificare, objIntervalChitanta.Status, objIntervalChitanta.Activ, objIntervalChitanta.Ordine);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalChitanta_UpdateIntervalChitanta", objIntervalChitanta);
         }
 
-        public void DeleteIntervalChitanta(IntervalChitantaInfo objIntervalChitanta)
+        public void IntervalChitantaDelete(IntervalChitantaInfo objIntervalChitanta)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalChitantaDelete", objIntervalChitanta.ID_IntervalChitanta);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalChitanta_DeleteIntervalChitanta", objIntervalChitanta);
         }
 
         public long SeteazaUrmatorulNumarDeChitanta(int ID_Utilizator)
         {
-            object o = SqlHelper.ExecuteScalar(_ConnectionString, "IntervalChitantaSeteazaUrmatorulNumarDeChitanta", ID_Utilizator);
-            return Convert.ToInt64(o);
+            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "IntervalChitanta_SeteazaUrmatorulNumarDeChitanta", ID_Utilizator);
         }
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UniApi.Models;
+using UniApi.Info;
 using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
@@ -11,50 +11,53 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorList()
+        public List<EvaluareProfesorInfo> EvaluareProfesorListGet()
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesorList"));
+            return CBO.FillCollection<EvaluareProfesorInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorList"));
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorListNrChestionareCompletate(long ID_AnUniv, int NrSemestru)
+        public List<EvaluareProfesorInfo> EvaluareProfesorListNrChestionareCompletateGet(long ID_AnUniv, int NrSemestru)
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesorListNrChestionareCompletate", ID_AnUniv, NrSemestru));
+            return CBO.FillCollection<EvaluareProfesorInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorListNrChestionareCompletate", ID_AnUniv, NrSemestru));
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorListNrChestionareCompletate_Prof(long ID_AnUniv, int NrSemestru)
+        public List<EvaluareProfesorInfo> EvaluareProfesorListNrChestionareCompletateProfGet(long ID_AnUniv, int NrSemestru)
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesorListNrChestionareCompletate_Prof", ID_AnUniv, NrSemestru));
+            return CBO.FillCollection<EvaluareProfesorInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorListNrChestionareCompletate_Prof", ID_AnUniv, NrSemestru));
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorListProfiDeEvaluat(long ID_AnUniv, int NrSemestru)
+        public List<EvaluareProfesorInfo> EvaluareProfesorListProfiDeEvaluatGet(long ID_AnUniv, int NrSemestru)
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesorListProfiDeEvaluat", ID_AnUniv, NrSemestru));
+            return CBO.FillCollection<EvaluareProfesorInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorListProfiDeEvaluat", ID_AnUniv, NrSemestru));
         }
 
-        public long AddEvaluareProfesor(EvaluareProfesorInfo objEvaluareProfesor)
+        public long EvaluareProfesorAdd(EvaluareProfesorInfo objEvaluareProfesor)
         {
-            object o = SqlHelper.ExecuteScalar(_ConnectionString, "EvaluareProfesorAdd", objEvaluareProfesor.ID_Profesor, objEvaluareProfesor.ID_Specializare, objEvaluareProfesor.ID_AnUniv, objEvaluareProfesor.NrSemestru, objEvaluareProfesor.Status, objEvaluareProfesor.ID_DetaliuPlanSemestru);
-            return Convert.ToInt64(o);
+            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "EvaluareProfesor_AddEvaluareProfesor", objEvaluareProfesor);
         }
 
-        public void UpdateEvaluareProfesor(EvaluareProfesorInfo objEvaluareProfesor)
+        public void EvaluareProfesorUpdate(EvaluareProfesorInfo objEvaluareProfesor)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesorUpdate", objEvaluareProfesor.ID_EvaluareProfesor, objEvaluareProfesor.ID_Profesor, objEvaluareProfesor.ID_Specializare, objEvaluareProfesor.ID_AnUniv, objEvaluareProfesor.NrSemestru, objEvaluareProfesor.Status);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_UpdateEvaluareProfesor", objEvaluareProfesor);
         }
 
-        public void DeleteEvaluareProfesor(EvaluareProfesorInfo objEvaluareProfesor)
+        public void EvaluareProfesorDelete(EvaluareProfesorInfo objEvaluareProfesor)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesorDelete", objEvaluareProfesor.ID_EvaluareProfesor);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_DeleteEvaluareProfesor", objEvaluareProfesor);
         }
 
-        public void DeleteEvaluareProfesorBySpecializareSemestru(long id_prof, long spec, int nrsem, long id_dps)
+        public void EvaluareProfesorDeleteBySpecializareSemestru(long ID_Prof, long ID_Specializare, int NrSemestru, long ID_Dps)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesorDeleteBySpecializareSemestru", id_prof, spec, nrsem, id_dps);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_DeleteEvaluareProfesorBySpecializareSemestru", ID_Prof, ID_Specializare, NrSemestru, ID_Dps);
         }
 
-        public void GenerateCoduriEvaluare(long ID_AnUniv, int NrSemestru)
+        public void CoduriEvaluareGenerate(long ID_AnUniv, int NrSemestru)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesorGenereazaCoduriEvaluare", ID_AnUniv, NrSemestru, -1);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_GenerateCoduriEvaluare", ID_AnUniv, NrSemestru);
         }
     }
 }

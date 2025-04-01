@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Web.Http;
-using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
-
+using Microsoft.ApplicationBlocks.Data;
+using DotNetNuke.Common.Utilities;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
@@ -14,26 +14,26 @@ namespace UniApi.Dal.Repos
 
         public AbsolvireStudentProbaInfo AbsolvireStudentProbaGet(long idStudentAbsolventProba)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<AbsolvireStudentProbaInfo>(
+            return CBO.FillObject<AbsolvireStudentProbaInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "AbsolvireStudentProbaGet", idStudentAbsolventProba));
-        }
-
-        public AbsolvireStudentProbaInfo AbsolvireStudentProbaGetByAbsolventProgramProba(long idAbsolvireStudent, long idAbsolvireProgramProba)
-        {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<AbsolvireStudentProbaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AbsolvireStudentProbaGetByAbsolventProgramProba", idAbsolvireStudent, idAbsolvireProgramProba));
         }
 
         public List<AbsolvireStudentProbaInfo> AbsolvireStudentProbaList()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<AbsolvireStudentProbaInfo>(
+            return CBO.FillCollection<AbsolvireStudentProbaInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "AbsolvireStudentProbaList"));
         }
 
         public List<AbsolvireStudentProbaInfo> AbsolvireStudentProbaListByStudent(long idAbsolvireStudent)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<AbsolvireStudentProbaInfo>(
+            return CBO.FillCollection<AbsolvireStudentProbaInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "AbsolvireStudentProbaListByStudent", idAbsolvireStudent));
+        }
+
+        public List<AbsolvireStudentProbaInfo> AbsolvireStudentProbaListByAbsolventProgramProba(long idAbsolvireStudent, long idAbsolvireProgramProba)
+        {
+            return CBO.FillCollection<AbsolvireStudentProbaInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "AbsolvireStudentProbaListByAbsolventProgramProba", idAbsolvireStudent, idAbsolvireProgramProba));
         }
 
         public long AbsolvireStudentProbaAdd(AbsolvireStudentProbaInfo probaInfo)

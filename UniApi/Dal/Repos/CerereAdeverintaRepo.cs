@@ -7,6 +7,7 @@ using System.Xml;
 using System.Configuration;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 
 namespace UniApi.Dal.Repos
@@ -44,6 +45,11 @@ namespace UniApi.Dal.Repos
         public List<MotivCerereAdevInfo> MotivCerereAdevList()
         {
             return CBO.FillCollection<MotivCerereAdevInfo>(SqlHelper.ExecuteReader(_connectionString, "MotivCerereAdevList"));
+        }
+        public List<TipCerereAdeverintaInfo> TipCerereAdeverintaList()
+        {
+            return CBO.FillCollection<TipCerereAdeverintaInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "TipCerereAdeverintaList"));
         }
 
     }

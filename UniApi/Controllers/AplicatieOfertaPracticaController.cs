@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -22,9 +23,19 @@ namespace UniApi.Controllers
         [HttpGet]
         public IHttpActionResult AplicatieOfertaPracticaGet(long idAplicatie)
         {
-            var aplicatie = _controller.AplicatieOfertaPracticaGet(idAplicatie);
-            return aplicatie != null ? Ok(aplicatie) : NotFound();
+            var repo = new AplicatieOfertaPracticaRepo(); // Use repository instead of a controller
+            var aplicatie = repo.AplicatieOfertaPracticaGet(idAplicatie); // Fetch the application
+
+            if (aplicatie != null)
+            {
+                return Ok(aplicatie);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
         // Obține lista tuturor aplicațiilor pentru oferta de practică
         [HttpGet]
@@ -59,25 +70,32 @@ namespace UniApi.Controllers
         }
 
         // Șterge o aplicație pentru oferta de practică
+        
         [HttpDelete]
         public IHttpActionResult AplicatieOfertaPracticaDelete(long idAplicatie)
         {
-            var aplicatie = _controller.AplicatieOfertaPracticaGet(idAplicatie);
+            var repo = new AplicatieOfertaPracticaRepo(); // Use repository instead of a controller
+            var aplicatie = repo.AplicatieOfertaPracticaGet(idAplicatie); // Check if the application exists
+
             if (aplicatie == null)
             {
                 return NotFound();
             }
 
-            _controller.AplicatieOfertaPracticaDelete(aplicatie);
+            repo.AplicatieOfertaPracticaDelete(idAplicatie); // Delete by ID
             return Ok();
         }
+
 
         // Obține numărul total de aplicații pentru o anumită ofertă de practică
         [HttpGet]
         public IHttpActionResult AplicatieOfertaPracticaGetTotalCountByIDOfPracticaFac(long idOfertaPracticaFacultate)
         {
-            int total = _controller.AplicatieOfertaPracticaGetTotalCountByIDOfPracticaFac(idOfertaPracticaFacultate);
-            return Ok(total);
+            var repo = new AplicatieOfertaPracticaRepo(); // Use repository instead of controller
+            int total = repo.AplicatieOfertaPracticaGetTotalCountByIDOfPracticaFac(idOfertaPracticaFacultate); // Get total count
+
+            return Ok(total); // Return count wrapped in Ok() response
         }
+
     }
 }

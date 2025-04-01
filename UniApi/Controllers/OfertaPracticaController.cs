@@ -1,46 +1,55 @@
+using System.Web.Http;
+using DotNetNuke.Web.Api;
+using UniApi.Dal.Repos;
+using UniApi.Info;
 using System.Collections.Generic;
-using UniTBv.AGSIS.Dal.Repos;
-using UniTBv.AGSIS.Models;
 
-namespace UniTBv.AGSIS.Controllers
+namespace UniApi.Controllers
 {
-    public class OfertaPracticaController
+    public class OfertaPracticaController : DnnApiController
     {
-        private readonly OfertaPracticaRepo _repo;
+        private readonly OfertaPracticaRepo _repo = new OfertaPracticaRepo();
 
-        public OfertaPracticaController()
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaGet(long ID_OfertaPractica)
         {
-            _repo = new OfertaPracticaRepo();
+            var oferta = _repo.OfertaPracticaGet(ID_OfertaPractica);
+            return Ok(oferta);
         }
 
-        public OfertaPractica OfertaPracticaGet(long iD_OfertaPractica)
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaListGet()
         {
-            return _repo.OfertaPracticaGet(iD_OfertaPractica);
+            var oferte = _repo.OfertaPracticaListGet();
+            return Ok(oferte);
         }
 
-        public List<OfertaPractica> OfertaPracticaGetList()
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaListByUserIDPortalGet(int ID_UserPortal)
         {
-            return _repo.OfertaPracticaGetList();
+            var oferte = _repo.OfertaPracticaListByUserIDPortalGet(ID_UserPortal);
+            return Ok(oferte);
         }
 
-        public List<OfertaPractica> OfertaPracticaGetListByUserIDPortal(int iD_UserPortal)
-        {
-            return _repo.OfertaPracticaGetListByUserIDPortal(iD_UserPortal);
-        }
-
-        public void OfertaPracticaAdd(OfertaPractica objOfertaPractica)
+        [HttpPost]
+        public IHttpActionResult OfertaPracticaAdd([FromBody] OfertaPractica objOfertaPractica)
         {
             _repo.OfertaPracticaAdd(objOfertaPractica);
+            return Ok();
         }
 
-        public void OfertaPracticaUpdate(OfertaPractica objOfertaPractica)
+        [HttpPut]
+        public IHttpActionResult OfertaPracticaUpdate([FromBody] OfertaPractica objOfertaPractica)
         {
             _repo.OfertaPracticaUpdate(objOfertaPractica);
+            return Ok();
         }
 
-        public void OfertaPracticaDelete(long iD_OfertaPractica)
+        [HttpDelete]
+        public IHttpActionResult OfertaPracticaDelete(long ID_OfertaPractica)
         {
-            _repo.OfertaPracticaDelete(iD_OfertaPractica);
+            _repo.OfertaPracticaDelete(ID_OfertaPractica);
+            return Ok();
         }
     }
 }

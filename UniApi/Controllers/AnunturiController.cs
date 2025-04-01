@@ -4,27 +4,44 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
     public class AnunturiController : DnnApiController
     {
-        // Adăugare Anunț
+       
         [HttpPost]
         public IHttpActionResult AnunturiAdd([FromBody] AnunturiInfo anunturiInfo)
         {
-            var controller = new AnunturiController();
-            bool result = controller.AnunturiAdd(anunturiInfo);
-            return result ? Ok() : BadRequest("A apărut o eroare la adăugarea anunțului.");
+            var repo = new AnunturiRepo(); // Assume you have a repository for DB operations
+            bool result = repo.AnunturiAdd(anunturiInfo); // Call repository instead of recursive call
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("A apărut o eroare la adăugarea anunțului.");
+            }
         }
 
         // Obține un anunț după ID
         [HttpGet]
         public IHttpActionResult AnunturiGet(long idAnunt)
         {
-            var controller = new AnunturiController();
-            var anunt = controller.AnunturiGet(idAnunt);
-            return anunt != null ? Ok(anunt) : NotFound();
+            var repo = new AnunturiRepo(); // Use repository instead of self-referencing
+            var anunt = repo.AnunturiGet(idAnunt); // Fetch the announcement from DB
+
+            if (anunt != null)
+            {
+                return Ok(anunt);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // Obține lista de anunțuri
@@ -49,10 +66,19 @@ namespace UniApi.Controllers
         [HttpPut]
         public IHttpActionResult AnunturiUpdate([FromBody] AnunturiInfo anunturiInfo)
         {
-            var controller = new AnunturiController();
-            bool result = controller.AnunturiUpdate(anunturiInfo);
-            return result ? Ok() : BadRequest("A apărut o eroare la actualizarea anunțului.");
+            var repo = new AnunturiRepo(); // Use repository instead of self-referencing
+            bool result = repo.AnunturiUpdate(anunturiInfo); // Call repository method
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("A apărut o eroare la actualizarea anunțului.");
+            }
         }
+
 
         // Obține lista de anunțuri pentru un an universitar și facultate
         [HttpGet]
@@ -68,17 +94,16 @@ namespace UniApi.Controllers
         public IHttpActionResult AnunturiListByStudent(long idAnUniv, long idAnStudiu, long idFacultate, long idFC, long idFCForma, long idDomeniu, long idSpecializare, long idGrupe)
         {
             var controller = new AnunturiController();
-            var anunturiList = controller.AnunturiListByStudentAnUniv(idAnUniv, idAnStudiu, idFacultate, idFC, idFCForma, idDomeniu, idSpecializare, idGrupe);
+            var anunturiList = controller.AnunturiListByStudent(idAnUniv, idAnStudiu, idFacultate, idFC, idFCForma, idDomeniu, idSpecializare, idGrupe);
             return Ok(anunturiList);
         }
 
         // Obține anunțuri pe pagină
         [HttpGet]
-        public IHttpActionResult AnunturiListPaged(int pageIndex, int pageSize)
+        public IHttpActionResult AnunturiListPaged(int pageIndex, int pageSize, ref int totalRecords)
         {
             var controller = new AnunturiController();
-            int totalRecords = 0;
-            var anunturiList = controller.AnunturiList_Paged(pageIndex, pageSize, ref totalRecords);
+            var anunturiList = controller.AnunturiListPaged(pageIndex, pageSize, ref totalRecords);
             return Ok(new { TotalRecords = totalRecords, Anunturi = anunturiList });
         }
     }

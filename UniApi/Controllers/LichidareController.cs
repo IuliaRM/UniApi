@@ -1,37 +1,40 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
-    public class LichidareController
+    public class LichidareController : DnnApiController
     {
-        private readonly LichidareRepo _repo;
+        private readonly LichidareRepo _repo = new LichidareRepo();
 
-        public LichidareController()
+        [HttpPost]
+        public IHttpActionResult LichidareSecretariatMerge(long ID_Lichidare, long ID_Absolvent, long ID_Student, long ID_AnUniv, long ID_Specializare, string UsernameInitiere)
         {
-            _repo = new LichidareRepo();
+            _repo.LichidareSecretariatMerge(ID_Lichidare, ID_Absolvent, ID_Student, ID_AnUniv, ID_Specializare, UsernameInitiere);
+            return Ok();
         }
 
-        public void LichidareSecretariatMerge(long ID_Lichidare, long ID_Absolvent, long ID_Student, long ID_AnUniv, long ID_Specializare, string usernameInitiere)
-        {
-            _repo.LichidareSecretariatMerge(ID_Lichidare, ID_Absolvent, ID_Student, ID_AnUniv, ID_Specializare, usernameInitiere);
-        }
-
-        public void LichidareInitiereAutomata()
+        [HttpPost]
+        public IHttpActionResult LichidareInitiereAutomata()
         {
             _repo.LichidareInitiereAutomata();
+            return Ok();
         }
 
-        public void LichidareSecretariatDeselecteaza(long ID_Lichidare, string username, string coloanaDebifata)
+        [HttpPut]
+        public IHttpActionResult LichidareSecretariatDeselecteaza(long ID_Lichidare, string Username, string ColoanaDebifata)
         {
-            _repo.LichidareSecretariatDeselecteaza(ID_Lichidare, username, coloanaDebifata);
+            _repo.LichidareSecretariatDeselecteaza(ID_Lichidare, Username, ColoanaDebifata);
+            return Ok();
         }
 
-        public LichidareInfo LichidareStudentGetByID_Lichidare(long ID_Lichidare)
+        [HttpGet]
+        public IHttpActionResult LichidareStudentByIDGet(long ID_Lichidare)
         {
-            return _repo.LichidareStudentGetByID_Lichidare(ID_Lichidare);
+            var lichidare = _repo.LichidareStudentByIDGet(ID_Lichidare);
+            return Ok(lichidare);
         }
     }
 }

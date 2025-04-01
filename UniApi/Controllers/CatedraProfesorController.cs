@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -13,9 +14,20 @@ namespace UniApi.Controllers
         [HttpGet]
         public IHttpActionResult CatedraProfesorGet(long idCatedraProfesor)
         {
-            var catedraProfesor = _repo.CatedraProfesorGet(idCatedraProfesor);
-            return catedraProfesor != null ? Ok(catedraProfesor) : NotFound();
+            var repo = new CatedraProfesorRepo(); // Use CatedraProfesorRepo, not CatedraRepo
+            var catedraProfesor = repo.CatedraProfesorGet(idCatedraProfesor); // Fetch data
+
+            if (catedraProfesor != null)
+            {
+                return Ok(catedraProfesor);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
+
 
         [HttpGet]
         public IHttpActionResult CatedraProfesorList()
@@ -48,9 +60,20 @@ namespace UniApi.Controllers
         [HttpPost]
         public IHttpActionResult CatedraProfesorAdd([FromBody] CatedraProfesorInfo catedraProfesor)
         {
-            int id = _repo.CatedraProfesorAdd(catedraProfesor);
-            return Ok(id);
+            var repo = new CatedraProfesorRepo(); // Use CatedraProfesorRepo, not CatedraRepo
+            long id = repo.CatedraProfesorAdd(catedraProfesor); // Call the correct method
+
+            if (id > 0)
+            {
+                return Ok(id); // Return the new ID if successful
+            }
+            else
+            {
+                return BadRequest("Eroare la adãugarea profesorului în catedrã."); // Handle failure
+            }
         }
+
+
 
         [HttpPut]
         public IHttpActionResult CatedraProfesorUpdate([FromBody] CatedraProfesorInfo catedraProfesor)

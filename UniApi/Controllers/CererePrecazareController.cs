@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllerss
 {
@@ -14,7 +15,11 @@ namespace UniApi.Controllerss
         public IHttpActionResult CererePrecazareGet(long idCererePrecazare)
         {
             var cerere = _repo.CererePrecazareGet(idCererePrecazare);
-            return cerere != null ? Ok(cerere) : NotFound();
+            if (cerere == null)
+            {
+                return NotFound();
+            }
+            return Ok(cerere);
         }
 
         [HttpGet]
@@ -81,15 +86,19 @@ namespace UniApi.Controllerss
         [HttpGet]
         public IHttpActionResult ListaCamerePrecazareByAnUnivCaminFacultate(long idAnUniversitar, long idCamin, long idFacultate)
         {
-            var camere = _repo.ListaCamerePrecazareByAnUnivCaminFacultate(idAnUniversitar, idCamin, idFacultate);
+            var camere = ListaCamerePrecazareByAnUnivCaminFacultate(idAnUniversitar, idCamin, idFacultate);
             return Ok(camere);
         }
 
         [HttpGet]
         public IHttpActionResult GetCameraInfoCererePrecedenta(long idStudent, long idAnUniversitar)
         {
-            var cerere = _repo.GetCameraInfoCererePrecedenta(idStudent, idAnUniversitar);
-            return cerere != null ? Ok(cerere) : NotFound();
+            var cerere = GetCameraInfoCererePrecedenta(idStudent, idAnUniversitar);
+            if (cerere == null)
+            {
+                return NotFound();
+            }
+            return Ok(cerere);
         }
     }
 }

@@ -1,76 +1,97 @@
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class NotaController
+    public class NotaController : DnnApiController
     {
-        private readonly NotaRepo _repo;
+        private readonly NotaRepo _repo = new NotaRepo();
 
-        public NotaController()
+        [HttpGet]
+        public IHttpActionResult NotaGet(long ID_Nota)
         {
-            _repo = new NotaRepo();
+            var nota = _repo.NotaGet(ID_Nota);
+            return Ok(nota);
         }
 
-        public NotaInfo NotaGet(long idNota)
+        [HttpGet]
+        public IHttpActionResult NotaListGet()
         {
-            return _repo.NotaGet(idNota);
+            var note = _repo.NotaListGet();
+            return Ok(note);
         }
 
-        public List<NotaInfo> NotaGetList()
+        [HttpGet]
+        public IHttpActionResult NotaListByDetaliuPlanSemestruGet(long ID_DetaliuPlanSemestru)
         {
-            return _repo.NotaGetList();
+            var note = _repo.NotaListByDetaliuPlanSemestruGet(ID_DetaliuPlanSemestru);
+            return Ok(note);
         }
 
-        public List<NotaInfo> NotaGetListByDetaliuPlanSemestru(long idDetaliuPlanSemestru)
+        [HttpGet]
+        public IHttpActionResult NotaListByStudentGet(long ID_Student, long ID_AnUniv)
         {
-            return _repo.NotaGetListByDetaliuPlanSemestru(idDetaliuPlanSemestru);
+            var note = _repo.NotaListByStudentGet(ID_Student, ID_AnUniv);
+            return Ok(note);
         }
 
-        public List<NotaInfo> NotaGetListByStudent(long idStudent, long idAnUniv)
+        [HttpPost]
+        public IHttpActionResult NotaAdd([FromBody] NotaInfo NotaInfo)
         {
-            return _repo.NotaGetListByStudent(idStudent, idAnUniv);
+            var id = _repo.NotaAdd(NotaInfo);
+            return Ok(id);
         }
 
-        public long NotaAdd(NotaInfo notaInfo)
+        [HttpPut]
+        public IHttpActionResult NotaUpdate([FromBody] NotaInfo NotaInfo)
         {
-            return _repo.NotaAdd(notaInfo);
+            _repo.NotaUpdate(NotaInfo);
+            return Ok();
         }
 
-        public void NotaUpdate(NotaInfo notaInfo)
+        [HttpDelete]
+        public IHttpActionResult NotaDelete(long ID_Nota)
         {
-            _repo.NotaUpdate(notaInfo);
+            _repo.NotaDelete(ID_Nota);
+            return Ok();
         }
 
-        public void NotaDelete(long idNota)
+        [HttpGet]
+        public IHttpActionResult NotaListByUserAnUniversitarGet(int UserId, long ID_AnUniversitar)
         {
-            _repo.NotaDelete(idNota);
+            var note = _repo.NotaListByUserAnUniversitarGet(UserId, ID_AnUniversitar);
+            return Ok(note);
         }
 
-        public List<NotaInfo> NotaGetListByUserAnuniversitar(int userId, long idAnUniversitar)
+        [HttpGet]
+        public IHttpActionResult NotaListByUsernameAnUniversitarGet(string Username, long ID_AnUniversitar)
         {
-            return _repo.NotaGetListByUserAnuniversitar(userId, idAnUniversitar);
+            var note = _repo.NotaListByUsernameAnUniversitarGet(Username, ID_AnUniversitar);
+            return Ok(note);
         }
 
-        public List<NotaInfo> NotaGetListByUsernameAnUniversitar(string username, long idAnUniversitar)
+        [HttpGet]
+        public IHttpActionResult NotaListByStudentGet(long ID_Student)
         {
-            return _repo.NotaGetListByUsernameAnUniversitar(username, idAnUniversitar);
+            var note = _repo.NotaListByStudentGet(ID_Student);
+            return Ok(note);
         }
 
-        public List<NotaInfo> NotaGetListByStudent(long idStudent)
+        [HttpGet]
+        public IHttpActionResult NotaByDetaliuPlanAndIdGet(long ID_DetaliuPlanSemestru, long ID_Nota)
         {
-            return _repo.NotaGetListByStudent(idStudent);
+            var nota = _repo.NotaByDetaliuPlanAndIdGet(ID_DetaliuPlanSemestru, ID_Nota);
+            return Ok(nota);
         }
 
-        public NotaInfo NotaGetByDetaliuPlanAndId(long idDetaliuPlanSemestru, long idNota)
+        [HttpPost]
+        public IHttpActionResult NotaEchivaleaza(long ID_DetaliuPlanSemestruRestanta, long ID_NotaCuCareSeEchivaleaza, long ID_Student, int ID_Utilizator)
         {
-            return _repo.NotaGetByDetaliuPlanAndId(idDetaliuPlanSemestru, idNota);
-        }
-
-        public void NotaEchivaleaza(long idDetaliuPlanSemestruRestanta, long idNotaCuCareSeEchivaleaza, long idStudent, int idUtilizator)
-        {
-            _repo.NotaEchivaleaza(idDetaliuPlanSemestruRestanta, idNotaCuCareSeEchivaleaza, idStudent, idUtilizator);
+            _repo.NotaEchivaleaza(ID_DetaliuPlanSemestruRestanta, ID_NotaCuCareSeEchivaleaza, ID_Student, ID_Utilizator);
+            return Ok();
         }
     }
 }

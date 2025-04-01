@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UniApi.Models;
+using UniApi.Info;
 using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
@@ -11,60 +11,66 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public FacultateCameraInfo GetFacultateCamera(long iD_FacultateCamera)
+        public FacultateCameraInfo FacultateCameraGet(long ID_FacultateCamera)
         {
-            return CBO.FillObject<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraGet", iD_FacultateCamera));
+            return CBO.FillObject<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCamera", ID_FacultateCamera));
         }
 
-        public FacultateCameraInfo GetFacultateCameraByFacultateCamera(long ID_Facultate, long ID_Camera, long ID_AnUniv)
+        public FacultateCameraInfo FacultateCameraByFacultateCameraGet(long ID_Facultate, long ID_Camera, long ID_AnUniv)
         {
-            return CBO.FillObject<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraGetByFacultateCamera", ID_Facultate, ID_Camera, ID_AnUniv));
+            return CBO.FillObject<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraByFacultateCamera", ID_Facultate, ID_Camera, ID_AnUniv));
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraList()
+        public List<FacultateCameraInfo> FacultateCameraListGet()
         {
-            return CBO.FillCollection<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraList"));
+            return CBO.FillCollection<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraList"));
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByAnUniversitar(long iD_AnUniv)
+        public List<FacultateCameraInfo> FacultateCameraListByAnUniversitarGet(long ID_AnUniv)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraListByAnUniversitar", iD_AnUniv));
+            return CBO.FillCollection<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByAnUniversitar", ID_AnUniv));
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByFacultate(long iD_Facultate)
+        public List<FacultateCameraInfo> FacultateCameraListByFacultateGet(long ID_Facultate)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraListByFacultate", iD_Facultate));
+            return CBO.FillCollection<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByFacultate", ID_Facultate));
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByFacultateAnUniv(long iD_Facultate, long ID_AnUniv)
+        public List<FacultateCameraInfo> FacultateCameraListByFacultateAnUnivGet(long ID_Facultate, long ID_AnUniv)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraListByFacultateAnUniv", iD_Facultate, ID_AnUniv));
+            return CBO.FillCollection<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByFacultateAnUniv", ID_Facultate, ID_AnUniv));
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByCamera(long iD_Camera)
+        public List<FacultateCameraInfo> FacultateCameraListByCameraGet(long ID_Camera)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(SqlHelper.ExecuteReader(_ConnectionString, "FacultateCameraListByCamera", iD_Camera));
+            return CBO.FillCollection<FacultateCameraInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByCamera", ID_Camera));
         }
 
-        public long AddFacultateCamera(FacultateCameraInfo objFacultateCamera)
+        public long FacultateCameraAdd(FacultateCameraInfo objFacultateCamera)
         {
-            object ret = SqlHelper.ExecuteScalar(_ConnectionString, "FacultateCameraAdd", objFacultateCamera.ID_Facultate, objFacultateCamera.ID_Camera, objFacultateCamera.ID_AnUniv);
-            return Convert.ToInt64(ret);
+            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "FacultateCamera_AddFacultateCamera", objFacultateCamera);
         }
 
-        public void UpdateFacultateCamera(FacultateCameraInfo objFacultateCamera)
+        public void FacultateCameraUpdate(FacultateCameraInfo objFacultateCamera)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCameraUpdate", objFacultateCamera.ID_FacultateCamera, objFacultateCamera.ID_Facultate, objFacultateCamera.ID_Camera, objFacultateCamera.ID_AnUniv);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCamera_UpdateFacultateCamera", objFacultateCamera);
         }
 
-        public void DeleteFacultateCamera(FacultateCameraInfo objFacultateCamera)
+        public void FacultateCameraDelete(FacultateCameraInfo objFacultateCamera)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCameraDelete", objFacultateCamera.ID_FacultateCamera);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCamera_DeleteFacultateCamera", objFacultateCamera);
         }
 
-        public void DeleteFacultateCameraByFacultateCamera(long ID_Facultate, long ID_Camera)
+        public void FacultateCameraDeleteByFacultateCamera(long ID_Facultate, long ID_Camera)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCameraDeleteByFacultateCamera", ID_Facultate, ID_Camera);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCamera_DeleteFacultateCameraByFacultateCamera", ID_Facultate, ID_Camera);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 

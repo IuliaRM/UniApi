@@ -1,57 +1,70 @@
 using System;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
+using UniApi.Dal.Repos;
+using UniApi.Info;
 using System.Collections.Generic;
-using UniTBv.AGSIS.Dal.Repos;
-using UniTBv.AGSIS.Models;
 
-namespace UniTBv.AGSIS.Controllers
+namespace UniApi.Controllers
 {
-    public class OfertaPracticaFacultateController
+    public class OfertaPracticaFacultateController : DnnApiController
     {
-        private readonly OfertaPracticaFacultateRepo _repo;
+        private readonly OfertaPracticaFacultateRepo _repo = new OfertaPracticaFacultateRepo();
 
-        public OfertaPracticaFacultateController()
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaFacultateGet(long ID_OfertaPracticaFacultate)
         {
-            _repo = new OfertaPracticaFacultateRepo();
+            var oferta = _repo.OfertaPracticaFacultateGet(ID_OfertaPracticaFacultate);
+            return Ok(oferta);
         }
 
-        public OfertaPracticaFacultate OfertaPracticaFacultateGet(long iD_OfertaPracticaFacultate)
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaFacultateListGet()
         {
-            return _repo.OfertaPracticaFacultateGet(iD_OfertaPracticaFacultate);
+            var oferte = _repo.OfertaPracticaFacultateListGet();
+            return Ok(oferte);
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetList()
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaFacultateListByFacAnStudSpecializDomFCGet(long ID_Facultate, long ID_AnStudiu, long ID_Specializare, long ID_Domeniu, long ID_FC, int Status, DateTime DataValabilitate)
         {
-            return _repo.OfertaPracticaFacultateGetList();
+            var oferte = _repo.OfertaPracticaFacultateListByFacAnStudSpecializDomFCGet(ID_Facultate, ID_AnStudiu, ID_Specializare, ID_Domeniu, ID_FC, Status, DataValabilitate);
+            return Ok(oferte);
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetListByFacAnStudSpecializDomFC(long iD_Facultate, long iD_AnStudiu, long iD_Specializare, long iD_Domeniu, long iD_FC, int status, DateTime dataValabilitate)
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaFacultateListByFacAnStudFCGet(long ID_Facultate, long ID_AnStudiu, long ID_FC, int Status, DateTime DataValabilitate)
         {
-            return _repo.OfertaPracticaFacultateGetListByFacAnStudSpecializDomFC(iD_Facultate, iD_AnStudiu, iD_Specializare, iD_Domeniu, iD_FC, status, dataValabilitate);
+            var oferte = _repo.OfertaPracticaFacultateListByFacAnStudFCGet(ID_Facultate, ID_AnStudiu, ID_FC, Status, DataValabilitate);
+            return Ok(oferte);
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetListByFacAnStudFC(long iD_Facultate, long iD_AnStudiu, long iD_FC, int status, DateTime dataValabilitate)
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaFacultateListByIdOfertaPracticaGet(long ID_OfertaPractica)
         {
-            return _repo.OfertaPracticaFacultateGetListByFacAnStudFC(iD_Facultate, iD_AnStudiu, iD_FC, status, dataValabilitate);
+            var oferte = _repo.OfertaPracticaFacultateListByIdOfertaPracticaGet(ID_OfertaPractica);
+            return Ok(oferte);
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateGetListByIdOfertaPractica(long iD_OfertaPractica)
-        {
-            return _repo.OfertaPracticaFacultateGetListByIdOfertaPractica(iD_OfertaPractica);
-        }
-
-        public void OfertaPracticaFacultateAdd(OfertaPracticaFacultate objOfertaPracticaFacultate)
+        [HttpPost]
+        public IHttpActionResult OfertaPracticaFacultateAdd([FromBody] OfertaPracticaFacultate objOfertaPracticaFacultate)
         {
             _repo.OfertaPracticaFacultateAdd(objOfertaPracticaFacultate);
+            return Ok();
         }
 
-        public void OfertaPracticaFacultateUpdate(OfertaPracticaFacultate objOfertaPracticaFacultate)
+        [HttpPut]
+        public IHttpActionResult OfertaPracticaFacultateUpdate([FromBody] OfertaPracticaFacultate objOfertaPracticaFacultate)
         {
             _repo.OfertaPracticaFacultateUpdate(objOfertaPracticaFacultate);
+            return Ok();
         }
 
-        public void OfertaPracticaFacultateDelete(long iD_OfertaPracticaFacultate)
+        [HttpDelete]
+        public IHttpActionResult OfertaPracticaFacultateDelete(long ID_OfertaPracticaFacultate)
         {
-            _repo.OfertaPracticaFacultateDelete(iD_OfertaPracticaFacultate);
+            _repo.OfertaPracticaFacultateDelete(ID_OfertaPracticaFacultate);
+            return Ok();
         }
     }
 }

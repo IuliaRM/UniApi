@@ -5,6 +5,7 @@ using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 
 namespace UniApi.Dal.Repos

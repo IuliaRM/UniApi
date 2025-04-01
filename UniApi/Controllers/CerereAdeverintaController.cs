@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
     public partial class CerereAdeverintaController
     {
-        private readonly CerereAdeverintaRepository _repository = new CerereAdeverintaRepository();
+        private readonly CerereAdeverintaRepo _repository = new CerereAdeverintaRepo();
 
         [DataObjectMethod(DataObjectMethodType.Insert, true)]
         public long CerereAdeverintaAdd(CerereAdeverintaInfo cerereAdevInfo)

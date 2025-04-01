@@ -1,64 +1,82 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using UniApi;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class DepartamentProfesorController
+    public class DepartamentProfesorController : DnnApiController
     {
-        private readonly DepartamentProfesorRepo _repo;
+        private readonly DepartamentProfesorRepo _repo = new DepartamentProfesorRepo();
 
-        public DepartamentProfesorController()
+        [HttpGet]
+        public IHttpActionResult DepartamentProfesorGet(long idDepartamentProfesor)
         {
-            _repo = new DepartamentProfesorRepo();
+            var departamentProfesor = _repo.DepartamentProfesorGet(idDepartamentProfesor);
+            if (departamentProfesor != null)
+            {
+                return Ok(departamentProfesor);
+            }
+            return NotFound();
         }
 
-        public DepartamentProfesorInfo DepartamentProfesorGet(long idDepartamentProfesor)
+        [HttpGet]
+        public IHttpActionResult DepartamentProfesorGetByProfesor(long idProfesor)
         {
-            return _repo.DepartamentProfesorGet(idDepartamentProfesor);
+            var departamentProfesor = _repo.DepartamentProfesorGetByProfesor(idProfesor);
+            if (departamentProfesor != null)
+            {
+                return Ok(departamentProfesor);
+            }
+            return NotFound();
         }
 
-        public DepartamentProfesorInfo DepartamentProfesorGetByProfesor(long idProfesor)
+        [HttpGet]
+        public IHttpActionResult DepartamentProfesorList()
         {
-            return _repo.DepartamentProfesorGetByProfesor(idProfesor);
+            var lista = _repo.DepartamentProfesorList();
+            return Ok(lista);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Select, true)]
-        public List<DepartamentProfesorInfo> DepartamentProfesorList()
+        [HttpGet]
+        public IHttpActionResult DepartamentProfesorListByDepartament(long idDepartament)
         {
-            return _repo.DepartamentProfesorList();
+            var lista = _repo.DepartamentProfesorListByDepartament(idDepartament);
+            return Ok(lista);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<DepartamentProfesorInfo> DepartamentProfesorListByDepartament(long idDepartament)
+        [HttpGet]
+        public IHttpActionResult DepartamentProfesorListByProfesor(long idProfesor)
         {
-            return _repo.DepartamentProfesorListByDepartament(idDepartament);
+            var lista = _repo.DepartamentProfesorListByProfesor(idProfesor);
+            return Ok(lista);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Select, false)]
-        public List<DepartamentProfesorInfo> DepartamentProfesorListByProfesor(long idProfesor)
+        [HttpPost]
+        public IHttpActionResult DepartamentProfesorAdd([FromBody] DepartamentProfesorInfo objDepartamentProfesor)
         {
-            return _repo.DepartamentProfesorListByProfesor(idProfesor);
+            int id = _repo.DepartamentProfesorAdd(objDepartamentProfesor);
+            return Ok(id);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Insert, true)]
-        public int DepartamentProfesorAdd(DepartamentProfesorInfo objDepartamentProfesor)
-        {
-            return _repo.DepartamentProfesorAdd(objDepartamentProfesor);
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Update, true)]
-        public void DepartamentProfesorUpdate(DepartamentProfesorInfo objDepartamentProfesor)
+        [HttpPut]
+        public IHttpActionResult DepartamentProfesorUpdate([FromBody] DepartamentProfesorInfo objDepartamentProfesor)
         {
             _repo.DepartamentProfesorUpdate(objDepartamentProfesor);
+            return Ok();
         }
 
-        [DataObjectMethod(DataObjectMethodType.Delete, true)]
-        public void DepartamentProfesorDelete(long idDepartamentProfesor)
+        [HttpDelete]
+        public IHttpActionResult DepartamentProfesorDelete(long idDepartamentProfesor)
         {
+            var departamentProfesor = _repo.DepartamentProfesorGet(idDepartamentProfesor);
+            if (departamentProfesor == null)
+            {
+                return NotFound();
+            }
             _repo.DepartamentProfesorDelete(idDepartamentProfesor);
+            return Ok();
         }
     }
 }

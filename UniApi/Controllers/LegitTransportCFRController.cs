@@ -1,27 +1,27 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class LegitTransportCFRController
+    public class LegitTransportCFRController : DnnApiController
     {
-        private readonly LegitTransportCFRRepo _repo;
+        private readonly LegitTransportCFRRepo _repo = new LegitTransportCFRRepo();
 
-        public LegitTransportCFRController()
+        [HttpPost]
+        public IHttpActionResult LegitimatiiCFRMerge(long ID_StudentAnUniv, string SerieLegitimatie, string NumarLegitimatie, int UserIdModificare)
         {
-            _repo = new LegitTransportCFRRepo();
+            var result = _repo.LegitimatiiCFRMerge(ID_StudentAnUniv, SerieLegitimatie, NumarLegitimatie, UserIdModificare);
+            return Ok(result);
         }
 
-        public long LegitimatiiCFRMerge(long ID_StudentAnUniv, string SerieLegitimatie, string NumarLegitimatie, int UserIdModificare)
+        [HttpGet]
+        public IHttpActionResult LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupaGet(long ID_AnUniv, long ID_Specializare, long ID_AnStudiu, long ID_Grupa)
         {
-            return _repo.LegitimatiiCFRMerge(ID_StudentAnUniv, SerieLegitimatie, NumarLegitimatie, UserIdModificare);
-        }
-
-        public List<LegitTransportCFRInfo> LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa(long ID_AnUniv, long ID_Specializare, long ID_AnStudiu, long ID_Grupa)
-        {
-            return _repo.LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa(ID_AnUniv, ID_Specializare, ID_AnStudiu, ID_Grupa);
+            var legitimatii = _repo.LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupaGet(ID_AnUniv, ID_Specializare, ID_AnStudiu, ID_Grupa);
+            return Ok(legitimatii);
         }
     }
 }

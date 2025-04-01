@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -10,12 +11,23 @@ namespace UniApi.Controllers
     {
         private readonly AvertismentRepo _repo = new AvertismentRepo();
 
+       
         [HttpGet]
         public IHttpActionResult AvertismentGet(long idAvertisment)
         {
-            var avertisment = _repo.AvertismentGet(idAvertisment);
-            return avertisment != null ? Ok(avertisment) : NotFound();
+            var repo = new AvertismentRepo(); // Ensure repository is properly instantiated
+            var avertisment = repo.AvertismentGet(idAvertisment); // Fetch data
+
+            if (avertisment != null)
+            {
+                return Ok(avertisment);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
         [HttpGet]
         public IHttpActionResult AvertismentList()
@@ -41,9 +53,19 @@ namespace UniApi.Controllers
         [HttpPost]
         public IHttpActionResult AvertismentAdd([FromBody] AvertismentInfo avertisment)
         {
-            int id = _repo.AvertismentAdd(avertisment);
-            return Ok(id);
+            var repo = new AvertismentRepo(); // Ensure repository is properly instantiated
+            int id = repo.AvertismentAdd(avertisment); // Insert the record and get the ID
+
+            if (id > 0)
+            {
+                return Ok(id); // Return the new ID if successful
+            }
+            else
+            {
+                return BadRequest("Eroare la adãugarea avertismentului."); // Handle insert failure
+            }
         }
+
 
         [HttpPut]
         public IHttpActionResult AvertismentUpdate([FromBody] AvertismentInfo avertisment)

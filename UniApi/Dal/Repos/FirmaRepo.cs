@@ -4,7 +4,7 @@ using UniApi.Models;
 using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
-using Microsoft.SqlServer.Server;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
@@ -12,29 +12,32 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public Firma GetFirma(long iD_Firma)
+        public Firma FirmaGet(long ID_Firma)
         {
-            return CBO.FillObject<Firma>(SqlHelper.ExecuteReader(_ConnectionString, "FirmaGet", iD_Firma));
+            return CBO.FillObject<Firma>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Firma_GetFirma", ID_Firma));
         }
 
-        public List<Firma> GetFirmaList()
+        public List<Firma> FirmaListGet()
         {
-            return CBO.FillCollection<Firma>(SqlHelper.ExecuteReader(_ConnectionString, "FirmaList"));
+            return CBO.FillCollection<Firma>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Firma_GetFirmaList"));
         }
 
-        public Firma GetFirmaByUserIdPortal(int iD_UserPortal)
+        public Firma FirmaByUserIdPortalGet(int ID_UserPortal)
         {
-            return CBO.FillObject<Firma>(SqlHelper.ExecuteReader(_ConnectionString, "FirmaGetByUserIdPortal", iD_UserPortal));
+            return CBO.FillObject<Firma>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Firma_GetFirmaByUserIdPortal", ID_UserPortal));
         }
 
-        public void AddFirma(Firma objFirma)
+        public void FirmaAdd(Firma objFirma)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FirmaAdd", objFirma.UserIDPortal, objFirma.DenumireFirma, objFirma.NumeDirector, objFirma.TelefonDirector, objFirma.EmailDirector, objFirma.NumePersoanaContact, objFirma.TelefonPersoanaContact, objFirma.EmailPersoanaContact, objFirma.ID_Judet, objFirma.DataModificare);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Firma_AddFirma", objFirma);
         }
 
-        public void UpdateFirma(Firma objFirma)
+        public void FirmaUpdate(Firma objFirma)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FirmaUpdate", objFirma.ID_Firma, objFirma.UserIDPortal, objFirma.DenumireFirma, objFirma.NumeDirector, objFirma.TelefonDirector, objFirma.EmailDirector, objFirma.NumePersoanaContact, objFirma.TelefonPersoanaContact, objFirma.EmailPersoanaContact, objFirma.ID_Judet, objFirma.DataModificare);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Firma_UpdateFirma", objFirma);
         }
     }
 }

@@ -1,62 +1,76 @@
-using System;
 using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
-    public class DetaliuPlanSemestruProfesorCuplajController
+    public class DetaliuPlanSemestruProfesorCuplajController : DnnApiController
     {
-        private readonly DetaliuPlanSemestruProfesorCuplajRepo _repo;
+        private readonly DetaliuPlanSemestruProfesorCuplajRepo _repo = new DetaliuPlanSemestruProfesorCuplajRepo();
 
-        public DetaliuPlanSemestruProfesorCuplajController()
+        [HttpGet]
+        public IHttpActionResult AllGet()
         {
-            _repo = new DetaliuPlanSemestruProfesorCuplajRepo();
+            var lista = _repo.AllGet();
+            return Ok(lista);
         }
 
-        public DetaliuPlanSemestruProfesorCuplajInfo GetById(long ID_DetaliuPlanSemestruProfesorCuplaj)
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorByGet(long ID_DetaliuPlanSemestruProfesor)
         {
-            return _repo.GetById(ID_DetaliuPlanSemestruProfesorCuplaj);
+            var lista = _repo.DetaliuPlanSemestruProfesorByGet(ID_DetaliuPlanSemestruProfesor);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorCuplajInfo> GetAll()
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajByGet(long ID_DetaliuPlanSemestruProfesor, long ID_Cuplaj)
         {
-            return _repo.GetAll();
+            var lista = _repo.DetaliuPlanSemestruProfesorCuplajByGet(ID_DetaliuPlanSemestruProfesor, ID_Cuplaj);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorCuplajInfo> GetByDetaliuPlanSemestruProfesor(long ID_DetaliuPlanSemestruProfesor)
+        [HttpGet]
+        public IHttpActionResult DetaliuCuplajByGet(long ID_DetaliuCuplaj)
         {
-            return _repo.GetByDetaliuPlanSemestruProfesor(ID_DetaliuPlanSemestruProfesor);
+            var lista = _repo.DetaliuCuplajByGet(ID_DetaliuCuplaj);
+            return Ok(lista);
         }
 
-        public List<DetaliuPlanSemestruProfesorCuplajInfo> GetByDetaliuPlanSemestruProfesor(long ID_DetaliuPlanSemestruProfesor, long ID_Cuplaj)
+        [HttpPost]
+        public IHttpActionResult AddPost([FromBody] DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
         {
-            return _repo.GetByDetaliuPlanSemestruProfesor(ID_DetaliuPlanSemestruProfesor, ID_Cuplaj);
+            int id = _repo.AddPost(objDetaliuPlanSemestruProfesorCuplaj);
+            return Ok(id);
         }
 
-        public List<DetaliuPlanSemestruProfesorCuplajInfo> GetByDetaliuCuplaj(long ID_DetaliuCuplaj)
+        [HttpPut]
+        public IHttpActionResult UpdatePut([FromBody] DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
         {
-            return _repo.GetByDetaliuCuplaj(ID_DetaliuCuplaj);
+            _repo.UpdatePut(objDetaliuPlanSemestruProfesorCuplaj);
+            return Ok();
         }
 
-        public int Add(DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
+        [HttpDelete]
+        public IHttpActionResult DeleteDelete([FromBody] DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
         {
-            return _repo.Add(objDetaliuPlanSemestruProfesorCuplaj);
+            _repo.DeleteDelete(objDetaliuPlanSemestruProfesorCuplaj);
+            return Ok();
         }
 
-        public void Update(DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
+        [HttpDelete]
+        public IHttpActionResult DeleteByPostProfesorDelete(long ID_DetaliuPlanSemestruProfesorCuplaj, long ID_PostProfesor)
         {
-            _repo.Update(objDetaliuPlanSemestruProfesorCuplaj);
+            _repo.DeleteByPostProfesorDelete(ID_DetaliuPlanSemestruProfesorCuplaj, ID_PostProfesor);
+            return Ok();
         }
 
-        public void Delete(DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
+        [HttpGet]
+        public IHttpActionResult IdGet(long ID_DetaliuPlanSemestruProfesorCuplaj)
         {
-            _repo.Delete(objDetaliuPlanSemestruProfesorCuplaj);
-        }
-
-        public void DeleteByPostProfesor(long ID_DetaliuPlanSemestruProfesorCuplaj, long ID_PostProfesor)
-        {
-            _repo.DeleteByPostProfesor(ID_DetaliuPlanSemestruProfesorCuplaj, ID_PostProfesor);
+            var detaliu = _repo.IdGet(ID_DetaliuPlanSemestruProfesorCuplaj);
+            return Ok(detaliu);
         }
     }
 }

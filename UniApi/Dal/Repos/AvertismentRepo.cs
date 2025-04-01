@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 
 namespace UniApi.Dal.Repos
@@ -61,8 +63,10 @@ namespace UniApi.Dal.Repos
                 "AvertismentAdd",
                 avertisment.ID_Cazare,
                 avertisment.ID_TipAvertisment,
-                avertisment.Descriere,
-                avertisment.Data));
+                avertisment.Motiv, // Updated from Descriere to Motiv
+                avertisment.DataAvertisment, // Updated from Data to DataAvertisment
+                avertisment.ID_AnUniv // Added missing field
+            ));
         }
 
         public void AvertismentUpdate(AvertismentInfo avertisment)
@@ -73,8 +77,10 @@ namespace UniApi.Dal.Repos
                 avertisment.ID_Avertisment,
                 avertisment.ID_Cazare,
                 avertisment.ID_TipAvertisment,
-                avertisment.Descriere,
-                avertisment.Data);
+                avertisment.Motiv, // Updated from Descriere to Motiv
+                avertisment.DataAvertisment, // Updated from Data to DataAvertisment
+                avertisment.ID_AnUniv // Added missing field
+            );
         }
 
         public void AvertismentDelete(long idAvertisment)

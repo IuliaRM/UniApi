@@ -4,6 +4,7 @@ using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using DotNetNuke.Common.Utilities;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
@@ -58,4 +59,16 @@ namespace UniApi.Dal.Repos
             SqlHelper.ExecuteNonQuery(_ConnectionString, "DepartamentProfesorUpdate",
                 objDepartamentProfesor.ID_DepartamentProfesor,
                 objDepartamentProfesor.ID_Departament,
-                objDepartamentProfesor.ID_Profes
+                objDepartamentProfesor.ID_Profesor,
+                objDepartamentProfesor.DataDeCand,
+                objDepartamentProfesor.DataPanaCand,
+                objDepartamentProfesor.DepartamentProfesorActiv,
+                objDepartamentProfesor.ID_AnUnivDepartament);
+        }
+
+        public void DepartamentProfesorDelete(long idDepartamentProfesor)
+        {
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "DepartamentProfesorDelete", idDepartamentProfesor);
+        }
+    }
+}

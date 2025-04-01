@@ -1,62 +1,76 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class EvaluareProfesorController
+    public class EvaluareProfesorController : DnnApiController
     {
-        private readonly EvaluareProfesorRepo _repo;
+        private readonly EvaluareProfesorRepo _repo = new EvaluareProfesorRepo();
 
-        public EvaluareProfesorController()
+        [HttpGet]
+        public IHttpActionResult EvaluareProfesorListGet()
         {
-            _repo = new EvaluareProfesorRepo();
+            var evaluari = _repo.EvaluareProfesorListGet();
+            return Ok(evaluari);
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorList()
+        [HttpGet]
+        public IHttpActionResult EvaluareProfesorListNrChestionareCompletateGet(long ID_AnUniv, int NrSemestru)
         {
-            return _repo.GetEvaluareProfesorList();
+            var evaluari = _repo.EvaluareProfesorListNrChestionareCompletateGet(ID_AnUniv, NrSemestru);
+            return Ok(evaluari);
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorListNrChestionareCompletate(long ID_AnUniv, int NrSemestru)
+        [HttpGet]
+        public IHttpActionResult EvaluareProfesorListNrChestionareCompletateProfGet(long ID_AnUniv, int NrSemestru)
         {
-            return _repo.GetEvaluareProfesorListNrChestionareCompletate(ID_AnUniv, NrSemestru);
+            var evaluari = _repo.EvaluareProfesorListNrChestionareCompletateProfGet(ID_AnUniv, NrSemestru);
+            return Ok(evaluari);
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorListNrChestionareCompletate_Prof(long ID_AnUniv, int NrSemestru)
+        [HttpGet]
+        public IHttpActionResult EvaluareProfesorListProfiDeEvaluatGet(long ID_AnUniv, int NrSemestru)
         {
-            return _repo.GetEvaluareProfesorListNrChestionareCompletate_Prof(ID_AnUniv, NrSemestru);
+            var evaluari = _repo.EvaluareProfesorListProfiDeEvaluatGet(ID_AnUniv, NrSemestru);
+            return Ok(evaluari);
         }
 
-        public List<EvaluareProfesorInfo> GetEvaluareProfesorListProfiDeEvaluat(long ID_AnUniv, int NrSemestru)
+        [HttpPost]
+        public IHttpActionResult EvaluareProfesorAdd([FromBody] EvaluareProfesorInfo objEvaluareProfesor)
         {
-            return _repo.GetEvaluareProfesorListProfiDeEvaluat(ID_AnUniv, NrSemestru);
+            var id = _repo.EvaluareProfesorAdd(objEvaluareProfesor);
+            return Ok(id);
         }
 
-        public long AddEvaluareProfesor(EvaluareProfesorInfo objEvaluareProfesor)
+        [HttpPut]
+        public IHttpActionResult EvaluareProfesorUpdate([FromBody] EvaluareProfesorInfo objEvaluareProfesor)
         {
-            return _repo.AddEvaluareProfesor(objEvaluareProfesor);
+            _repo.EvaluareProfesorUpdate(objEvaluareProfesor);
+            return Ok();
         }
 
-        public void UpdateEvaluareProfesor(EvaluareProfesorInfo objEvaluareProfesor)
+        [HttpDelete]
+        public IHttpActionResult EvaluareProfesorDelete([FromBody] EvaluareProfesorInfo objEvaluareProfesor)
         {
-            _repo.UpdateEvaluareProfesor(objEvaluareProfesor);
+            _repo.EvaluareProfesorDelete(objEvaluareProfesor);
+            return Ok();
         }
 
-        public void DeleteEvaluareProfesor(EvaluareProfesorInfo objEvaluareProfesor)
+        [HttpDelete]
+        public IHttpActionResult EvaluareProfesorDeleteBySpecializareSemestru(long ID_Prof, long ID_Specializare, int NrSemestru, long ID_Dps)
         {
-            _repo.DeleteEvaluareProfesor(objEvaluareProfesor);
+            _repo.EvaluareProfesorDeleteBySpecializareSemestru(ID_Prof, ID_Specializare, NrSemestru, ID_Dps);
+            return Ok();
         }
 
-        public void DeleteEvaluareProfesorBySpecializareSemestru(long id_prof, long spec, int nrsem, long id_dps)
+        [HttpPost]
+        public IHttpActionResult CoduriEvaluareGenerate(long ID_AnUniv, int NrSemestru)
         {
-            _repo.DeleteEvaluareProfesorBySpecializareSemestru(id_prof, spec, nrsem, id_dps);
-        }
-
-        public void GenerateCoduriEvaluare(long ID_AnUniv, int NrSemestru)
-        {
-            _repo.GenerateCoduriEvaluare(ID_AnUniv, NrSemestru);
+            _repo.CoduriEvaluareGenerate(ID_AnUniv, NrSemestru);
+            return Ok();
         }
     }
 }

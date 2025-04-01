@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UniApi.Models;
+using UniApi.Info;
 using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
@@ -11,93 +11,71 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public List<MaterieStudentInfo> GetMaterieListByUsernameAndIdAnUniv(string username, long ID_AnUniv, int NrSemestruEvaluare)
+        public List<MaterieStudentInfo> MaterieListByUsernameAndIdAnUnivGet(string Username, long ID_AnUniv, int NrSemestruEvaluare)
         {
-            return CBO.FillCollection<MaterieStudentInfo>(SqlHelper.ExecuteReader(_ConnectionString,
-                "[DetaliuPlanSemestruMaterieListByUsernameAnUniv]", username, ID_AnUniv, NrSemestruEvaluare));
+            return CBO.FillCollection<MaterieStudentInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetMaterieListByUsernameAndIdAnUniv", Username, ID_AnUniv, NrSemestruEvaluare));
         }
 
-        public MaterieStudentDetaliiInfo GetMaterieStudentDetalii(long ID_CodEvaluare)
+        public MaterieStudentDetaliiInfo MaterieStudentDetaliiGet(long ID_CodEvaluare)
         {
-            MaterieStudentDetaliiInfo materie = CBO.FillObject<MaterieStudentDetaliiInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "[MaterieDetaliiByIdCodEvaluare]", ID_CodEvaluare));
-            materie.Profesor = CBO.FillObject<ProfesorMaterieInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "[ProfesorListByIdCodEvaluare]", ID_CodEvaluare));
-            return materie;
+            return CBO.FillObject<MaterieStudentDetaliiInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetMaterieStudentDetalii", ID_CodEvaluare));
         }
 
-        public long InsertChestionarEvaluat(long ID_Chestionar, long ID_CodEvaluare)
+        public long ChestionarEvaluatInsert(long ID_Chestionar, long ID_CodEvaluare)
         {
-            var obj = SqlHelper.ExecuteScalar(_ConnectionString, "ChestionarCompletatInsert", ID_Chestionar, ID_CodEvaluare);
-            return obj != null ? Convert.ToInt64(obj) : 0;
+            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "Evaluare_InsertChestionarEvaluat", ID_Chestionar, ID_CodEvaluare);
         }
 
-        public void InsertEvaluare(CriteriuEvaluareRaspunsInfo ceri)
+        public void EvaluareInsert(CriteriuEvaluareRaspunsInfo Ceri)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "CriteriuEvaluareRaspunsInsert", ceri.ID_CriteriuEvaluare,
-                ceri.ID_CriteriuEvaluareVarianteRaspuns, ceri.ID_ChestionarEvaluat, ceri.TextRaspuns);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Evaluare_InsertEvaluare", Ceri);
         }
 
-        public List<CriteriuEvaluareInfo> GetCriteriiEvaluareWithVarianteRaspuns(long id_codevaluare)
+        public List<CriteriuEvaluareInfo> CriteriiEvaluareWithVarianteRaspunsGet(long ID_CodEvaluare)
         {
-            List<CriteriuEvaluareInfo> result = CBO.FillCollection<CriteriuEvaluareInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "CriteriuEvaluareListByCodEvaluare", id_codevaluare));
-
-            foreach (var cei in result)
-            {
-                cei.VarianteRaspuns = CBO.FillCollection<CriteriuEvaluareVarianteRaspunsInfo>(
-                    SqlHelper.ExecuteReader(_ConnectionString, "CriteriuEvaluareVarianteRaspunsListByIdCriteriuEvaluare", cei.ID_CriteriuEvaluare));
-            }
-            return result;
+            return CBO.FillCollection<CriteriuEvaluareInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetCriteriiEvaluareWithVarianteRaspuns", ID_CodEvaluare));
         }
 
-        public CriteriuEvaluareVarianteRaspunsInfo GetCriteriuEvaluareVarianteRaspunsById(long id_CriteriuEvaluareVarianteRaspuns)
+        public CriteriuEvaluareVarianteRaspunsInfo CriteriuEvaluareVarianteRaspunsByIdGet(long ID_CriteriuEvaluareVarianteRaspuns)
         {
             return CBO.FillObject<CriteriuEvaluareVarianteRaspunsInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "CriteriuEvaluareVarianteRaspunsGetById", id_CriteriuEvaluareVarianteRaspuns));
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetCriteriuEvaluareVarianteRaspunsById", ID_CriteriuEvaluareVarianteRaspuns));
         }
 
-        public List<ProfesorMaterieInfo> GetCodEvaluareListBySpecializareSemestru(long idSpecializare, int nrSemestru)
+        public List<ProfesorMaterieInfo> CodEvaluareListBySpecializareSemestruGet(long ID_Specializare, int NrSemestru)
         {
             return CBO.FillCollection<ProfesorMaterieInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "[CodEvaluareListBySpecializareSemestru]", idSpecializare, nrSemestru));
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetCodEvaluareListBySpecializareSemestru", ID_Specializare, NrSemestru));
         }
 
-        public bool TestAdaugareChestionar(long codEvaluare)
+        public bool ChestionarAdaugareTest(long CodEvaluare)
         {
-            return (bool)SqlHelper.ExecuteScalar(_ConnectionString, "EvaluareTestAdaugareChestionar", codEvaluare);
+            return (bool)SqlHelper.ExecuteScalar(_ConnectionString, "Evaluare_TestAdaugareChestionar", CodEvaluare);
         }
 
-        public string GetRoleByUserId(int userId)
+        public string RoleByUserIdGet(int UserId)
         {
-            return (string)SqlHelper.ExecuteScalar(_ConnectionString, "[EvaluareGetRoleByUserId]", userId);
+            return (string)SqlHelper.ExecuteScalar(_ConnectionString, "Evaluare_GetRoleByUserId", UserId);
         }
 
-        public string GetRoleByUsername(string username)
+        public string RoleByUsernameGet(string Username)
         {
-            return (string)SqlHelper.ExecuteScalar(_ConnectionString, "[EvaluareGetRoleByUsername]", username);
+            return (string)SqlHelper.ExecuteScalar(_ConnectionString, "Evaluare_GetRoleByUsername", Username);
         }
 
-        public List<string> GetCodEvaluareListByUsernameRole(string username, string role, long ID_AnUniv)
+        public List<string> CodEvaluareListByUsernameRoleGet(string Username, string Role, long ID_AnUniv)
         {
-            List<string> result = new List<string>();
-            var sds = SqlHelper.ExecuteReader(_ConnectionString, "CodEvaluareListByUsernameRole", username, role, ID_AnUniv);
-            while (sds.Read())
-            {
-                result.Add(sds.GetInt64(0).ToString());
-            }
-            return result;
+            return CBO.FillCollection<string>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetCodEvaluareListByUsernameRole", Username, Role, ID_AnUniv));
         }
 
-        public List<string> GetSpecializariListByUsernameRole(string username, string role, long idAnUniv)
+        public List<string> SpecializariListByUsernameRoleGet(string Username, string Role, long ID_AnUniv)
         {
-            List<string> result = new List<string>();
-            var sds = SqlHelper.ExecuteReader(_ConnectionString, "SpecializareListByUsernameRole", username, role, idAnUniv);
-            while (sds.Read())
-            {
-                result.Add(sds.GetInt64(0).ToString());
-            }
-            return result;
+            return CBO.FillCollection<string>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetSpecializariListByUsernameRole", Username, Role, ID_AnUniv));
         }
     }
 }

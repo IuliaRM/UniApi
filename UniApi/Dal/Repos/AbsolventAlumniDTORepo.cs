@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using AGSIS.Components.Repos;
-using AGSIS.Components.Info;
+using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace AGSIS.Components.Controller
+namespace UniApi.Dal.Repos
 {
-    public class AbsolventAlumniDTOController
+    public class AbsolventAlumniDTORepo
     {
         private readonly AbsolventAlumniDTORepo _repo;
 
-        public AbsolventAlumniDTOController()
+        public AbsolventAlumniDTORepo()
         {
             _repo = new AbsolventAlumniDTORepo();
         }

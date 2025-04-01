@@ -1,43 +1,49 @@
-using Microsoft.SqlServer.Server;
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 using UniApi.Models;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class FirmaController
+    public class FirmaController : DnnApiController
     {
-        private readonly FirmaRepo _repo;
+        private readonly FirmaRepo _repo = new FirmaRepo();
 
-        public FirmaController()
+        [HttpGet]
+        public IHttpActionResult FirmaGet(long ID_Firma)
         {
-            _repo = new FirmaRepo();
+            var firma = _repo.FirmaGet(ID_Firma);
+            return Ok(firma);
         }
 
-        public Firma GetFirma(long iD_Firma)
+        [HttpGet]
+        public IHttpActionResult FirmaListGet()
         {
-            return _repo.GetFirma(iD_Firma);
+            var firme = _repo.FirmaListGet();
+            return Ok(firme);
         }
 
-        public List<Firma> GetFirmaList()
+        [HttpGet]
+        public IHttpActionResult FirmaByUserIdPortalGet(int ID_UserPortal)
         {
-            return _repo.GetFirmaList();
+            var firma = _repo.FirmaByUserIdPortalGet(ID_UserPortal);
+            return Ok(firma);
         }
 
-        public Firma GetFirmaByUserIdPortal(int iD_UserPortal)
+        [HttpPost]
+        public IHttpActionResult FirmaAdd([FromBody] Firma objFirma)
         {
-            return _repo.GetFirmaByUserIdPortal(iD_UserPortal);
+            _repo.FirmaAdd(objFirma);
+            return Ok();
         }
 
-        public void AddFirma(Firma objFirma)
+        [HttpPut]
+        public IHttpActionResult FirmaUpdate([FromBody] Firma objFirma)
         {
-            _repo.AddFirma(objFirma);
-        }
-
-        public void UpdateFirma(Firma objFirma)
-        {
-            _repo.UpdateFirma(objFirma);
+            _repo.FirmaUpdate(objFirma);
+            return Ok();
         }
     }
 }

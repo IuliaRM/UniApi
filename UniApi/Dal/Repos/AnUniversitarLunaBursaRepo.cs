@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
+using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Dal.Repos;
-
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
@@ -12,22 +13,22 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public List<AnUniversitarLunaBursaInfo> AnUniversitarLunaBursaListByAnUniv(long idAnUniv)
+        public List<AnUniversitarLunaBursaInfo> AnUniversitarLunaBursaGetByAnUniv(long idAnUniv)
         {
             return DotNetNuke.Common.Utilities.CBO.FillCollection<AnUniversitarLunaBursaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaListByAnUniv", idAnUniv));
+                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUniv", idAnUniv));
         }
 
         public AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUnivAndNumarLuna(long idAnUniv, int numarLuna)
         {
             return DotNetNuke.Common.Utilities.CBO.FillObject<AnUniversitarLunaBursaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivNumarLuna", idAnUniv, numarLuna));
+                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivAndNumarLuna", idAnUniv, numarLuna));
         }
 
         public AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUnivAndOrdineLuna(long idAnUniv, int ordineLuna)
         {
             return DotNetNuke.Common.Utilities.CBO.FillObject<AnUniversitarLunaBursaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivOrdineLuna", idAnUniv, ordineLuna));
+                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivAndOrdineLuna", idAnUniv, ordineLuna));
         }
 
         public void AnUniversitarLunaBursaUpdate(AnUniversitarLunaBursaInfo lunaBursaInfo)
@@ -40,7 +41,7 @@ namespace UniApi.Dal.Repos
 
         public void AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndNumarLuna(AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivNumarLuna",
+            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndNumarLuna",
                 lunaBursaInfo.ID_AnUniv,
                 lunaBursaInfo.NumarLuna,
                 lunaBursaInfo.LunaInchisa,
@@ -49,7 +50,7 @@ namespace UniApi.Dal.Repos
 
         public void AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndOrdineLuna(AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivOrdineLuna",
+            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndOrdineLuna",
                 lunaBursaInfo.ID_AnUniv,
                 lunaBursaInfo.OrdineLuna,
                 lunaBursaInfo.LunaInchisa,

@@ -1,30 +1,27 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class EvaluareComentariiController
+    public class EvaluareComentariiController : DnnApiController
     {
-        private readonly EvaluareComentariiRepo _repo;
+        private readonly EvaluareComentariiRepo _repo = new EvaluareComentariiRepo();
 
-        public EvaluareComentariiController()
+        [HttpGet]
+        public IHttpActionResult ComentariiByDetaliuPlanSemestruGet(long ID_DetaliuPlanSemestru)
         {
-            _repo = new EvaluareComentariiRepo();
+            var comentarii = _repo.ComentariiByDetaliuPlanSemestruGet(ID_DetaliuPlanSemestru);
+            return Ok(comentarii);
         }
 
-        public List<EvaluareComentariiInfo> GetComentariiByDetaliuPlanSemestru(long iD_DetaliuPlanSemestru)
+        [HttpGet]
+        public IHttpActionResult MedieAnStudiiGet(long ID_Student, long ID_PlanInvatamant)
         {
-            return _repo.GetComentariiByDetaliuPlanSemestru(iD_DetaliuPlanSemestru);
+            var medieAnStudii = _repo.MedieAnStudiiGet(ID_Student, ID_PlanInvatamant);
+            return Ok(medieAnStudii);
         }
-
-        // If you want to implement the update functionality as well:
-        /*
-        public void UpdateTipCriteriuEvaluare(TipCriteriuEvaluareInfo objTipCriteriuEvaluare)
-        {
-            _repo.UpdateTipCriteriuEvaluare(objTipCriteriuEvaluare);
-        }
-        */
     }
 }

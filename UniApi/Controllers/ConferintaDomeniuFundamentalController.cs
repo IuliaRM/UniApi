@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -16,13 +17,22 @@ namespace UniApi.Controllers
             var domeniiFundamentale = _repo.ConferintaDomeniuFundamentalList();
             return Ok(domeniiFundamentale);
         }
-
         [HttpGet]
         public IHttpActionResult ConferintaDomeniuFundamentalGet(long idConferintaDomeniuFundamental)
         {
-            var domeniuFundamental = _repo.ConferintaDomeniuFundamentalGet(idConferintaDomeniuFundamental);
-            return domeniuFundamental != null ? Ok(domeniuFundamental) : NotFound();
+            var repo = new ConferintaDomeniuFundamentalRepo(); // Ensure repository is initialized
+            var domeniuFundamental = repo.ConferintaDomeniuFundamentalGet(idConferintaDomeniuFundamental); // Fetch data
+
+            if (domeniuFundamental != null)
+            {
+                return Ok(domeniuFundamental);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
         [HttpGet]
         public IHttpActionResult ConferintaDomeniuFundamentalListByConferinta(long idConferinta)

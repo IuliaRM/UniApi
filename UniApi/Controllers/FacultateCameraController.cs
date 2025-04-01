@@ -1,72 +1,90 @@
-using System;
-using System.Collections.Generic;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
-using UniApi.Models;
+using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
-    public class FacultateCameraController
+    public class FacultateCameraController : DnnApiController
     {
-        private readonly FacultateCameraRepo _repo;
+        private readonly FacultateCameraRepo _repo = new FacultateCameraRepo();
 
-        public FacultateCameraController()
+        [HttpGet]
+        public IHttpActionResult FacultateCameraGet(long ID_FacultateCamera)
         {
-            _repo = new FacultateCameraRepo();
+            var camera = _repo.FacultateCameraGet(ID_FacultateCamera);
+            return Ok(camera);
         }
 
-        public FacultateCameraInfo GetFacultateCamera(long iD_FacultateCamera)
+        [HttpGet]
+        public IHttpActionResult FacultateCameraByFacultateCameraGet(long ID_Facultate, long ID_Camera, long ID_AnUniv)
         {
-            return _repo.GetFacultateCamera(iD_FacultateCamera);
+            var camera = _repo.FacultateCameraByFacultateCameraGet(ID_Facultate, ID_Camera, ID_AnUniv);
+            return Ok(camera);
         }
 
-        public FacultateCameraInfo GetFacultateCameraByFacultateCamera(long ID_Facultate, long ID_Camera, long ID_AnUniv)
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListGet()
         {
-            return _repo.GetFacultateCameraByFacultateCamera(ID_Facultate, ID_Camera, ID_AnUniv);
+            var camere = _repo.FacultateCameraListGet();
+            return Ok(camere);
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraList()
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByAnUniversitarGet(long ID_AnUniv)
         {
-            return _repo.GetFacultateCameraList();
+            var camere = _repo.FacultateCameraListByAnUniversitarGet(ID_AnUniv);
+            return Ok(camere);
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByAnUniversitar(long iD_AnUniv)
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByFacultateGet(long ID_Facultate)
         {
-            return _repo.GetFacultateCameraListByAnUniversitar(iD_AnUniv);
+            var camere = _repo.FacultateCameraListByFacultateGet(ID_Facultate);
+            return Ok(camere);
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByFacultate(long iD_Facultate)
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByFacultateAnUnivGet(long ID_Facultate, long ID_AnUniv)
         {
-            return _repo.GetFacultateCameraListByFacultate(iD_Facultate);
+            var camere = _repo.FacultateCameraListByFacultateAnUnivGet(ID_Facultate, ID_AnUniv);
+            return Ok(camere);
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByFacultateAnUniv(long iD_Facultate, long ID_AnUniv)
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByCameraGet(long ID_Camera)
         {
-            return _repo.GetFacultateCameraListByFacultateAnUniv(iD_Facultate, ID_AnUniv);
+            var camere = _repo.FacultateCameraListByCameraGet(ID_Camera);
+            return Ok(camere);
         }
 
-        public List<FacultateCameraInfo> GetFacultateCameraListByCamera(long iD_Camera)
+        [HttpPost]
+        public IHttpActionResult FacultateCameraAdd([FromBody] FacultateCameraInfo objFacultateCamera)
         {
-            return _repo.GetFacultateCameraListByCamera(iD_Camera);
+            var id = _repo.FacultateCameraAdd(objFacultateCamera);
+            return Ok(id);
         }
 
-        public long AddFacultateCamera(FacultateCameraInfo objFacultateCamera)
+        [HttpPut]
+        public IHttpActionResult FacultateCameraUpdate([FromBody] FacultateCameraInfo objFacultateCamera)
         {
-            return _repo.AddFacultateCamera(objFacultateCamera);
+            _repo.FacultateCameraUpdate(objFacultateCamera);
+            return Ok();
         }
 
-        public void UpdateFacultateCamera(FacultateCameraInfo objFacultateCamera)
+        [HttpDelete]
+        public IHttpActionResult FacultateCameraDelete([FromBody] FacultateCameraInfo objFacultateCamera)
         {
-            _repo.UpdateFacultateCamera(objFacultateCamera);
+            _repo.FacultateCameraDelete(objFacultateCamera);
+            return Ok();
         }
 
-        public void DeleteFacultateCamera(FacultateCameraInfo objFacultateCamera)
+        [HttpDelete]
+        public IHttpActionResult FacultateCameraDeleteByFacultateCamera(long ID_Facultate, long ID_Camera)
         {
-            _repo.DeleteFacultateCamera(objFacultateCamera);
-        }
-
-        public void DeleteFacultateCameraByFacultateCamera(long ID_Facultate, long ID_Camera)
-        {
-            _repo.DeleteFacultateCameraByFacultateCamera(ID_Facultate, ID_Camera);
+            _repo.FacultateCameraDeleteByFacultateCamera(ID_Facultate, ID_Camera);
+            return Ok();
         }
     }
 }

@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web.Http;
-using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
-
+using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
@@ -45,9 +43,7 @@ namespace UniApi.Dal.Repos
         public AnUniversitarInfo AnUniversitarGetByAnCalendaristic(int anCalendaristic)
         {
             var listAnUniv = AnUniversitarListAll();
-            var result = listAnUniv.FirstOrDefault(
-                li => li.Denumire.ToLower().StartsWith("an universitar " + anCalendaristic.ToString()));
-            return result ?? listAnUniv.Last();
+            return listAnUniv.FirstOrDefault(li => li.Denumire.ToLower().StartsWith($"an universitar {anCalendaristic}")) ?? listAnUniv.Last();
         }
 
         public int AnUniversitarAdd(AnUniversitarInfo anUniversitarInfo)
@@ -88,7 +84,7 @@ namespace UniApi.Dal.Repos
             }
         }
 
-        public List<AnUniversitarInfo> AnUniversitarListWithPrevious()
+        public List<AnUniversitarInfo> AnUniversitarListWithPrecedent()
         {
             using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_GetCurrentAndPrevious"))
             {
@@ -96,7 +92,7 @@ namespace UniApi.Dal.Repos
             }
         }
 
-        public AnUniversitarInfo AnUniversitarGetPrevious(long idAnUniversitarCurent)
+        public AnUniversitarInfo AnUniversitarGetPreviousYear(long idAnUniversitarCurent)
         {
             var currentYear = AnUniversitarGet(idAnUniversitarCurent);
             return AnUniversitarGet(currentYear.Id_AnUnivPrecedent);

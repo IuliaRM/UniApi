@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info; 
 
 
 namespace UniApi.Dal.Repos
@@ -23,10 +25,25 @@ namespace UniApi.Dal.Repos
             try
             {
                 var id = SqlHelper.ExecuteScalar(_connectionString, "AnunturiAdd",
-                    anunturiInfo.Titlu,
-                    anunturiInfo.Descriere,
-                    anunturiInfo.DataPublicare,
-                    anunturiInfo.ID_Utilizator);
+                  anunturiInfo.TitluAnunt,
+                    anunturiInfo.MesajAnunt,
+                    anunturiInfo.DataPostare,
+                    anunturiInfo.DataExpirare,
+                    anunturiInfo.AnuntProfesori,
+                    anunturiInfo.AnuntStudenti,
+                    anunturiInfo.ID_Facultate,
+                    anunturiInfo.ID_FC,
+                    anunturiInfo.ID_FCForma,
+                    anunturiInfo.ID_Catedra,
+                    anunturiInfo.ID_AnUniv,
+                    anunturiInfo.ID_AnStudiu,
+                    anunturiInfo.ID_Domeniu,
+                    anunturiInfo.ID_Specializare,
+                    anunturiInfo.ID_Grupe,
+                    anunturiInfo.PortalID,
+                    anunturiInfo.UserID,
+                    anunturiInfo.TipFisier,
+                    anunturiInfo.CaleFisier);
                 return Convert.ToInt64(id) > 0;
             }
             catch (Exception)
@@ -65,11 +82,26 @@ namespace UniApi.Dal.Repos
             try
             {
                 SqlHelper.ExecuteNonQuery(_connectionString, "AnunturiUpdate",
-                    anunturiInfo.ID_Anunt,
-                    anunturiInfo.Titlu,
-                    anunturiInfo.Descriere,
-                    anunturiInfo.DataPublicare,
-                    anunturiInfo.ID_Utilizator);
+                    anunturiInfo.IdAnunt,
+                    anunturiInfo.TitluAnunt,
+                    anunturiInfo.MesajAnunt,
+                    anunturiInfo.DataPostare,
+                    anunturiInfo.DataExpirare,
+                    anunturiInfo.AnuntProfesori,
+                    anunturiInfo.AnuntStudenti,
+                    anunturiInfo.ID_Facultate,
+                    anunturiInfo.ID_FC,
+                    anunturiInfo.ID_FCForma,
+                    anunturiInfo.ID_Catedra,
+                    anunturiInfo.ID_AnUniv,
+                    anunturiInfo.ID_AnStudiu,
+                    anunturiInfo.ID_Domeniu,
+                    anunturiInfo.ID_Specializare,
+                    anunturiInfo.ID_Grupe,
+                    anunturiInfo.PortalID,
+                    anunturiInfo.UserID,
+                    anunturiInfo.TipFisier,
+                    anunturiInfo.CaleFisier);
                 return true;
             }
             catch (Exception)

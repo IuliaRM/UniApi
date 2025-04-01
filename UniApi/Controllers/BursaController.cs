@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -29,9 +30,19 @@ namespace UniApi.Controllers
         [HttpGet]
         public IHttpActionResult BursaGet(long idBursa)
         {
-            var bursa = _controller.BursaGet(idBursa);
-            return bursa != null ? Ok(bursa) : NotFound();
+            var repo = new BursaRepo(); // Ensure repository is instantiated correctly
+            var bursa = repo.BursaGet(idBursa); // Fetch the scholarship data
+
+            if (bursa != null)
+            {
+                return Ok(bursa);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
         // Obține lista tuturor burselor
         [HttpGet]
@@ -51,22 +62,35 @@ namespace UniApi.Controllers
         [HttpPost]
         public IHttpActionResult BursaAddOrUpdate([FromBody] BursaInfo bursa)
         {
-            int id = _controller.BursaAddOrUpdate(bursa);
-            return Ok(id);
+            var repo = new BursaRepo(); // Instantiate repository
+            int id = repo.BursaAddOrUpdate(bursa); // Call repository method
+
+            if (id > 0)
+            {
+                return Ok(id); // Return the new ID if successful
+            }
+            else
+            {
+                return BadRequest("Eroare la adăugarea sau actualizarea bursei."); // Handle failure
+            }
         }
 
         // Șterge o bursă
         [HttpDelete]
         public IHttpActionResult BursaDelete(long idBursa)
         {
-            var bursa = _controller.BursaGet(idBursa);
+            var repo = new BursaRepo(); // Instantiate repository
+            var bursa = repo.BursaGet(idBursa); // Fetch the scholarship entry
+
             if (bursa == null)
             {
                 return NotFound();
             }
-            _controller.BursaDelete(bursa);
+
+            repo.BursaDelete(idBursa); // Delete by ID
             return Ok();
         }
+
 
         // Șterge burse pentru un student pe un anumit semestru
         [HttpDelete]

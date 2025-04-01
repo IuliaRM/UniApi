@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
-namespace AGSIS.Components.Repos
+namespace UniApi.Controllers
 {
     public class AbsolventAlumniDTORepo
     {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UniApi.Models;
+using UniApi.Info;
 using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
@@ -11,17 +11,16 @@ namespace UniApi.Dal.Repos
     {
         private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public List<EvaluareComentariiInfo> GetComentariiByDetaliuPlanSemestru(long iD_DetaliuPlanSemestru)
+        public List<EvaluareComentariiInfo> ComentariiByDetaliuPlanSemestruGet(long ID_DetaliuPlanSemestru)
         {
-            return CBO.FillCollection<EvaluareComentariiInfo>(SqlHelper.ExecuteReader(_ConnectionString, "EvaluareGetComentariiByIDDetaliuPlanSemestru", iD_DetaliuPlanSemestru));
+            return CBO.FillCollection<EvaluareComentariiInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Evaluare_GetComentariiByDetaliuPlanSemestru", ID_DetaliuPlanSemestru));
         }
 
-        // If you want to implement the update method as well, you can follow a similar approach.
-        /*
-        public void UpdateTipCriteriuEvaluare(TipCriteriuEvaluareInfo objTipCriteriuEvaluare)
+        public DiplomaSupplementAdeverintaAbsolvireInfo MedieAnStudiiGet(long ID_Student, long ID_PlanInvatamant)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "TipCriteriuEvaluareUpdate", objTipCriteriuEvaluare.ID_TipCriteriuEvaluare, objTipCriteriuEvaluare.DescriereCriteriu, objTipCriteriuEvaluare.ModVizualizare, objTipCriteriuEvaluare.Intrebare, objTipCriteriuEvaluare.IDRaspunsDefault, objTipCriteriuEvaluare.IDText, objTipCriteriuEvaluare.RaspunsObligatoriu, objTipCriteriuEvaluare.MinText, objTipCriteriuEvaluare.MaxText, objTipCriteriuEvaluare.Dimensiune);
+            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Rap_Absolvire_GetMedieAnStudii", ID_Student, ID_PlanInvatamant));
         }
-        */
     }
 }

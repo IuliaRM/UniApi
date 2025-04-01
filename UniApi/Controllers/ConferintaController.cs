@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -20,9 +21,19 @@ namespace UniApi.Controllers
         [HttpGet]
         public IHttpActionResult ConferintaGet(long idConferinta)
         {
-            var conferinta = _repo.ConferintaGet(idConferinta);
-            return conferinta != null ? Ok(conferinta) : NotFound();
+            var repo = new ConferintaRepo(); // Ensure repository is initialized
+            var conferinta = repo.ConferintaGet(idConferinta); // Fetch data
+
+            if (conferinta != null)
+            {
+                return Ok(conferinta);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
         [HttpGet]
         public IHttpActionResult ConferintaListByAnCalendaristic(int anCalendaristic)
@@ -52,6 +63,7 @@ namespace UniApi.Controllers
             return Ok();
         }
 
+        
         [HttpDelete]
         public IHttpActionResult ConferintaDelete(long idConferinta)
         {
@@ -60,8 +72,10 @@ namespace UniApi.Controllers
             {
                 return NotFound();
             }
-            _repo.ConferintaDelete(conferinta);
+
+            _repo.ConferintaDelete(conferinta.ID_Conferinta); // Pass the ID instead of the object
             return Ok();
         }
+
     }
 }

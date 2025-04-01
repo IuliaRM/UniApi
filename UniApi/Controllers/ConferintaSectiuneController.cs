@@ -1,53 +1,64 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using UniApi;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class ConferintaSectiuneController
+    public class ConferintaSectiuneController : DnnApiController
     {
-        private readonly ConferintaSectiuneRepo _repo;
+        private readonly ConferintaSectiuneRepo _repo = new ConferintaSectiuneRepo();
 
-        public ConferintaSectiuneController()
+        [HttpGet]
+        public IHttpActionResult ConferintaSectiuneGet(long idConferintaSectiune)
         {
-            _repo = new ConferintaSectiuneRepo();
+            var sectiune = _repo.ConferintaSectiuneGet(idConferintaSectiune);
+            if (sectiune != null)
+            {
+                return Ok(sectiune);
+            }
+            return NotFound();
         }
 
-        public ConferintaSectiuneInfo ConferintaSectiuneGet(long idConferintaSectiune)
+        [HttpGet]
+        public IHttpActionResult ConferintaSectiuneList()
         {
-            return _repo.ConferintaSectiuneGet(idConferintaSectiune);
+            var sectiuni = _repo.ConferintaSectiuneList();
+            return Ok(sectiuni);
         }
 
-        [DataObjectMethodAttribute(DataObjectMethodType.Select, true)]
-        public List<ConferintaSectiuneInfo> ConferintaSectiuneList()
+        [HttpGet]
+        public IHttpActionResult ConferintaSectiuneListByConferinta(long idConferinta)
         {
-            return _repo.ConferintaSectiuneList();
+            var sectiuni = _repo.ConferintaSectiuneListByConferinta(idConferinta);
+            return Ok(sectiuni);
         }
 
-        [DataObjectMethodAttribute(DataObjectMethodType.Select, false)]
-        public List<ConferintaSectiuneInfo> ConferintaSectiuneListByConferinta(long idConferinta)
+        [HttpPost]
+        public IHttpActionResult ConferintaSectiuneAdd([FromBody] ConferintaSectiuneInfo conferintaSectiune)
         {
-            return _repo.ConferintaSectiuneListByConferinta(idConferinta);
+            long id = _repo.ConferintaSectiuneAdd(conferintaSectiune);
+            return Ok(id);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Insert, true)]
-        public long ConferintaSectiuneAdd(ConferintaSectiuneInfo objConferintaSectiune)
+        [HttpPut]
+        public IHttpActionResult ConferintaSectiuneUpdate([FromBody] ConferintaSectiuneInfo conferintaSectiune)
         {
-            return _repo.ConferintaSectiuneAdd(objConferintaSectiune);
+            _repo.ConferintaSectiuneUpdate(conferintaSectiune);
+            return Ok();
         }
 
-        [DataObjectMethod(DataObjectMethodType.Update, true)]
-        public void ConferintaSectiuneUpdate(ConferintaSectiuneInfo objConferintaSectiune)
+        [HttpDelete]
+        public IHttpActionResult ConferintaSectiuneDelete(long idConferintaSectiune)
         {
-            _repo.ConferintaSectiuneUpdate(objConferintaSectiune);
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Delete, true)]
-        public void ConferintaSectiuneDelete(long idConferintaSectiune)
-        {
+            var sectiune = _repo.ConferintaSectiuneGet(idConferintaSectiune);
+            if (sectiune == null)
+            {
+                return NotFound();
+            }
             _repo.ConferintaSectiuneDelete(idConferintaSectiune);
+            return Ok();
         }
     }
 }

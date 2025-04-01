@@ -4,6 +4,7 @@ using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Dal.Repos;
 using DotNetNuke.Common.Utilities;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {

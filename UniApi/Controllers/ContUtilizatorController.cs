@@ -1,59 +1,80 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using UniApi.Models;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class ContUtilizatorController
+    public class ContUtilizatorController : DnnApiController
     {
-        private readonly ContUtilizatorRepo _repo;
+        private readonly ContUtilizatorRepo _repo = new ContUtilizatorRepo();
 
-        public ContUtilizatorController()
+        [HttpGet]
+        public IHttpActionResult ContUtilizatorGet(long idContUtilizator)
         {
-            _repo = new ContUtilizatorRepo();
+            var utilizator = _repo.ContUtilizatorGet(idContUtilizator);
+            if (utilizator != null)
+            {
+                return Ok(utilizator);
+            }
+            return NotFound();
         }
 
-        public ContUtilizatorInfo ContUtilizatorGet(long idContUtilizator)
+        [HttpGet]
+        public IHttpActionResult ContUtilizatorList()
         {
-            return _repo.ContUtilizatorGet(idContUtilizator);
+            var utilizatori = _repo.ContUtilizatorList();
+            return Ok(utilizatori);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Select, true)]
-        public List<ContUtilizatorInfo> ContUtilizatorList()
+        [HttpGet]
+        public IHttpActionResult ContUtilizatorGetByCNP(string cnp)
         {
-            return _repo.ContUtilizatorList();
+            var utilizator = _repo.ContUtilizatorGetByCNP(cnp);
+            if (utilizator != null)
+            {
+                return Ok(utilizator);
+            }
+            return NotFound();
         }
 
-        [DataObjectMethod(DataObjectMethodType.Select, true)]
-        public ContUtilizatorInfo ContUtilizatorGetByCNP(string cnp)
+        [HttpPost]
+        public IHttpActionResult ContUtilizatorAdd([FromBody] ContUtilizatorInfo objContUtilizator)
         {
-            return _repo.ContUtilizatorGetByCNP(cnp);
+            long id = _repo.ContUtilizatorAdd(objContUtilizator);
+            return Ok(id);
         }
 
-        [DataObjectMethod(DataObjectMethodType.Insert, true)]
-        public long ContUtilizatorAdd(ContUtilizatorInfo objContUtilizator)
-        {
-            return _repo.ContUtilizatorAdd(objContUtilizator);
-        }
-
-        [DataObjectMethod(DataObjectMethodType.Update, true)]
-        public void ContUtilizatorUpdate(ContUtilizatorInfo objContUtilizator)
+        [HttpPut]
+        public IHttpActionResult ContUtilizatorUpdate([FromBody] ContUtilizatorInfo objContUtilizator)
         {
             _repo.ContUtilizatorUpdate(objContUtilizator);
+            return Ok();
         }
 
-        [DataObjectMethod(DataObjectMethodType.Delete, true)]
-        public void ContUtilizatorDelete(long idContUtilizator)
+        [HttpDelete]
+        public IHttpActionResult ContUtilizatorDelete(long idContUtilizator)
         {
+            var utilizator = _repo.ContUtilizatorGet(idContUtilizator);
+            if (utilizator == null)
+            {
+                return NotFound();
+            }
             _repo.ContUtilizatorDelete(idContUtilizator);
+            return Ok();
         }
 
-        [DataObjectMethod(DataObjectMethodType.Delete, false)]
-        public void ContUtilizatorDeleteByCNP(string cnp)
+        [HttpDelete]
+        public IHttpActionResult ContUtilizatorDeleteByCNP(string cnp)
         {
+            var utilizator = _repo.ContUtilizatorGetByCNP(cnp);
+            if (utilizator == null)
+            {
+                return NotFound();
+            }
             _repo.ContUtilizatorDeleteByCNP(cnp);
+            return Ok();
         }
     }
 }

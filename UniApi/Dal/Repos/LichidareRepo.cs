@@ -1,32 +1,34 @@
-using Microsoft.ApplicationBlocks.Data;
 using System;
-using System.Collections.Generic;
+using UniApi.Info;
+using Microsoft.ApplicationBlocks.Data;
+using System.Configuration;
 using DotNetNuke.Common.Utilities;
 
 namespace UniApi.Dal.Repos
 {
     public class LichidareRepo
     {
-        private readonly string _ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public void LichidareSecretariatMerge(long ID_Lichidare, long ID_Absolvent, long ID_Student, long ID_AnUniv, long ID_Specializare, string usernameInitiere)
+        public void LichidareSecretariatMerge(long ID_Lichidare, long ID_Absolvent, long ID_Student, long ID_AnUniv, long ID_Specializare, string UsernameInitiere)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "LichidareSecretariatMerge", ID_Lichidare, ID_Absolvent, ID_Student, ID_AnUniv, ID_Specializare, usernameInitiere);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Lichidare_SecretariatMerge", ID_Lichidare, ID_Absolvent, ID_Student, ID_AnUniv, ID_Specializare, UsernameInitiere);
         }
 
         public void LichidareInitiereAutomata()
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "LichidareInitiereAutomata");
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Lichidare_InitiereAutomata");
         }
 
-        public void LichidareSecretariatDeselecteaza(long ID_Lichidare, string username, string coloanaDebifata)
+        public void LichidareSecretariatDeselecteaza(long ID_Lichidare, string Username, string ColoanaDebifata)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "LichidareSecretariatDeselecteaza", ID_Lichidare, username, coloanaDebifata);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "Lichidare_SecretariatDeselecteaza", ID_Lichidare, Username, ColoanaDebifata);
         }
 
-        public LichidareInfo LichidareStudentGetByID_Lichidare(long ID_Lichidare)
+        public LichidareInfo LichidareStudentByIDGet(long ID_Lichidare)
         {
-            return CBO.FillObject<LichidareInfo>(SqlHelper.ExecuteReader(_ConnectionString, "LichidareStudentGetByID_Lichidare", ID_Lichidare));
+            return CBO.FillObject<LichidareInfo>(
+                SqlHelper.ExecuteReader(_ConnectionString, "Lichidare_GetStudentByID", ID_Lichidare));
         }
     }
 }

@@ -1,45 +1,47 @@
-using DotNetNuke.Common.Utilities;
-using Microsoft.ApplicationBlocks.Data;
 using System;
 using System.Collections.Generic;
+using UniApi.Info;
+using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using DotNetNuke.Common.Utilities;
 
-namespace UniTBv.AGSIS.Dal.Repos
+namespace UniApi.Dal.Repos
 {
     public class OfertaPracticaRepo
     {
-        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public OfertaPractica OfertaPracticaGet(long iD_OfertaPractica)
+        public OfertaPractica OfertaPracticaGet(long ID_OfertaPractica)
         {
-            return CBO.FillObject<OfertaPractica>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaGet", iD_OfertaPractica));
+            return CBO.FillObject<OfertaPractica>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPractica_Get", ID_OfertaPractica));
         }
 
-        public List<OfertaPractica> OfertaPracticaGetList()
+        public List<OfertaPractica> OfertaPracticaListGet()
         {
-            return CBO.FillCollection<OfertaPractica>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaList"));
+            return CBO.FillCollection<OfertaPractica>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPractica_GetList"));
         }
 
-        public List<OfertaPractica> OfertaPracticaGetListByUserIDPortal(int iD_UserPortal)
+        public List<OfertaPractica> OfertaPracticaListByUserIDPortalGet(int ID_UserPortal)
         {
-            return CBO.FillCollection<OfertaPractica>(SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaListByUserIDPortal", iD_UserPortal));
+            return CBO.FillCollection<OfertaPractica>(
+                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPractica_GetListByUserIDPortal", ID_UserPortal));
         }
 
         public void OfertaPracticaAdd(OfertaPractica objOfertaPractica)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaAdd",
-              objOfertaPractica.ID_Firma, objOfertaPractica.DescriereOfertaPractica, objOfertaPractica.PerioadaValabilitateStart, objOfertaPractica.PerioadaValabilitateStop, objOfertaPractica.AdresaImagine,
-              objOfertaPractica.NrLocuri, objOfertaPractica.ID_TipPractica, objOfertaPractica.ID_AnUniv, objOfertaPractica.DataModificare, objOfertaPractica.Status, objOfertaPractica.DataValabilitate, objOfertaPractica.NumeOferta);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPractica_Add", objOfertaPractica);
         }
 
         public void OfertaPracticaUpdate(OfertaPractica objOfertaPractica)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaUpdate", objOfertaPractica.ID_OfertaPractica, objOfertaPractica.ID_Firma, objOfertaPractica.DescriereOfertaPractica, objOfertaPractica.PerioadaValabilitateStart, objOfertaPractica.PerioadaValabilitateStop, objOfertaPractica.AdresaImagine, objOfertaPractica.NrLocuri, objOfertaPractica.ID_TipPractica, objOfertaPractica.ID_AnUniv, objOfertaPractica.DataModificare, objOfertaPractica.Status, objOfertaPractica.DataValabilitate, objOfertaPractica.NumeOferta);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPractica_Update", objOfertaPractica);
         }
 
-        public void OfertaPracticaDelete(long iD_OfertaPractica)
+        public void OfertaPracticaDelete(long ID_OfertaPractica)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaDelete", iD_OfertaPractica);
+            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPractica_Delete", ID_OfertaPractica);
         }
     }
 }

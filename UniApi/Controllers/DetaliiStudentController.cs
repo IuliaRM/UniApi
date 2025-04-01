@@ -1,53 +1,63 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using UniApi.Models;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
-namespace UniApi
+namespace UniApi.Controllers
 {
-    public class DetaliiStudentController
+    public class DetaliiStudentController : DnnApiController
     {
-        private readonly DetaliiStudentRepo _repo;
+        private readonly DetaliiStudentRepo _repo = new DetaliiStudentRepo();
 
-        public DetaliiStudentController()
+        [HttpGet]
+        public IHttpActionResult StudentListByIdAndAnUniv([FromUri] List<long> listaID_Student, long idAnUniv)
         {
-            _repo = new DetaliiStudentRepo();
+            var studenti = _repo.StudentListByIdAndAnUniv(listaID_Student, idAnUniv);
+            return Ok(studenti);
         }
 
-        public List<StudentDatePersonaleInfo> StudentListByIdAndAnUniv(List<long> listaID_Student, long idAnUniv)
+        [HttpGet]
+        public IHttpActionResult UsernameExistent(string username)
         {
-            return _repo.StudentListByIdAndAnUniv(listaID_Student, idAnUniv);
+            bool exists = _repo.UsernameExistent(username);
+            return Ok(exists);
         }
 
-        public bool UsernameExistent(string username)
-        {
-            return _repo.UsernameExistent(username);
-        }
-
-        public void StudentUserPassEmailAdd(long idStudent, string user, string pass, string email)
+        [HttpPost]
+        public IHttpActionResult StudentUserPassEmailAdd(long idStudent, string user, string pass, string email)
         {
             _repo.StudentUserPassEmailAdd(idStudent, user, pass, email);
+            return Ok();
         }
 
-        public string StudentUsernameGetByCNP(string cnp)
+        [HttpGet]
+        public IHttpActionResult StudentUsernameGetByCNP(string cnp)
         {
-            return _repo.StudentUsernameGetByCNP(cnp);
+            var username = _repo.StudentUsernameGetByCNP(cnp);
+            return Ok(username);
         }
 
-        public string StudentUsernameGetByNumePrenumeDataN(string nume, string prenume, DateTime data)
+        [HttpGet]
+        public IHttpActionResult StudentUsernameGetByNumePrenumeDataN(string nume, string prenume, DateTime data)
         {
-            return _repo.StudentUsernameGetByNumePrenumeDataN(nume, prenume, data);
+            var username = _repo.StudentUsernameGetByNumePrenumeDataN(nume, prenume, data);
+            return Ok(username);
         }
 
-        public string StudentParolaGetByUsername(string user)
+        [HttpGet]
+        public IHttpActionResult StudentParolaGetByUsername(string user)
         {
-            return _repo.StudentParolaGetByUsername(user);
+            var parola = _repo.StudentParolaGetByUsername(user);
+            return Ok(parola);
         }
 
-        public void StudentParolaUpdateByUsername(string username)
+        [HttpPut]
+        public IHttpActionResult StudentParolaUpdateByUsername(string username)
         {
             _repo.StudentParolaUpdateByUsername(username);
+            return Ok();
         }
     }
 }

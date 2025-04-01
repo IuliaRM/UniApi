@@ -3,6 +3,7 @@ using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi;
 using UniApi.Dal.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
@@ -13,9 +14,19 @@ namespace UniApi.Controllers
         [HttpGet]
         public IHttpActionResult CatedraGet(long idCatedra)
         {
-            var catedra = _repo.CatedraGet(idCatedra);
-            return catedra != null ? Ok(catedra) : NotFound();
+            var repo = new CatedraRepo(); // Instantiate repository
+            var catedra = repo.CatedraGet(idCatedra); // Fetch data from repository
+
+            if (catedra != null)
+            {
+                return Ok(catedra);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
 
         [HttpGet]
         public IHttpActionResult CatedraList()
