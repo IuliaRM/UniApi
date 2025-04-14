@@ -1,68 +1,205 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Web.Http;
+using System.Data;
 using DotNetNuke.Common.Utilities;
-using DotNetNuke.Web.Api;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-
 
 namespace UniApi.Dal.Repos
 {
-    public class CererePrecazareRepo
+    public interface ICererePrecazareRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
-        private string _connectionString;
+        long CererePrecazareAdd(CererePrecazareInfo info);
+        void CererePrecazareUpdate(CererePrecazareInfo info);
+        void CererePrecazareDelete(long idCererePrecazare);
+        CererePrecazareInfo CererePrecazareGet(long idCererePrecazare);
+        List<CererePrecazareInfo> CererePrecazareList();
+        List<CererePrecazareInfo> CererePrecazareListByStudent(long idStudent);
+        List<CererePrecazareInfo> CererePrecazareListByStudentComplet(long idStudent, long idAnUniv);
+        List<CererePrecazareInfo> CererePrecazareListByCamera(long idCamera);
+        List<CererePrecazareInfo> CererePrecazareListByStudentUsername(string username);
+        List<CererePrecazareInfo> CererePrecazareListStudentCompletByFacultate(long idFacultate);
+        List<CererePrecazareInfo> CererePrecazareListStudentCompletByFCFSAnUniv(long idFacultate, long idCamin, long idAnUniv);
+        CererePrecazareInfo CererePrecazareGetByStudentIdAnUniversitar(long idStudent, long idAnUniv);
+    }
 
-        public CererePrecazareInfo CererePrecazareGet(long idCererePrecazare)
+    public class CererePrecazareRepo : ICererePrecazareRepo
+    {
+        private readonly string _connectionString;
+
+        public CererePrecazareRepo()
         {
-            return CBO.FillObject<CererePrecazareInfo>(SqlHelper.ExecuteReader(_ConnectionString, "CererePrecazareGet", idCererePrecazare));
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
         }
 
-        public List<CererePrecazareInfo> CererePrecazareList()
+        public long CererePrecazareAdd(CererePrecazareInfo info)
         {
-            return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_ConnectionString, "CererePrecazareList"));
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                return Convert.ToInt64(SqlHelper.ExecuteScalar(_connectionString, "CererePrecazareAdd",
+                    info.ID_Student,
+                    info.ID_Camera,
+                    info.DataCerere,
+                    info.Motiv,
+                    info.ID_AnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la adăugarea cererii de precazare.", ex);
+            }
         }
 
-        public List<CererePrecazareInfo> CererePrecazareListByStudent(long idStudent)
+        public void CererePrecazareUpdate(CererePrecazareInfo info)
         {
-            return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_ConnectionString, "CererePrecazareListByStudent", idStudent));
-        }
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
 
-        public List<CererePrecazareInfo> CererePrecazareListByStudentComplet(long idStudent, long idAnUniv)
-        {
-            return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_ConnectionString, "CererePrecazareListByStudentComplet", idStudent, idAnUniv));
-        }
-
-        public List<CererePrecazareInfo> CererePrecazareListByCamera(long idCamera)
-        {
-            return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_ConnectionString, "CererePrecazareListByCamera", idCamera));
-        }
-
-        public long CererePrecazareAdd(CererePrecazareInfo objCererePrecazare)
-        {
-            return System.Convert.ToInt64(SqlHelper.ExecuteScalar(_ConnectionString, "CererePrecazareAdd", objCererePrecazare.ID_Student, objCererePrecazare.ID_Camera, objCererePrecazare.DataCerere, objCererePrecazare.Motiv, objCererePrecazare.ID_AnUniv));
-        }
-
-        public void CererePrecazareUpdate(CererePrecazareInfo objCererePrecazare)
-        {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "CererePrecazareUpdate", objCererePrecazare.ID_CererePrecazare, objCererePrecazare.ID_Student, objCererePrecazare.ID_Camera, objCererePrecazare.DataCerere, objCererePrecazare.Motiv, objCererePrecazare.ID_AnUniv);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "CererePrecazareUpdate",
+                    info.ID_CererePrecazare,
+                    info.ID_Student,
+                    info.ID_Camera,
+                    info.DataCerere,
+                    info.Motiv,
+                    info.ID_AnUniv);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la actualizarea cererii de precazare.", ex);
+            }
         }
 
         public void CererePrecazareDelete(long idCererePrecazare)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "CererePrecazareDelete", idCererePrecazare);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "CererePrecazareDelete", idCererePrecazare);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la ștergerea cererii de precazare.", ex);
+            }
         }
 
-        public List<CazareInfo> ListaCamineByAnuUniversitarFacultate(long idAnUniversitar, long idFacultate)
+        public CererePrecazareInfo CererePrecazareGet(long idCererePrecazare)
         {
-            return CBO.FillCollection<CazareInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ListaCamineByAnuUniversitarFacultate", idAnUniversitar, idFacultate)
-            );
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "CererePrecazareGet", idCererePrecazare))
+                {
+                    return CBO.FillObject<CererePrecazareInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea cererii de precazare.", ex);
+            }
         }
 
+        public List<CererePrecazareInfo> CererePrecazareList()
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareList"));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea cererilor de precazare.", ex);
+            }
+        }
+
+        public List<CererePrecazareInfo> CererePrecazareListByStudent(long idStudent)
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareListByStudent", idStudent));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea cererilor de precazare după student.", ex);
+            }
+        }
+
+        public List<CererePrecazareInfo> CererePrecazareListByStudentComplet(long idStudent, long idAnUniv)
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareListByStudentComplet", idStudent, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea completă a cererilor după student și an universitar.", ex);
+            }
+        }
+
+        public List<CererePrecazareInfo> CererePrecazareListByCamera(long idCamera)
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareListByCamera", idCamera));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea cererilor după cameră.", ex);
+            }
+        }
+
+        public List<CererePrecazareInfo> CererePrecazareListByStudentUsername(string username)
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareListByStudentUsername", username));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea cererilor după username student.", ex);
+            }
+        }
+
+        public List<CererePrecazareInfo> CererePrecazareListStudentCompletByFacultate(long idFacultate)
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareListStudentCompletByFacultate", idFacultate));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea completă a cererilor după facultate.", ex);
+            }
+        }
+
+        public List<CererePrecazareInfo> CererePrecazareListStudentCompletByFCFSAnUniv(long idFacultate, long idCamin, long idAnUniv)
+        {
+            try
+            {
+                return CBO.FillCollection<CererePrecazareInfo>(SqlHelper.ExecuteReader(_connectionString, "CererePrecazareListStudentCompletByFCFSAnUniv", idFacultate, idCamin, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea cererilor după FCFS, cămin și an universitar.", ex);
+            }
+        }
+
+        public CererePrecazareInfo CererePrecazareGetByStudentIdAnUniversitar(long idStudent, long idAnUniv)
+        {
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "CererePrecazareGetByStudentIdAnUniversitar", idStudent, idAnUniv))
+                {
+                    return CBO.FillObject<CererePrecazareInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea cererii după student și an universitar.", ex);
+            }
+        }
     }
 }

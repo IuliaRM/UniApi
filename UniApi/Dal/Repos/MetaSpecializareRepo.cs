@@ -1,55 +1,129 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
-using DotNetNuke.Common.Utilities;
 using System.Configuration;
-using System.ComponentModel;
-using UniApi.Info;
+using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class MetaSpecializareRepo
+    public interface IMetaSpecializareRepo
+    {
+        MetaSpecializareInfo MetaSpecializareGet(long idMetaSpecializare);
+        List<MetaSpecializareInfo> MetaSpecializareList();
+        List<MetaSpecializareInfo> MetaSpecializareListByFacultate(long idFacultate);
+        List<MetaSpecializareInfo> MetaSpecializareListBySpecializare(long idSpecializare);
+        List<MetaSpecializareInfo> MetaSpecializareListByCatedraAnUniv(long idCatedra, long idAnUniv);
+        long MetaSpecializareAdd(MetaSpecializareInfo info);
+        void MetaSpecializareUpdate(MetaSpecializareInfo info);
+        void MetaSpecializareDelete(long idMetaSpecializare);
+    }
+
+    public class MetaSpecializareRepo : IMetaSpecializareRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public MetaSpecializareInfo MetaSpecializareGet(long idMetaSpecializare)
         {
-            return CBO.FillObject<MetaSpecializareInfo>(SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareGet", idMetaSpecializare));
+            try
+            {
+                return CBO.FillObject<MetaSpecializareInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareGet", idMetaSpecializare));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareGet", ex);
+            }
         }
 
         public List<MetaSpecializareInfo> MetaSpecializareList()
         {
-            return CBO.FillCollection<MetaSpecializareInfo>(SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareList"));
+            try
+            {
+                return CBO.FillCollection<MetaSpecializareInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareList"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareList", ex);
+            }
         }
 
         public List<MetaSpecializareInfo> MetaSpecializareListByFacultate(long idFacultate)
         {
-            return CBO.FillCollection<MetaSpecializareInfo>(SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareListByFacultate", idFacultate));
+            try
+            {
+                return CBO.FillCollection<MetaSpecializareInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareListByFacultate", idFacultate));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareListByFacultate", ex);
+            }
         }
 
         public List<MetaSpecializareInfo> MetaSpecializareListBySpecializare(long idSpecializare)
         {
-            return CBO.FillCollection<MetaSpecializareInfo>(SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareListBySpecializare", idSpecializare));
+            try
+            {
+                return CBO.FillCollection<MetaSpecializareInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareListBySpecializare", idSpecializare));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareListBySpecializare", ex);
+            }
         }
 
-        public long MetaSpecializareAdd(MetaSpecializareInfo objMetaSpecializare)
+        public List<MetaSpecializareInfo> MetaSpecializareListByCatedraAnUniv(long idCatedra, long idAnUniv)
         {
-            object obj = SqlHelper.ExecuteScalar(_connectionString, "MetaSpecializareAdd", objMetaSpecializare.denumiremetaspecializare, objMetaSpecializare.id_facultate);
-            return Convert.ToInt64(obj);
+            try
+            {
+                return CBO.FillCollection<MetaSpecializareInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "MetaSpecializareListByCatedraAnUniv", idCatedra, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareListByCatedraAnUniv", ex);
+            }
         }
 
-        public void MetaSpecializareUpdate(MetaSpecializareInfo objMetaSpecializare)
+        public long MetaSpecializareAdd(MetaSpecializareInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "MetaSpecializareUpdate", objMetaSpecializare.id_metaspecializare, objMetaSpecializare.denumiremetaspecializare, objMetaSpecializare.id_facultate);
+            try
+            {
+                return Convert.ToInt64(SqlHelper.ExecuteScalar(
+                    _connectionString, "MetaSpecializareAdd", info.denumiremetaspecializare, info.id_facultate));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareAdd", ex);
+            }
+        }
+
+        public void MetaSpecializareUpdate(MetaSpecializareInfo info)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "MetaSpecializareUpdate",
+                    info.id_metaspecializare, info.denumiremetaspecializare, info.id_facultate);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareUpdate", ex);
+            }
         }
 
         public void MetaSpecializareDelete(long idMetaSpecializare)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "MetaSpecializareDelete", idMetaSpecializare);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "MetaSpecializareDelete", idMetaSpecializare);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MetaSpecializareDelete", ex);
+            }
         }
     }
 }

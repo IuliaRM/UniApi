@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
+using UniApi;
 using UniApi.Info;
 
 
@@ -9,83 +10,101 @@ namespace UniApi.Controllers
 {
     public class PropunereCandidatController : DnnApiController
     {
+        private readonly IPropunereCandidatRepo _repo = new PropunereCandidatRepo();
+
+        public PropunereCandidatController()
+        {
+        }
+
         [HttpGet]
         public IHttpActionResult PropunereCandidatGet(long idPropunereCandidat)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatGet(idPropunereCandidat);
+            var result = _repo.PropunereCandidatGet(idPropunereCandidat);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult PropunereCandidatListByStudentGet(long idStudent, long idAnUniv)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatListByStudentGet(idStudent, idAnUniv);
+            var result = _repo.PropunereCandidatListByStudent(idStudent, idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult PropunereCandidatListByAnUniversitarGet(long idAnUniv)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatListByAnUniversitarGet(idAnUniv);
+            var result = _repo.PropunereCandidatListByAnUniversitar(idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult PropunereCandidatListByFacultateGet(long idFacultate, long idAnUniv)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatListByFacultateGet(idFacultate, idAnUniv);
+            var result = _repo.PropunereCandidatListByFacultate(idFacultate, idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult PropunereCandidatListByJudetGet(long idJudet, long idAnUniv)
+        public IHttpActionResult PropunereCandidatListByJudeteGet(long idJudet, long idAnUniv)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatListByJudetGet(idJudet, idAnUniv);
+            var result = _repo.PropunereCandidatListByJudete(idJudet, idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult PropunereCandidatListByOrasGet(long idOras, long idAnUniv)
+        public IHttpActionResult PropunereCandidatListByLocalitatiGet(long idOras, long idAnUniv)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatListByOrasGet(idOras, idAnUniv);
+            var result = _repo.PropunereCandidatListByLocalitati(idOras, idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult PropunereCandidatListByLiceuGet(long idLiceu, long idAnUniv)
+        public IHttpActionResult PropunereCandidatListByN_JudetGet(long idJudet, long idAnUniv)
         {
-            var repo = new PropunereCandidatRepo();
-            var result = repo.PropunereCandidatListByLiceuGet(idLiceu, idAnUniv);
+            var result = _repo.PropunereCandidatListByN_Judet(idJudet, idAnUniv);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult PropunereCandidatListByN_OrasGet(long idOras, long idAnUniv)
+        {
+            var result = _repo.PropunereCandidatListByN_Oras(idOras, idAnUniv);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult PropunereCandidatListByStudentGet(long idStudent) // Redundant, dar îl includ conform cerinței
+        {
+            var result = _repo.PropunereCandidatListByStudent(idStudent);
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult PropunereCandidatAdd([FromBody] PropunereCandidatInfo propunereCandidat)
         {
-            var repo = new PropunereCandidatRepo();
-            var id = repo.PropunereCandidatAdd(propunereCandidat);
+            if (propunereCandidat == null)
+            {
+                return BadRequest("Obiectul propunereCandidat nu poate fi null.");
+            }
+            var id = _repo.PropunereCandidatAdd(propunereCandidat);
             return Ok(id);
         }
 
         [HttpPut]
         public IHttpActionResult PropunereCandidatUpdate([FromBody] PropunereCandidatInfo propunereCandidat)
         {
-            var repo = new PropunereCandidatRepo();
-            repo.PropunereCandidatUpdate(propunereCandidat);
+            if (propunereCandidat == null)
+            {
+                return BadRequest("Obiectul propunereCandidat nu poate fi null.");
+            }
+            _repo.PropunereCandidatUpdate(propunereCandidat);
             return Ok();
         }
 
         [HttpDelete]
         public IHttpActionResult PropunereCandidatDelete(long idPropunereCandidat)
         {
-            var repo = new PropunereCandidatRepo();
-            repo.PropunereCandidatDelete(idPropunereCandidat);
+            _repo.PropunereCandidatDelete(idPropunereCandidat);
             return Ok();
         }
     }

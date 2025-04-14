@@ -1,13 +1,28 @@
 using System;
 using System.Collections.Generic;
+using DotNetNuke.Common.Utilities;
 using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
-using DotNetNuke.Common.Utilities;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class ReducereTaxaStudentRepo
+
+    public interface IReducereTaxaStudentRepo
+    {
+        ReducereTaxaStudentInfo ReducereTaxaStudentGet(long idReducereStudent);
+        ReducereTaxaStudentInfo ReducereTaxaStudentGetByTaxaStudent(long idTaxaStudent);
+        List<ReducereTaxaStudentInfo> ReducereTaxaStudentList();
+        List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByStudent(long idStudent);
+        List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByTaxaStudentStudent(long idTaxaStudent, long idStudent);
+        List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByTipReducere(long idTipReducere);
+        long ReducereTaxaStudentAdd(ReducereTaxaStudentInfo objReducereTaxaStudent);
+        void ReducereTaxaStudentUpdate(ReducereTaxaStudentInfo objReducereTaxaStudent);
+        void ReducereTaxaStudentDelete(long idReducereStudent);
+    }
+
+    public class ReducereTaxaStudentRepo : IReducereTaxaStudentRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
@@ -17,28 +32,34 @@ namespace UniApi.DAL.Repos
                 SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentGet", idReducereStudent));
         }
 
-        public ReducereTaxaStudentInfo ReducereTaxaStudentByTaxaStudentGet(long idTaxaStudent)
+        public ReducereTaxaStudentInfo ReducereTaxaStudentGetByTaxaStudent(long idTaxaStudent)
         {
             return CBO.FillObject<ReducereTaxaStudentInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentGetByTaxaStudent", idTaxaStudent));
         }
 
-        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentListGet()
+        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentList()
         {
             return CBO.FillCollection<ReducereTaxaStudentInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentList"));
         }
 
-        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByTipReducereGet(long idTipReducere)
-        {
-            return CBO.FillCollection<ReducereTaxaStudentInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentListByTipReducere", idTipReducere));
-        }
-
-        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByStudentGet(long idStudent)
+        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByStudent(long idStudent)
         {
             return CBO.FillCollection<ReducereTaxaStudentInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentListByStudent", idStudent));
+        }
+
+        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByTaxaStudentStudent(long idTaxaStudent, long idStudent)
+        {
+            return CBO.FillCollection<ReducereTaxaStudentInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentListByTaxaStudent", idTaxaStudent, idStudent));
+        }
+
+        public List<ReducereTaxaStudentInfo> ReducereTaxaStudentListByTipReducere(long idTipReducere)
+        {
+            return CBO.FillCollection<ReducereTaxaStudentInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "ReducereTaxaStudentListByTipReducere", idTipReducere));
         }
 
         public long ReducereTaxaStudentAdd(ReducereTaxaStudentInfo objReducereTaxaStudent)
@@ -62,9 +83,9 @@ namespace UniApi.DAL.Repos
                 objReducereTaxaStudent.MotivReducere);
         }
 
-        public void ReducereTaxaStudentDelete(ReducereTaxaStudentInfo objReducereTaxaStudent)
+        public void ReducereTaxaStudentDelete(long idReducereStudent)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "ReducereTaxaStudentDelete", objReducereTaxaStudent.ID_ReducereStudent);
+            SqlHelper.ExecuteNonQuery(_connectionString, "ReducereTaxaStudentDelete", idReducereStudent);
         }
     }
 }

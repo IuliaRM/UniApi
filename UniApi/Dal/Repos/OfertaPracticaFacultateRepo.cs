@@ -1,59 +1,127 @@
 using System;
 using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class OfertaPracticaFacultateRepo
+    public interface IOfertaPracticaFacultateRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        OfertaPracticaFacultate OfertaPracticaFacultateGet(long idOfertaPracticaFacultate);
+        List<OfertaPracticaFacultate> OfertaPracticaFacultateList();
+        List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudSpecializDomFC(long idFacultate, long idAnStudiu, long idSpecializare, long idDomeniu, long idFC, int status, DateTime dataValabilitate);
+        List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudFC(long idFacultate, long idAnStudiu, long idFC, int status, DateTime dataValabilitate);
+        List<OfertaPracticaFacultate> OfertaPracticaFacultateListByIdOfertaPractica(long idOfertaPractica);
+        long OfertaPracticaFacultateAdd(OfertaPracticaFacultate info);
+        void OfertaPracticaFacultateUpdate(OfertaPracticaFacultate info);
+        void OfertaPracticaFacultateDelete(long idOfertaPracticaFacultate);
+    }
 
-        public OfertaPracticaFacultate OfertaPracticaFacultateGet(long ID_OfertaPracticaFacultate)
+    public class OfertaPracticaFacultateRepo : IOfertaPracticaFacultateRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public OfertaPracticaFacultate OfertaPracticaFacultateGet(long idOfertaPracticaFacultate)
         {
-            return CBO.FillObject<OfertaPracticaFacultate>(
-                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_Get", ID_OfertaPracticaFacultate));
+            try
+            {
+                return CBO.FillObject<OfertaPracticaFacultate>(
+                    SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultate_Get", idOfertaPracticaFacultate));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateGet", ex);
+            }
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListGet()
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateList()
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(
-                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetList"));
+            try
+            {
+                return CBO.FillCollection<OfertaPracticaFacultate>(
+                    SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultate_GetList"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateList", ex);
+            }
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudSpecializDomFCGet(long ID_Facultate, long ID_AnStudiu, long ID_Specializare, long ID_Domeniu, long ID_FC, int Status, DateTime DataValabilitate)
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudSpecializDomFC(long idFacultate, long idAnStudiu, long idSpecializare, long idDomeniu, long idFC, int status, DateTime dataValabilitate)
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(
-                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetListByFacAnStudSpecializDomFC", ID_Facultate, ID_AnStudiu, ID_Specializare, ID_Domeniu, ID_FC, Status, DataValabilitate));
+            try
+            {
+                return CBO.FillCollection<OfertaPracticaFacultate>(
+                    SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultate_GetListByFacAnStudSpecializDomFC", idFacultate, idAnStudiu, idSpecializare, idDomeniu, idFC, status, dataValabilitate));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateListByFacAnStudSpecializDomFC", ex);
+            }
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudFCGet(long ID_Facultate, long ID_AnStudiu, long ID_FC, int Status, DateTime DataValabilitate)
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByFacAnStudFC(long idFacultate, long idAnStudiu, long idFC, int status, DateTime dataValabilitate)
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(
-                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetListByFacAnStudFC", ID_Facultate, ID_AnStudiu, ID_FC, Status, DataValabilitate));
+            try
+            {
+                return CBO.FillCollection<OfertaPracticaFacultate>(
+                    SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultate_GetListByFacAnStudFC", idFacultate, idAnStudiu, idFC, status, dataValabilitate));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateListByFacAnStudFC", ex);
+            }
         }
 
-        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByIdOfertaPracticaGet(long ID_OfertaPractica)
+        public List<OfertaPracticaFacultate> OfertaPracticaFacultateListByIdOfertaPractica(long idOfertaPractica)
         {
-            return CBO.FillCollection<OfertaPracticaFacultate>(
-                SqlHelper.ExecuteReader(_ConnectionString, "OfertaPracticaFacultate_GetListByIdOfertaPractica", ID_OfertaPractica));
+            try
+            {
+                return CBO.FillCollection<OfertaPracticaFacultate>(
+                    SqlHelper.ExecuteReader(_connectionString, "OfertaPracticaFacultate_GetListByIdOfertaPractica", idOfertaPractica));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateListByIdOfertaPractica", ex);
+            }
         }
 
-        public void OfertaPracticaFacultateAdd(OfertaPracticaFacultate objOfertaPracticaFacultate)
+        public long OfertaPracticaFacultateAdd(OfertaPracticaFacultate info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPracticaFacultate_Add", objOfertaPracticaFacultate);
+            try
+            {
+                return Convert.ToInt64(SqlHelper.ExecuteScalar(_connectionString, "OfertaPracticaFacultate_Add", info));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateAdd", ex);
+            }
         }
 
-        public void OfertaPracticaFacultateUpdate(OfertaPracticaFacultate objOfertaPracticaFacultate)
+        public void OfertaPracticaFacultateUpdate(OfertaPracticaFacultate info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPracticaFacultate_Update", objOfertaPracticaFacultate);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaFacultate_Update", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateUpdate", ex);
+            }
         }
 
-        public void OfertaPracticaFacultateDelete(long ID_OfertaPracticaFacultate)
+        public void OfertaPracticaFacultateDelete(long idOfertaPracticaFacultate)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "OfertaPracticaFacultate_Delete", ID_OfertaPracticaFacultate);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "OfertaPracticaFacultate_Delete", idOfertaPracticaFacultate);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la OfertaPracticaFacultateDelete", ex);
+            }
         }
     }
 }

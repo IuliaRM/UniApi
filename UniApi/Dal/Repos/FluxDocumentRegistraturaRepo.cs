@@ -1,53 +1,110 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class FluxDocumentRegistraturaRepo
+    public interface IFluxDocumentRegistraturaRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        FluxDocumentRegistraturaInfo FluxDocumentRegistraturaGet(long id);
+        DataTable FluxDocumentRegistraturaList();
+        DataTable FluxDocumentRegistraturaListByDocumentRegistratura(long idDocReg, int anCalendaristic);
+        long FluxDocumentRegistraturaAdd(FluxDocumentRegistraturaInfo info);
+        void FluxDocumentRegistraturaUpdate(FluxDocumentRegistraturaInfo info);
+        void FluxDocumentRegistraturaDelete(FluxDocumentRegistraturaInfo info);
+        DataTable FluxDocumentRegistraturaStatisticiByAn(int anCalendaristic);
+    }
 
-        public FluxDocumentRegistraturaInfo FluxDocumentRegistraturaGet(long ID_FluxDocReg)
+    public class FluxDocumentRegistraturaRepo : IFluxDocumentRegistraturaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public FluxDocumentRegistraturaInfo FluxDocumentRegistraturaGet(long id)
         {
-            return CBO.FillObject<FluxDocumentRegistraturaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistratura", ID_FluxDocReg));
+            try
+            {
+                return CBO.FillObject<FluxDocumentRegistraturaInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistratura", id));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaGet", ex);
+            }
         }
 
-        public List<FluxDocumentRegistraturaInfo> FluxDocumentRegistraturaListGet()
+        public DataTable FluxDocumentRegistraturaList()
         {
-            return CBO.FillCollection<FluxDocumentRegistraturaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistraturaList"));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistraturaList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaList", ex);
+            }
         }
 
-        public List<FluxDocumentRegistraturaInfo> FluxDocumentRegistraturaListByDocumentRegistraturaGet(long ID_DocReg, int AnCalendaristic)
+        public DataTable FluxDocumentRegistraturaListByDocumentRegistratura(long idDocReg, int anCalendaristic)
         {
-            return CBO.FillCollection<FluxDocumentRegistraturaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistraturaListByDocumentRegistratura", ID_DocReg, AnCalendaristic));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistraturaListByDocumentRegistratura", idDocReg, anCalendaristic).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaListByDocumentRegistratura", ex);
+            }
         }
 
-        public long FluxDocumentRegistraturaAdd(FluxDocumentRegistraturaInfo objFluxDocumentRegistratura)
+        public long FluxDocumentRegistraturaAdd(FluxDocumentRegistraturaInfo info)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "FluxDocumentRegistratura_AddFluxDocumentRegistratura", objFluxDocumentRegistratura);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "FluxDocumentRegistratura_AddFluxDocumentRegistratura", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaAdd", ex);
+            }
         }
 
-        public void FluxDocumentRegistraturaUpdate(FluxDocumentRegistraturaInfo objFluxDocumentRegistratura)
+        public void FluxDocumentRegistraturaUpdate(FluxDocumentRegistraturaInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FluxDocumentRegistratura_UpdateFluxDocumentRegistratura", objFluxDocumentRegistratura);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FluxDocumentRegistratura_UpdateFluxDocumentRegistratura", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaUpdate", ex);
+            }
         }
 
-        public void FluxDocumentRegistraturaDelete(FluxDocumentRegistraturaInfo objFluxDocumentRegistratura)
+        public void FluxDocumentRegistraturaDelete(FluxDocumentRegistraturaInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FluxDocumentRegistratura_DeleteFluxDocumentRegistratura", objFluxDocumentRegistratura);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FluxDocumentRegistratura_DeleteFluxDocumentRegistratura", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaDelete", ex);
+            }
         }
 
-        public List<FluxDocumentRegistraturaInfo> FluxDocumentRegistraturaStatisticiByAnGet(int AnCalendaristic)
+        public DataTable FluxDocumentRegistraturaStatisticiByAn(int anCalendaristic)
         {
-            return CBO.FillCollection<FluxDocumentRegistraturaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistraturaStatisticiByAn", AnCalendaristic));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FluxDocumentRegistratura_GetFluxDocumentRegistraturaStatisticiByAn", anCalendaristic).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FluxDocumentRegistraturaStatisticiByAn", ex);
+            }
         }
     }
 }

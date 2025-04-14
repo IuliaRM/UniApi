@@ -1,14 +1,23 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.ApplicationBlocks.Data;
 using DotNetNuke.Common.Utilities;
+using System.Configuration;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class TipPracticaRepo
+
+    public interface ITipPracticaRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        TipPractica TipPracticaGet(int idTipPractica);
+        List<TipPractica> TipPracticaList();
+    }
+
+    public class TipPracticaRepo : ITipPracticaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public TipPractica TipPracticaGet(int idTipPractica)
         {
@@ -16,23 +25,10 @@ namespace UniApi.DAL.Repos
                 SqlHelper.ExecuteReader(_connectionString, "TipPracticaGet", idTipPractica));
         }
 
-        public List<TipPractica> TipPracticaListGet()
+        public List<TipPractica> TipPracticaList()
         {
             return CBO.FillCollection<TipPractica>(
                 SqlHelper.ExecuteReader(_connectionString, "TipPracticaList"));
-        }
-
-        public int TipPracticaAdd(TipPractica tipPractica)
-        {
-            object id = SqlHelper.ExecuteScalar(_connectionString, "TipPracticaAdd",
-                tipPractica.DenumireTipPractica); 
-
-            return Convert.ToInt32(id);
-        }
-
-        public void TipPracticaDelete(int idTipPractica)
-        {
-            SqlHelper.ExecuteNonQuery(_connectionString, "TipPracticaDelete", idTipPractica);
         }
     }
 }

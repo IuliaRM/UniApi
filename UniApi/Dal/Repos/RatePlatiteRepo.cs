@@ -1,45 +1,109 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using DotNetNuke.Common.Utilities;
+using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class RatePlatiteRepo
+
+    public interface IRatePlatiteRepo
+    {
+        RatePlatiteInfo RatePlatiteGet(long idRatePlatite);
+        RatePlatiteInfo RatePlatiteGetByContContabil(long idContContabil);
+        RatePlatiteInfo RatePlatiteGetByRataTaxa(long idRataTaxa);
+        List<RatePlatiteInfo> RatePlatiteList();
+        List<RatePlatiteInfo> RatePlatiteListByStudent(long idStudent, long idAnUniv);
+        List<RatePlatiteInfo> RatePlatiteListByTaxeStudent(long idTaxaStudent, long idAnUniv);
+        long RatePlatiteAdd(RatePlatiteInfo ratePlatite);
+        void RatePlatiteDelete(long idRatePlatite);
+        void RatePlatiteUpdate(RatePlatiteInfo ratePlatite);
+        long RatePlatiteUpdateUrmatoareleNumereDeChitanta(long idRatePlatite, long numarChitanta, long userId, DateTime dataPentruModificare, bool crescator);
+    }
+
+    public class RatePlatiteRepo : IRatePlatiteRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public List<RatePlatiteInfo> RatePlatiteListByTaxeStudentGet(long ID_TaxaStudent, long ID_AnUniv)
+        public RatePlatiteInfo RatePlatiteGet(long idRatePlatite)
         {
-            return CBO.FillCollection<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteListByTaxeStudent", ID_TaxaStudent, ID_AnUniv));
+            return CBO.FillObject<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteGet", idRatePlatite));
         }
 
-        public List<RatePlatiteInfo> RatePlatiteListByStudentGet(long ID_Student, long ID_AnUniv)
+        public RatePlatiteInfo RatePlatiteGetByContContabil(long idContContabil)
         {
-            return CBO.FillCollection<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteListByStudent", ID_Student, ID_AnUniv));
+            return CBO.FillObject<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteGetByContContabil", idContContabil));
         }
 
-        public RatePlatiteInfo RatePlatiteByRataTaxaGet(long ID_RataTaxa)
+        public RatePlatiteInfo RatePlatiteGetByRataTaxa(long idRataTaxa)
         {
-            return CBO.FillObject<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteGetByRataTaxa", ID_RataTaxa));
+            return CBO.FillObject<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteGetByRataTaxa", idRataTaxa));
         }
 
-        public RatePlatiteInfo RatePlatiteGet(long ID_RatePlatite)
+        public List<RatePlatiteInfo> RatePlatiteList()
         {
-            return CBO.FillObject<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteGet", ID_RatePlatite));
+            return CBO.FillCollection<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteList"));
         }
 
-        public long RatePlatiteNextReceiptNumberUpdate(long ID_RatePlatite, long NumarChitanta, long UserID, DateTime DataPentruModificare, bool crescator)
+        public List<RatePlatiteInfo> RatePlatiteListByStudent(long idStudent, long idAnUniv)
         {
-            object result = SqlHelper.ExecuteScalar(_connectionString, "RatePlatiteUpdateUrmatoareleNumereDeChitanta", ID_RatePlatite, NumarChitanta, UserID, DataPentruModificare, crescator);
-            return result != null ? Convert.ToInt64(result.ToString()) : -1;
+            return CBO.FillCollection<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteListByStudent", idStudent, idAnUniv));
         }
 
-        public void RatePlatiteUpdate(DateTime Data_Plata, decimal SumaPlatita, string SerieChitanta, long NumarChitanta, long NumarFactura, long ID_ContContabil, long ID_Utilizator)
+        public List<RatePlatiteInfo> RatePlatiteListByTaxeStudent(long idTaxaStudent, long idAnUniv)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "RatePlatiteUpdate", Data_Plata, SumaPlatita, SerieChitanta, NumarChitanta, NumarFactura, ID_ContContabil, ID_Utilizator);
+            return CBO.FillCollection<RatePlatiteInfo>(SqlHelper.ExecuteReader(_connectionString, "RatePlatiteListByTaxeStudent", idTaxaStudent, idAnUniv));
+        }
+
+        public long RatePlatiteAdd(RatePlatiteInfo ratePlatite)
+        {
+            object result = SqlHelper.ExecuteScalar(_connectionString, "RatePlatiteAdd",
+                ratePlatite.ID_RataTaxa,
+                ratePlatite.Data_Plata,
+                ratePlatite.SumaPlatita,
+                ratePlatite.SerieChitanta,
+                ratePlatite.NumarChitanta,
+               // ratePlatite.NumarFactura,
+                ratePlatite.ID_ContContabil,
+                ratePlatite.ID_Utilizator,
+               // ratePlatite.DataCreare,
+               // ratePlatite.UserIDCreare,
+               // ratePlatite.DataModificare,
+               // ratePlatite.UserIDModificare,
+                ratePlatite.PortalID);
+            return result != null ? Convert.ToInt64(result) : -1;
+        }
+
+        public void RatePlatiteDelete(long idRatePlatite)
+        {
+            SqlHelper.ExecuteNonQuery(_connectionString, "RatePlatiteDelete", idRatePlatite);
+        }
+
+        public void RatePlatiteUpdate(RatePlatiteInfo ratePlatite)
+        {
+            SqlHelper.ExecuteNonQuery(_connectionString, "RatePlatiteUpdate",
+                ratePlatite.ID_RatePlatite,
+                ratePlatite.ID_RataTaxa,
+                ratePlatite.Data_Plata,
+                ratePlatite.SumaPlatita,
+                ratePlatite.SerieChitanta,
+                ratePlatite.NumarChitanta,
+               // ratePlatite.NumarFactura,
+                ratePlatite.ID_ContContabil,
+                ratePlatite.ID_Utilizator,
+              //  ratePlatite.DataCreare,
+              //  ratePlatite.UserIDCreare,
+              //  ratePlatite.DataModificare,
+              //  ratePlatite.UserIDModificare,
+                ratePlatite.PortalID);
+        }
+
+        public long RatePlatiteUpdateUrmatoareleNumereDeChitanta(long idRatePlatite, long numarChitanta, long userId, DateTime dataPentruModificare, bool crescator)
+        {
+            object result = SqlHelper.ExecuteScalar(_connectionString, "RatePlatiteUpdateUrmatoareleNumereDeChitanta", idRatePlatite, numarChitanta, userId, dataPentruModificare, crescator);
+            return result != null ? Convert.ToInt64(result) : -1;
         }
     }
 }

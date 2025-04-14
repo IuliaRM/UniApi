@@ -1,101 +1,98 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using DotNetNuke.Common.Utilities;
+using System.Configuration;
+using System.Data;
 using Microsoft.ApplicationBlocks.Data;
+using DotNetNuke.Common.Utilities;
 using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class AnUniversitarRepo
+    public interface IAnUniversitarRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        AnUniversitarInfo AnUniversitarGet(long idAnUniv);
+        long AnUniversitarAdd(AnUniversitarInfo anUniversitarInfo);
+        void AnUniversitarDelete(long idAnUniv);
+        List<AnUniversitarInfo> AnUniversitarListByUsername(string username);
+    }
+
+    public class AnUniversitarRepo : IAnUniversitarRepo
+    {
+        private readonly string _connectionString;
+
+        public AnUniversitarRepo()
+        {
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
+        }
 
         public AnUniversitarInfo AnUniversitarGet(long idAnUniv)
         {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_Get", idAnUniv))
+            try
             {
-                return (AnUniversitarInfo)CBO.FillObject(dr, typeof(AnUniversitarInfo));
-            }
-        }
-
-        public List<AnUniversitarInfo> AnUniversitarListByUtilizator(int idUtilizator)
-        {
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                sqlConnection.Open();
-                using (var dr = SqlHelper.ExecuteReader(sqlConnection, "AnUniversitar_GetByID_Utilizator", idUtilizator))
+                using (var reader = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_Get", idAnUniv))
                 {
-                    return CBO.FillCollection<AnUniversitarInfo>(dr);
+                    return CBO.FillObject<AnUniversitarInfo>(reader);
                 }
             }
-        }
-
-        public List<AnUniversitarInfo> AnUniversitarListAll()
-        {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_List"))
+            catch (Exception ex)
             {
-                return CBO.FillCollection<AnUniversitarInfo>(dr);
+                throw new DataException("Error retrieving AnUniversitar.", ex);
             }
         }
 
-        public AnUniversitarInfo AnUniversitarGetByAnCalendaristic(int anCalendaristic)
+        public long AnUniversitarAdd(AnUniversitarInfo anUniversitarInfo)
         {
-            var listAnUniv = AnUniversitarListAll();
-            return listAnUniv.FirstOrDefault(li => li.Denumire.ToLower().StartsWith($"an universitar {anCalendaristic}")) ?? listAnUniv.Last();
-        }
+            if (anUniversitarInfo == null)
+                throw new ArgumentNullException(nameof(anUniversitarInfo));
 
-        public int AnUniversitarAdd(AnUniversitarInfo anUniversitarInfo)
-        {
-            return Convert.ToInt32(SqlHelper.ExecuteScalar(_connectionString, "AnUniversitar_Insert",
-                anUniversitarInfo.Denumire,
-                anUniversitarInfo.DataModificare,
-                anUniversitarInfo.ID_Utilizator,
-                anUniversitarInfo.Status,
-                anUniversitarInfo.PortalID,
-                anUniversitarInfo.DataInceputAnUniv,
-                anUniversitarInfo.DataSfirsitAnUniv));
-        }
+            try
+            {
+                var id = SqlHelper.ExecuteScalar(_connectionString, "AnUniversitar_Insert",
+                    anUniversitarInfo.Denumire,
+                    anUniversitarInfo.DataModificare,
+                    anUniversitarInfo.ID_Utilizator,
+                    anUniversitarInfo.Status,
+                    anUniversitarInfo.PortalID,
+                    anUniversitarInfo.DataInceputAnUniv,
+                    anUniversitarInfo.DataSfirsitAnUniv
+                );
 
-        public void AnUniversitarUpdate(AnUniversitarInfo anUniversitarInfo)
-        {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitar_Update",
-                anUniversitarInfo.ID_AnUniv,
-                anUniversitarInfo.Denumire,
-                anUniversitarInfo.DataModificare,
-                anUniversitarInfo.ID_Utilizator,
-                anUniversitarInfo.Status,
-                anUniversitarInfo.PortalID,
-                anUniversitarInfo.DataInceputAnUniv,
-                anUniversitarInfo.DataSfirsitAnUniv);
+                return Convert.ToInt64(id);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error adding AnUniversitar.", ex);
+            }
         }
 
         public void AnUniversitarDelete(long idAnUniv)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitar_Delete", idAnUniv);
-        }
-
-        public AnUniversitarInfo AnUniversitarGetNextYear(long idAnUniversitarCurent)
-        {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_getNextYear", idAnUniversitarCurent))
+            try
             {
-                return (AnUniversitarInfo)CBO.FillObject(dr, typeof(AnUniversitarInfo));
+                SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitar_Delete", idAnUniv);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error deleting AnUniversitar.", ex);
             }
         }
 
-        public List<AnUniversitarInfo> AnUniversitarListWithPrecedent()
+        public List<AnUniversitarInfo> AnUniversitarListByUsername(string username)
         {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_GetCurrentAndPrevious"))
+            try
             {
-                return CBO.FillCollection<AnUniversitarInfo>(dr);
+                using (var reader = SqlHelper.ExecuteReader(_connectionString, "AnUniversitar_GetByID_Utilizator", username))
+                {
+                    return CBO.FillCollection<AnUniversitarInfo>(reader);
+                }
             }
-        }
-
-        public AnUniversitarInfo AnUniversitarGetPreviousYear(long idAnUniversitarCurent)
-        {
-            var currentYear = AnUniversitarGet(idAnUniversitarCurent);
-            return AnUniversitarGet(currentYear.Id_AnUnivPrecedent);
+            catch (Exception ex)
+            {
+                throw new DataException("Error retrieving AnUniversitar list by username.", ex);
+            }
         }
     }
 }

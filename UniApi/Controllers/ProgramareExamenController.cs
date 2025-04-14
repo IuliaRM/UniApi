@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Web.Http;
 using UniApi.DAL.Repos;
 using DotNetNuke.Web.Api;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.Controllers
 {
+    [AllowAnonymous]
     public class ProgramareExamenController : DnnApiController
     {
         [HttpPost]
@@ -26,7 +28,7 @@ namespace UniApi.Controllers
             return Ok(result);
         }
 
-        /*[HttpPost]
+        /* [HttpPost]
         public IHttpActionResult ProgramareExamenStudentMerge([FromBody] ProgramareExamenStudentInfo exameneStudentInfo)
         {
             var repo = new ProgramareExamenRepo();

@@ -1,76 +1,194 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class EvaluareProfesorController : DnnApiController
     {
-        private readonly EvaluareProfesorRepo _repo = new EvaluareProfesorRepo();
+        private readonly IEvaluareProfesorRepo _repo = new EvaluareProfesorRepo();
 
-        [HttpGet]
-        public IHttpActionResult EvaluareProfesorListGet()
+        public EvaluareProfesorController()
         {
-            var evaluari = _repo.EvaluareProfesorListGet();
-            return Ok(evaluari);
+
+        }
+
+
+        public EvaluareProfesorController(IEvaluareProfesorRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult EvaluareProfesorListNrChestionareCompletateGet(long ID_AnUniv, int NrSemestru)
+        public IHttpActionResult EvaluareProfesorList()
         {
-            var evaluari = _repo.EvaluareProfesorListNrChestionareCompletateGet(ID_AnUniv, NrSemestru);
-            return Ok(evaluari);
+            try
+            {
+                var result = _repo.EvaluareProfesorList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult EvaluareProfesorListNrChestionareCompletateProfGet(long ID_AnUniv, int NrSemestru)
+        public IHttpActionResult EvaluareProfesorListNrChestionareCompletate(long idAnUniv, int nrSemestru)
         {
-            var evaluari = _repo.EvaluareProfesorListNrChestionareCompletateProfGet(ID_AnUniv, NrSemestru);
-            return Ok(evaluari);
+            try
+            {
+                var result = _repo.EvaluareProfesorListNrChestionareCompletate(idAnUniv, nrSemestru);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult EvaluareProfesorListProfiDeEvaluatGet(long ID_AnUniv, int NrSemestru)
+        public IHttpActionResult EvaluareProfesorListNrChestionareCompletate_Prof(long idAnUniv, int nrSemestru)
         {
-            var evaluari = _repo.EvaluareProfesorListProfiDeEvaluatGet(ID_AnUniv, NrSemestru);
-            return Ok(evaluari);
+            try
+            {
+                var result = _repo.EvaluareProfesorListNrChestionareCompletate_Prof(idAnUniv, nrSemestru);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult EvaluareProfesorListProfiDeEvaluat(long idAnUniv, int nrSemestru)
+        {
+            try
+            {
+                var result = _repo.EvaluareProfesorListProfiDeEvaluat(idAnUniv, nrSemestru);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult EvaluareProfesorAdd([FromBody] EvaluareProfesorInfo objEvaluareProfesor)
+        public IHttpActionResult EvaluareProfesorAdd([FromBody] EvaluareProfesorInfo info)
         {
-            var id = _repo.EvaluareProfesorAdd(objEvaluareProfesor);
-            return Ok(id);
+            try
+            {
+                _repo.EvaluareProfesorAdd(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult EvaluareProfesorUpdate([FromBody] EvaluareProfesorInfo objEvaluareProfesor)
+        public IHttpActionResult EvaluareProfesorUpdate([FromBody] EvaluareProfesorInfo info)
         {
-            _repo.EvaluareProfesorUpdate(objEvaluareProfesor);
-            return Ok();
+            try
+            {
+                _repo.EvaluareProfesorUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult EvaluareProfesorDelete([FromBody] EvaluareProfesorInfo objEvaluareProfesor)
+        public IHttpActionResult EvaluareProfesorDelete([FromBody] EvaluareProfesorInfo info)
         {
-            _repo.EvaluareProfesorDelete(objEvaluareProfesor);
-            return Ok();
+            try
+            {
+                _repo.EvaluareProfesorDelete(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult EvaluareProfesorDeleteBySpecializareSemestru(long ID_Prof, long ID_Specializare, int NrSemestru, long ID_Dps)
+        public IHttpActionResult EvaluareProfesorDeleteBySpecializareSemestru(long idProf, long idSpecializare, int nrSemestru, long idDps)
         {
-            _repo.EvaluareProfesorDeleteBySpecializareSemestru(ID_Prof, ID_Specializare, NrSemestru, ID_Dps);
-            return Ok();
+            try
+            {
+                _repo.EvaluareProfesorDeleteBySpecializareSemestru(idProf, idSpecializare, nrSemestru, idDps);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpDelete]
+        public IHttpActionResult EvaluareProfesor_DeleteBySpecializareSemestru(long idSpecializare, int nrSemestru)
+        {
+            try
+            {
+                _repo.EvaluareProfesor_DeleteBySpecializareSemestru(idSpecializare, nrSemestru);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult CoduriEvaluareGenerate(long ID_AnUniv, int NrSemestru)
+        public IHttpActionResult EvaluareProfesorGenereazaCoduriEvaluare(long idAnUniv, int nrSemestru)
         {
-            _repo.CoduriEvaluareGenerate(ID_AnUniv, NrSemestru);
-            return Ok();
+            try
+            {
+                _repo.EvaluareProfesorGenereazaCoduriEvaluare(idAnUniv, nrSemestru);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult EvaluareProfesorGenereazaCoduriEvaluare_OLD(long idAnUniv, int nrSemestru)
+        {
+            try
+            {
+                _repo.EvaluareProfesorGenereazaCoduriEvaluare_OLD(idAnUniv, nrSemestru);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult EvaluareProfesorBifeazaProfesorDinStatImportatInDetaliuPlanSemestru(long idAnUniv)
+        {
+            try
+            {
+                _repo.EvaluareProfesorBifeazaProfesorDinStatImportatInDetaliuPlanSemestru(idAnUniv);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

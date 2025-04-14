@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
+using UniApi.Info;
 
 namespace UniApi.Controllers
 {
+    [AllowAnonymous]
     public class StudentContController : DnnApiController
     {
         private readonly StudentContRepo _repo = new StudentContRepo();
+
+        public StudentContController() { }
 
         [HttpGet]
         public IHttpActionResult StudentListByIdAndAnUnivGet(List<long> listaID_Student, long ID_AnUniv)

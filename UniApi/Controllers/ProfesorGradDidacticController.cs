@@ -4,43 +4,67 @@ using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
 using UniApi.Info;
 
+
 namespace UniApi.Controllers
 {
     public class ProfesorGradDidacticController : DnnApiController
     {
-        private readonly ProfesorGradDidacticRepo _repo = new ProfesorGradDidacticRepo();
+        private readonly IProfesorGradDidacticRepo _repo = new ProfesorGradDidacticRepo();
+
+        public ProfesorGradDidacticController()
+        {
+
+        }
 
         [HttpGet]
-        public IHttpActionResult GradDidacticActivGet(long idProfesor)
+        public IHttpActionResult ProfesorGradDidacticGet(long idProfesorGradDidactic)
         {
-            var result = _repo.GradDidacticActivGet(idProfesor);
+            var result = _repo.ProfesorGradDidacticGet(idProfesorGradDidactic);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult GradDidacticActivAnUnivGet(long idProfesor, long idAnUniv)
+        public IHttpActionResult ProfesorGradDidacticGetGradDidacticActiv(long idProfesor)
         {
-            var result = _repo.GradDidacticActivAnUnivGet(idProfesor, idAnUniv);
+            var result = _repo.ProfesorGradDidacticGetGradDidacticActiv(idProfesor);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult GradDidacticListByProfesorGet(long idProfesor)
+        public IHttpActionResult ProfesorGradDidacticGetGradDidacticActivAnUniv(long idProfesor, long idAnUniv)
         {
-            var result = _repo.GradDidacticListByProfesorGet(idProfesor);
+            var result = _repo.ProfesorGradDidacticGetGradDidacticActivAnUniv(idProfesor, idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult GradDidacticListByTipGradDidacticGet(long idTipGradDidactic)
+        public IHttpActionResult ProfesorGradDidacticList()
         {
-            var result = _repo.GradDidacticListByTipGradDidacticGet(idTipGradDidactic);
+            var result = _repo.ProfesorGradDidacticList();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ProfesorGradDidacticListByProfesor(long idProfesor)
+        {
+            var result = _repo.ProfesorGradDidacticListByProfesor(idProfesor);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult ProfesorGradDidacticListByTipGradDidactic(long idTipGradDidactic)
+        {
+            var result = _repo.ProfesorGradDidacticListByTipGradDidactic(idTipGradDidactic);
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult ProfesorGradDidacticAdd([FromBody] ProfesorGradDidacticInfo profesorGradDidactic)
         {
+            if (profesorGradDidactic == null)
+            {
+                return BadRequest("Obiectul profesorGradDidactic nu poate fi null.");
+            }
             var id = _repo.ProfesorGradDidacticAdd(profesorGradDidactic);
             return Ok(id);
         }
@@ -48,14 +72,18 @@ namespace UniApi.Controllers
         [HttpPut]
         public IHttpActionResult ProfesorGradDidacticUpdate([FromBody] ProfesorGradDidacticInfo profesorGradDidactic)
         {
+            if (profesorGradDidactic == null)
+            {
+                return BadRequest("Obiectul profesorGradDidactic nu poate fi null.");
+            }
             _repo.ProfesorGradDidacticUpdate(profesorGradDidactic);
             return Ok();
         }
 
         [HttpDelete]
-        public IHttpActionResult ProfesorGradDidacticDelete([FromBody] ProfesorGradDidacticInfo profesorGradDidactic)
+        public IHttpActionResult ProfesorGradDidacticDelete(long idProfesorGradDidactic)
         {
-            _repo.ProfesorGradDidacticDelete(profesorGradDidactic);
+            _repo.ProfesorGradDidacticDelete(idProfesorGradDidactic);
             return Ok();
         }
     }

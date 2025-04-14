@@ -9,36 +9,26 @@ namespace UniApi.Controllers
 {
     public class TipPracticaController : DnnApiController
     {
+        private readonly ITipPracticaRepo _repo = new TipPracticaRepo();
+
+        public TipPracticaController()
+        {
+
+        }
+
+
         [HttpGet]
         public IHttpActionResult TipPracticaGet(int idTipPractica)
         {
-            var repo = new TipPracticaRepo();
-            var result = repo.TipPracticaGet(idTipPractica);
+            var result = _repo.TipPracticaGet(idTipPractica);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipPracticaListGet()
         {
-            var repo = new TipPracticaRepo();
-            var result = repo.TipPracticaListGet();
+            var result = _repo.TipPracticaList();
             return Ok(result);
-        }
-
-        [HttpPost]
-        public IHttpActionResult TipPracticaAdd([FromBody] TipPractica tipPractica)
-        {
-            var repo = new TipPracticaRepo();
-            var id = repo.TipPracticaAdd(tipPractica);
-            return Ok(id); 
-        }
-
-        [HttpDelete]
-        public IHttpActionResult TipPracticaDelete(int idTipPractica)
-        {
-            var repo = new TipPracticaRepo();
-            repo.TipPracticaDelete(idTipPractica);
-            return Ok(); 
         }
     }
 }

@@ -1,49 +1,94 @@
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using UniApi.Models;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
+using System.Data;
 
 namespace UniApi.Controllers
 {
     public class FirmaController : DnnApiController
     {
-        private readonly FirmaRepo _repo = new FirmaRepo();
+        private readonly IFirmaRepo _repo = new FirmaRepo();
 
-        [HttpGet]
-        public IHttpActionResult FirmaGet(long ID_Firma)
+        public FirmaController()
         {
-            var firma = _repo.FirmaGet(ID_Firma);
-            return Ok(firma);
+
+        }
+
+        public FirmaController(IFirmaRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult FirmaListGet()
+        public IHttpActionResult FirmaGet(long idFirma)
         {
-            var firme = _repo.FirmaListGet();
-            return Ok(firme);
+            try
+            {
+                var result = _repo.FirmaGet(idFirma);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FirmaByUserIdPortalGet(int ID_UserPortal)
+        public IHttpActionResult FirmaByUserIdPortalGet(int idUserPortal)
         {
-            var firma = _repo.FirmaByUserIdPortalGet(ID_UserPortal);
-            return Ok(firma);
+            try
+            {
+                var result = _repo.FirmaGetByUserIdPortal(idUserPortal);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult FirmaList()
+        {
+            try
+            {
+                var result = _repo.FirmaList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult FirmaAdd([FromBody] Firma objFirma)
+        public IHttpActionResult FirmaAdd([FromBody] Firma info)
         {
-            _repo.FirmaAdd(objFirma);
-            return Ok();
+            try
+            {
+                var id = _repo.FirmaAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult FirmaUpdate([FromBody] Firma objFirma)
+        public IHttpActionResult FirmaUpdate([FromBody] Firma info)
         {
-            _repo.FirmaUpdate(objFirma);
-            return Ok();
+            try
+            {
+                _repo.FirmaUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

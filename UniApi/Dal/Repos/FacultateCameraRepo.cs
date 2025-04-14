@@ -1,76 +1,230 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Controllers;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class FacultateCameraRepo
+    public interface IFacultateCameraRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        FacultateCameraInfo FacultateCameraGet(long idFacultateCamera);
+        FacultateCameraInfo FacultateCameraGetByFacultateCamera(long idFacultate, long idCamera, long idAnUniv);
+        DataTable FacultateCameraList();
+        DataTable FacultateCameraListByAnUniversitar(long idAnUniv);
+        DataTable FacultateCameraListByFacultate(long idFacultate);
+        DataTable FacultateCameraListByFacultateAnUniv(long idFacultate, long idAnUniv);
+        DataTable FacultateCameraListByFacultateAnUnivCamin(long idFacultate, long idAnUniv, long idCamin);
+        DataTable FacultateCameraListByFacultateCaminEtajAnUniv(long idFacultate, long idCamin, int etaj, long idAnUniv);
+        DataTable FacultateCameraListByCamera(long idCamera);
+        DataTable FacultateCameraRaportLocuriByCaminAnUniv(long idCamin, long idAnUniv);
 
-        public FacultateCameraInfo FacultateCameraGet(long ID_FacultateCamera)
+        long FacultateCameraAdd(FacultateCameraInfo info);
+        void FacultateCameraUpdate(FacultateCameraInfo info);
+        void FacultateCameraMerge(FacultateCameraInfo info);
+
+        void FacultateCameraImportDinAltAnUniv(long idAnUnivSursa, long idAnUnivDestinatie);
+        void FacultateCameraDelete(FacultateCameraInfo info);
+        void FacultateCameraDeleteByFacultateCamera(long idFacultate, long idCamera);
+    }
+    public class FacultateCameraRepo : IFacultateCameraRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public FacultateCameraInfo FacultateCameraGet(long idFacultateCamera)
         {
-            return CBO.FillObject<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCamera", ID_FacultateCamera));
+            try
+            {
+                return CBO.FillObject<FacultateCameraInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "FacultateCamera_GetFacultateCamera", idFacultateCamera));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraGet", ex);
+            }
         }
 
-        public FacultateCameraInfo FacultateCameraByFacultateCameraGet(long ID_Facultate, long ID_Camera, long ID_AnUniv)
+        public FacultateCameraInfo FacultateCameraGetByFacultateCamera(long idFacultate, long idCamera, long idAnUniv)
         {
-            return CBO.FillObject<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraByFacultateCamera", ID_Facultate, ID_Camera, ID_AnUniv));
+            try
+            {
+                return CBO.FillObject<FacultateCameraInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "FacultateCamera_GetFacultateCameraByFacultateCamera", idFacultate, idCamera, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraGetByFacultateCamera", ex);
+            }
         }
 
-        public List<FacultateCameraInfo> FacultateCameraListGet()
+        public DataTable FacultateCameraList()
         {
-            return CBO.FillCollection<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraList"));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraList", ex);
+            }
         }
 
-        public List<FacultateCameraInfo> FacultateCameraListByAnUniversitarGet(long ID_AnUniv)
+        public DataTable FacultateCameraListByAnUniversitar(long idAnUniv)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByAnUniversitar", ID_AnUniv));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraListByAnUniversitar", idAnUniv).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraListByAnUniversitar", ex);
+            }
         }
 
-        public List<FacultateCameraInfo> FacultateCameraListByFacultateGet(long ID_Facultate)
+        public DataTable FacultateCameraListByFacultate(long idFacultate)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByFacultate", ID_Facultate));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraListByFacultate", idFacultate).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraListByFacultate", ex);
+            }
         }
 
-        public List<FacultateCameraInfo> FacultateCameraListByFacultateAnUnivGet(long ID_Facultate, long ID_AnUniv)
+        public DataTable FacultateCameraListByFacultateAnUniv(long idFacultate, long idAnUniv)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByFacultateAnUniv", ID_Facultate, ID_AnUniv));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraListByFacultateAnUniv", idFacultate, idAnUniv).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraListByFacultateAnUniv", ex);
+            }
         }
 
-        public List<FacultateCameraInfo> FacultateCameraListByCameraGet(long ID_Camera)
+        public DataTable FacultateCameraListByFacultateAnUnivCamin(long idFacultate, long idAnUniv, long idCamin)
         {
-            return CBO.FillCollection<FacultateCameraInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "FacultateCamera_GetFacultateCameraListByCamera", ID_Camera));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraListByFacultateAnUnivCamin", idFacultate, idAnUniv, idCamin).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraListByFacultateAnUnivCamin", ex);
+            }
         }
 
-        public long FacultateCameraAdd(FacultateCameraInfo objFacultateCamera)
+        public DataTable FacultateCameraListByFacultateCaminEtajAnUniv(long idFacultate, long idCamin, int etaj, long idAnUniv)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "FacultateCamera_AddFacultateCamera", objFacultateCamera);
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraListByFacultateCaminEtajAnUniv", idFacultate, idCamin, etaj, idAnUniv).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraListByFacultateCaminEtajAnUniv", ex);
+            }
         }
 
-        public void FacultateCameraUpdate(FacultateCameraInfo objFacultateCamera)
+        public DataTable FacultateCameraListByCamera(long idCamera)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCamera_UpdateFacultateCamera", objFacultateCamera);
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetFacultateCameraListByCamera", idCamera).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraListByCamera", ex);
+            }
         }
 
-        public void FacultateCameraDelete(FacultateCameraInfo objFacultateCamera)
+        public DataTable FacultateCameraRaportLocuriByCaminAnUniv(long idCamin, long idAnUniv)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCamera_DeleteFacultateCamera", objFacultateCamera);
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "FacultateCamera_GetRaportLocuriByCaminAnUniv", idCamin, idAnUniv).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraRaportLocuriByCaminAnUniv", ex);
+            }
         }
 
-        public void FacultateCameraDeleteByFacultateCamera(long ID_Facultate, long ID_Camera)
+        public long FacultateCameraAdd(FacultateCameraInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "FacultateCamera_DeleteFacultateCameraByFacultateCamera", ID_Facultate, ID_Camera);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "FacultateCamera_AddFacultateCamera", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraAdd", ex);
+            }
+        }
+
+        public void FacultateCameraUpdate(FacultateCameraInfo info)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FacultateCamera_UpdateFacultateCamera", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraUpdate", ex);
+            }
+        }
+
+        public void FacultateCameraMerge(FacultateCameraInfo info)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FacultateCamera_MergeFacultateCamera", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraMerge", ex);
+            }
+        }
+
+        public void FacultateCameraDelete(FacultateCameraInfo info)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FacultateCamera_DeleteFacultateCamera", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraDelete", ex);
+            }
+        }
+
+        public void FacultateCameraDeleteByFacultateCamera(long idFacultate, long idCamera)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FacultateCamera_DeleteFacultateCameraByFacultateCamera", idFacultate, idCamera);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraDeleteByFacultateCamera", ex);
+            }
+        }
+
+        public void FacultateCameraImportDinAltAnUniv(long idAnUnivSursa, long idAnUnivDestinatie)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "FacultateCamera_ImportDinAltAnUniv", idAnUnivSursa, idAnUnivDestinatie);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FacultateCameraImportDinAltAnUniv", ex);
+            }
         }
     }
 }

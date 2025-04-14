@@ -1,76 +1,142 @@
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
+    
     public class DetaliuPlanSemestruProfesorCuplajController : DnnApiController
     {
-        private readonly DetaliuPlanSemestruProfesorCuplajRepo _repo = new DetaliuPlanSemestruProfesorCuplajRepo();
+        private readonly IDetaliuPlanSemestruProfesorCuplajRepo _repo = new DetaliuPlanSemestruProfesorCuplajRepo();
 
-        [HttpGet]
-        public IHttpActionResult AllGet()
+        public DetaliuPlanSemestruProfesorCuplajController()
         {
-            var lista = _repo.AllGet();
-            return Ok(lista);
+
+        }
+
+        public DetaliuPlanSemestruProfesorCuplajController(IDetaliuPlanSemestruProfesorCuplajRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult DetaliuPlanSemestruProfesorByGet(long ID_DetaliuPlanSemestruProfesor)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajGet(long id)
         {
-            var lista = _repo.DetaliuPlanSemestruProfesorByGet(ID_DetaliuPlanSemestruProfesor);
-            return Ok(lista);
+            try
+            {
+                var result = _repo.DetaliuPlanSemestruProfesorCuplajGet(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajList()
+        {
+            try
+            {
+                var list = _repo.DetaliuPlanSemestruProfesorCuplajList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajByGet(long ID_DetaliuPlanSemestruProfesor, long ID_Cuplaj)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajListByDetaliuPlanSemestruProfesor(long idDetaliu)
         {
-            var lista = _repo.DetaliuPlanSemestruProfesorCuplajByGet(ID_DetaliuPlanSemestruProfesor, ID_Cuplaj);
-            return Ok(lista);
+            try
+            {
+                var list = _repo.DetaliuPlanSemestruProfesorCuplajListByDetaliuPlanSemestruProfesor(idDetaliu);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult DetaliuCuplajByGet(long ID_DetaliuCuplaj)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajListByDetaliuCuplaj(long idCuplaj)
         {
-            var lista = _repo.DetaliuCuplajByGet(ID_DetaliuCuplaj);
-            return Ok(lista);
+            try
+            {
+                var list = _repo.DetaliuPlanSemestruProfesorCuplajListByDetaliuCuplaj(idCuplaj);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult AddPost([FromBody] DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajAdd([FromBody] DetaliuPlanSemestruProfesorCuplajInfo info)
         {
-            int id = _repo.AddPost(objDetaliuPlanSemestruProfesorCuplaj);
-            return Ok(id);
+            try
+            {
+                var id = _repo.DetaliuPlanSemestruProfesorCuplajAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult UpdatePut([FromBody] DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajUpdate([FromBody] DetaliuPlanSemestruProfesorCuplajInfo info)
         {
-            _repo.UpdatePut(objDetaliuPlanSemestruProfesorCuplaj);
-            return Ok();
+            try
+            {
+                _repo.DetaliuPlanSemestruProfesorCuplajUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteDelete([FromBody] DetaliuPlanSemestruProfesorCuplajInfo objDetaliuPlanSemestruProfesorCuplaj)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajDelete(long id)
         {
-            _repo.DeleteDelete(objDetaliuPlanSemestruProfesorCuplaj);
-            return Ok();
+            try
+            {
+                var existing = _repo.DetaliuPlanSemestruProfesorCuplajGet(id);
+                if (existing == null)
+                    return NotFound();
+
+                _repo.DetaliuPlanSemestruProfesorCuplajDelete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteByPostProfesorDelete(long ID_DetaliuPlanSemestruProfesorCuplaj, long ID_PostProfesor)
+        public IHttpActionResult DetaliuPlanSemestruProfesorCuplajDeleteByPostProfesor(long idCuplaj, long idPostProfesor)
         {
-            _repo.DeleteByPostProfesorDelete(ID_DetaliuPlanSemestruProfesorCuplaj, ID_PostProfesor);
-            return Ok();
-        }
-
-        [HttpGet]
-        public IHttpActionResult IdGet(long ID_DetaliuPlanSemestruProfesorCuplaj)
-        {
-            var detaliu = _repo.IdGet(ID_DetaliuPlanSemestruProfesorCuplaj);
-            return Ok(detaliu);
+            try
+            {
+                _repo.DetaliuPlanSemestruProfesorCuplajDeleteByPostProfesor(idCuplaj, idPostProfesor);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

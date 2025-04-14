@@ -2,109 +2,156 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
+   
+
     public class AnunturiController : DnnApiController
     {
-       
+        private readonly IAnunturiRepo _repo = new AnunturiRepo();
+        public AnunturiController()
+        {
+
+        }
+
+        public AnunturiController(IAnunturiRepo repo)
+        {
+            _repo = repo;
+        }
+
         [HttpPost]
         public IHttpActionResult AnunturiAdd([FromBody] AnunturiInfo anunturiInfo)
         {
-            var repo = new AnunturiRepo(); // Assume you have a repository for DB operations
-            bool result = repo.AnunturiAdd(anunturiInfo); // Call repository instead of recursive call
-
-            if (result)
+            try
             {
+                _repo.AnunturiAdd(anunturiInfo);
                 return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("A apărut o eroare la adăugarea anunțului.");
+                return InternalServerError(ex);
             }
         }
 
-        // Obține un anunț după ID
-        [HttpGet]
-        public IHttpActionResult AnunturiGet(long idAnunt)
-        {
-            var repo = new AnunturiRepo(); // Use repository instead of self-referencing
-            var anunt = repo.AnunturiGet(idAnunt); // Fetch the announcement from DB
-
-            if (anunt != null)
-            {
-                return Ok(anunt);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        // Obține lista de anunțuri
-        [HttpGet]
-        public IHttpActionResult AnunturiList()
-        {
-            var controller = new AnunturiController();
-            var anunturiList = controller.AnunturiList();
-            return Ok(anunturiList);
-        }
-
-        // Șterge un anunț
-        [HttpDelete]
-        public IHttpActionResult AnunturiDelete(long idAnunt)
-        {
-            var controller = new AnunturiController();
-            controller.AnunturiDelete(idAnunt);
-            return Ok();
-        }
-
-        // Actualizează un anunț
         [HttpPut]
         public IHttpActionResult AnunturiUpdate([FromBody] AnunturiInfo anunturiInfo)
         {
-            var repo = new AnunturiRepo(); // Use repository instead of self-referencing
-            bool result = repo.AnunturiUpdate(anunturiInfo); // Call repository method
-
-            if (result)
+            try
             {
+                _repo.AnunturiUpdate(anunturiInfo);
                 return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("A apărut o eroare la actualizarea anunțului.");
+                return InternalServerError(ex);
             }
         }
 
-
-        // Obține lista de anunțuri pentru un an universitar și facultate
-        [HttpGet]
-        public IHttpActionResult AnunturiListByAnUniv_Facultate(long idAnUniv, long idFacultate)
+        [HttpDelete]
+        public IHttpActionResult AnunturiDelete(long idAnunt)
         {
-            var controller = new AnunturiController();
-            var anunturiList = controller.AnunturiListByAnUniv_Facultate(idAnUniv, idFacultate);
-            return Ok(anunturiList);
+            try
+            {
+                _repo.AnunturiDelete(idAnunt);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-        // Obține lista de anunțuri pentru un student
         [HttpGet]
-        public IHttpActionResult AnunturiListByStudent(long idAnUniv, long idAnStudiu, long idFacultate, long idFC, long idFCForma, long idDomeniu, long idSpecializare, long idGrupe)
+        public IHttpActionResult AnunturiGet(long idAnunt)
         {
-            var controller = new AnunturiController();
-            var anunturiList = controller.AnunturiListByStudent(idAnUniv, idAnStudiu, idFacultate, idFC, idFCForma, idDomeniu, idSpecializare, idGrupe);
-            return Ok(anunturiList);
+            try
+            {
+                var result = _repo.AnunturiGet(idAnunt);
+                if (result == null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-        // Obține anunțuri pe pagină
         [HttpGet]
-        public IHttpActionResult AnunturiListPaged(int pageIndex, int pageSize, ref int totalRecords)
+        public IHttpActionResult AnunturiGetByIdStudentAnUniv(long idStudent, long idAnUniv)
         {
-            var controller = new AnunturiController();
-            var anunturiList = controller.AnunturiListPaged(pageIndex, pageSize, ref totalRecords);
-            return Ok(new { TotalRecords = totalRecords, Anunturi = anunturiList });
+            try
+            {
+                var result = _repo.AnunturiGetByIdStudentAnUniv(idStudent, idAnUniv);
+                if (result == null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AnunturiList()
+        {
+            try
+            {
+                var result = _repo.AnunturiList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AnunturiListByIdStudnetAnUniv(long idStudent, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.AnunturiListByIdStudnetAnUniv(idStudent, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AnunturiListByStudentAnUniv(long idStudent, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.AnunturiListByStudentAnUniv(idStudent, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AnunturiListByUsernameStudentAnUniv(string username, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.AnunturiListByUsernameStudentAnUniv(username, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

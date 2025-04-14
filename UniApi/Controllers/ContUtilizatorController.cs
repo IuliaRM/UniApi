@@ -1,80 +1,129 @@
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class ContUtilizatorController : DnnApiController
     {
-        private readonly ContUtilizatorRepo _repo = new ContUtilizatorRepo();
+        private readonly IContUtilizatorRepo _repo = new ContUtilizatorRepo();
+
+        public ContUtilizatorController()
+        {
+
+        }
+        public ContUtilizatorController(IContUtilizatorRepo repo)
+        {
+            _repo = repo;
+        }
 
         [HttpGet]
         public IHttpActionResult ContUtilizatorGet(long idContUtilizator)
         {
-            var utilizator = _repo.ContUtilizatorGet(idContUtilizator);
-            if (utilizator != null)
+            try
             {
-                return Ok(utilizator);
+                var utilizator = _repo.ContUtilizatorGet(idContUtilizator);
+                return utilizator != null ? (IHttpActionResult)Ok(utilizator) : NotFound();
             }
-            return NotFound();
-        }
-
-        [HttpGet]
-        public IHttpActionResult ContUtilizatorList()
-        {
-            var utilizatori = _repo.ContUtilizatorList();
-            return Ok(utilizatori);
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult ContUtilizatorGetByCNP(string cnp)
         {
-            var utilizator = _repo.ContUtilizatorGetByCNP(cnp);
-            if (utilizator != null)
+            try
             {
-                return Ok(utilizator);
+                var utilizator = _repo.ContUtilizatorGetByCNP(cnp);
+                return utilizator != null ? (IHttpActionResult)Ok(utilizator) : NotFound();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult ContUtilizatorList()
+        {
+            try
+            {
+                var list = _repo.ContUtilizatorList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult ContUtilizatorAdd([FromBody] ContUtilizatorInfo objContUtilizator)
+        public IHttpActionResult ContUtilizatorAdd([FromBody] ContUtilizatorInfo info)
         {
-            long id = _repo.ContUtilizatorAdd(objContUtilizator);
-            return Ok(id);
+            try
+            {
+                var id = _repo.ContUtilizatorAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult ContUtilizatorUpdate([FromBody] ContUtilizatorInfo objContUtilizator)
+        public IHttpActionResult ContUtilizatorUpdate([FromBody] ContUtilizatorInfo info)
         {
-            _repo.ContUtilizatorUpdate(objContUtilizator);
-            return Ok();
+            try
+            {
+                _repo.ContUtilizatorUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult ContUtilizatorDelete(long idContUtilizator)
         {
-            var utilizator = _repo.ContUtilizatorGet(idContUtilizator);
-            if (utilizator == null)
+            try
             {
-                return NotFound();
+                var existing = _repo.ContUtilizatorGet(idContUtilizator);
+                if (existing == null)
+                    return NotFound();
+
+                _repo.ContUtilizatorDelete(idContUtilizator);
+                return Ok();
             }
-            _repo.ContUtilizatorDelete(idContUtilizator);
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult ContUtilizatorDeleteByCNP(string cnp)
         {
-            var utilizator = _repo.ContUtilizatorGetByCNP(cnp);
-            if (utilizator == null)
+            try
             {
-                return NotFound();
+                var existing = _repo.ContUtilizatorGetByCNP(cnp);
+                if (existing == null)
+                    return NotFound();
+
+                _repo.ContUtilizatorDeleteByCNP(cnp);
+                return Ok();
             }
-            _repo.ContUtilizatorDeleteByCNP(cnp);
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

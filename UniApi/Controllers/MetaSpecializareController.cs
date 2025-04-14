@@ -1,73 +1,135 @@
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
-using DotNetNuke.Common.Utilities;
-using Microsoft.ApplicationBlocks.Data;
-using System.Configuration;
-using System.ComponentModel;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class MetaSpecializareController : DnnApiController
     {
+        private readonly IMetaSpecializareRepo _repo = new MetaSpecializareRepo();
+
+        public MetaSpecializareController()
+        {
+
+        }
+
+        public MetaSpecializareController(IMetaSpecializareRepo repo)
+        {
+            _repo = repo;
+        }
+
         [HttpGet]
         public IHttpActionResult MetaSpecializareGet(long idMetaSpecializare)
         {
-            var repo = new MetaSpecializareRepo();
-            var result = repo.MetaSpecializareGet(idMetaSpecializare);
-            return Ok(result);
+            try
+            {
+                var result = _repo.MetaSpecializareGet(idMetaSpecializare);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult MetaSpecializareList()
         {
-            var repo = new MetaSpecializareRepo();
-            var result = repo.MetaSpecializareList();
-            return Ok(result);
+            try
+            {
+                var result = _repo.MetaSpecializareList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult MetaSpecializareListByFacultate(long idFacultate)
         {
-            var repo = new MetaSpecializareRepo();
-            var result = repo.MetaSpecializareListByFacultate(idFacultate);
-            return Ok(result);
+            try
+            {
+                var result = _repo.MetaSpecializareListByFacultate(idFacultate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult MetaSpecializareListBySpecializare(long idSpecializare)
         {
-            var repo = new MetaSpecializareRepo();
-            var result = repo.MetaSpecializareListBySpecializare(idSpecializare);
-            return Ok(result);
+            try
+            {
+                var result = _repo.MetaSpecializareListBySpecializare(idSpecializare);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult MetaSpecializareListByCatedraAnUniv(long idCatedra, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.MetaSpecializareListByCatedraAnUniv(idCatedra, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult MetaSpecializareAdd([FromBody] MetaSpecializareInfo objMetaSpecializare)
+        public IHttpActionResult MetaSpecializareAdd([FromBody] MetaSpecializareInfo info)
         {
-            var repo = new MetaSpecializareRepo();
-            repo.MetaSpecializareAdd(objMetaSpecializare);
-            return Ok();
+            try
+            {
+                var id = _repo.MetaSpecializareAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult MetaSpecializareUpdate([FromBody] MetaSpecializareInfo objMetaSpecializare)
+        public IHttpActionResult MetaSpecializareUpdate([FromBody] MetaSpecializareInfo info)
         {
-            var repo = new MetaSpecializareRepo();
-            repo.MetaSpecializareUpdate(objMetaSpecializare);
-            return Ok();
+            try
+            {
+                _repo.MetaSpecializareUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult MetaSpecializareDelete(long idMetaSpecializare)
         {
-            var repo = new MetaSpecializareRepo();
-            repo.MetaSpecializareDelete(idMetaSpecializare);
-            return Ok();
+            try
+            {
+                _repo.MetaSpecializareDelete(idMetaSpecializare);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

@@ -1,76 +1,136 @@
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
+using System.Data;
 
 namespace UniApi.Controllers
 {
     public class LocalitatiController : DnnApiController
     {
-        private readonly LocalitatiRepo _repo = new LocalitatiRepo();
+        private readonly ILocalitatiRepo _repo = new LocalitatiRepo();
 
-        [HttpGet]
-        public IHttpActionResult LocalitatiGet(string ID_Localitate)
+        public LocalitatiController()
         {
-            var localitate = _repo.LocalitatiGet(ID_Localitate);
-            return Ok(localitate);
+
+        }
+
+        public LocalitatiController(ILocalitatiRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult LocalitatiByID_N_LocalitateGet(int ID_N_Localitate)
+        public IHttpActionResult LocalitatiGet(string idLocalitate)
         {
-            var localitate = _repo.LocalitatiByID_N_LocalitateGet(ID_N_Localitate);
-            return Ok(localitate);
+            try
+            {
+                var result = _repo.LocalitatiGet(idLocalitate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult LocalitatiListGet()
+        public IHttpActionResult LocalitatiByID_N_LocalitateGet(int idNLocalitate)
         {
-            var localitati = _repo.LocalitatiListGet();
-            return Ok(localitati);
+            try
+            {
+                var result = _repo.LocalitatiGetByID_N_Localitate(idNLocalitate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult LocalitatiListByJudetGet(string ID_Judet)
+        public IHttpActionResult LocalitatiByDenumireIdJudetGet(string denumireLocalitate, string idJudet)
         {
-            var localitati = _repo.LocalitatiListByJudetGet(ID_Judet);
-            return Ok(localitati);
+            try
+            {
+                var result = _repo.LocalitatiGetByDenumireIdJudet(denumireLocalitate, idJudet);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult LocalitatiByDenumireIdJudetGet(string DenumireLocalitate, string ID_Judet)
+        public IHttpActionResult LocalitatiListByCaractereDenumireIdJudetGet(string caractere, string idJudet)
         {
-            var localitate = _repo.LocalitatiByDenumireIdJudetGet(DenumireLocalitate, ID_Judet);
-            return Ok(localitate);
+            try
+            {
+                var result = _repo.LocalitatiListByCaractereDenumireIdJudet(caractere, idJudet);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult LocalitatiListByCaractereDenumireIdJudetGet(string CaractereDenumireLocalitate, string ID_Judet)
+        public IHttpActionResult LocalitatiListByJudetGet(string idJudet)
         {
-            var localitati = _repo.LocalitatiListByCaractereDenumireIdJudetGet(CaractereDenumireLocalitate, ID_Judet);
-            return Ok(localitati);
+            try
+            {
+                var result = _repo.LocalitatiListByJudet(idJudet);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult LocalitatiAdd([FromBody] LocalitatiInfo objLocalitati)
+        public IHttpActionResult LocalitatiAdd([FromBody] LocalitatiInfo info)
         {
-            var id = _repo.LocalitatiAdd(objLocalitati);
-            return Ok(id);
+            try
+            {
+                var id = _repo.LocalitatiAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult LocalitatiUpdate([FromBody] LocalitatiInfo objLocalitati)
+        public IHttpActionResult LocalitatiUpdate([FromBody] LocalitatiInfo info)
         {
-            _repo.LocalitatiUpdate(objLocalitati);
-            return Ok();
+            try
+            {
+                _repo.LocalitatiUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult LocalitatiDelete([FromBody] LocalitatiInfo objLocalitati)
+        public IHttpActionResult LocalitatiDelete([FromBody] LocalitatiInfo info)
         {
-            _repo.LocalitatiDelete(objLocalitati);
-            return Ok();
+            try
+            {
+                _repo.LocalitatiDelete(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

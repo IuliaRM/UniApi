@@ -2,41 +2,26 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
+using UniApi;
+using UniApi.Info;
+
 
 namespace UniApi.Controllers
 {
     public class TaxaDeScolarizareController : DnnApiController
     {
-        [HttpGet]
-        public IHttpActionResult StudentiCuTaxaScolarizareAchitataMaiPutinDeProcentGet(long ID_AnUniv, long Id_FC, long Id_FCForma, long Id_AnStudiu, long Id_Domeniu, long Id_Specializare, long ID_Grupe, string FiltruTipIntrareIesire, int Procent)
+        private readonly ITaxaDeScolarizareRepo _repo = new TaxaDeScolarizareRepo();
+
+        public TaxaDeScolarizareController()
         {
-            var repo = new TaxaDeScolarizareRepo();
-            var result = repo.StudentiCuTaxaScolarizareAchitataMaiPutinDeProcentGet(ID_AnUniv, Id_FC, Id_FCForma, Id_AnStudiu, Id_Domeniu, Id_Specializare, ID_Grupe, FiltruTipIntrareIesire, Procent);
-            return Ok(result);
+
         }
 
         [HttpGet]
-        public IHttpActionResult TipTaxaScolarizareStudentAnCurentGet(long ID_Student, long ID_AnUniv)
+        public IHttpActionResult TaxaScolaiareListByFacultateCicluFormaGet(long idFacultate, long idCicluStudiu, long idFormaInvatamant, long idAnUniversitar)
         {
-            var repo = new TaxaDeScolarizareRepo();
-            var result = repo.TipTaxaScolarizareStudentAnCurentGet(ID_Student, ID_AnUniv);
+            var result = _repo.TaxaScolaiareListByFacultateCicluForma(idFacultate, idCicluStudiu, idFormaInvatamant, idAnUniversitar);
             return Ok(result);
-        }
-
-        /* [HttpPost]
-        public IHttpActionResult TaxaScolarizareAdd([FromBody] TaxaScolarizareInfo taxaInfo)
-        {
-            var repo = new TaxaDeScolarizareRepo();
-            var id = repo.TaxaScolarizareAdd(taxaInfo);
-            return Ok(id);
-        } */
-
-        [HttpDelete]
-        public IHttpActionResult TaxaScolarizareDelete(long idTaxa)
-        {
-            var repo = new TaxaDeScolarizareRepo();
-            repo.TaxaScolarizareDelete(idTaxa);
-            return Ok();
         }
     }
 }

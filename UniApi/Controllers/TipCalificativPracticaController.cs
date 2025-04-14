@@ -2,42 +2,33 @@
 using System.Web.Http;
 using UniApi.DAL.Repos;
 using DotNetNuke.Web.Api;
+using UniApi;
 using UniApi.Info;
+
 
 namespace UniApi.Controllers
 {
     public class TipCalificativPracticaController : DnnApiController
     {
+        private readonly ITipCalificativPracticaRepo _repo = new TipCalificativPracticaRepo();
+
+        public TipCalificativPracticaController()
+        {
+
+        }
+
         [HttpGet]
         public IHttpActionResult TipCalificativPracticaGet(long idTipCalificativPractica)
         {
-            var repo = new TipCalificativPracticaRepo();
-            var result = repo.TipCalificativPracticaGet(idTipCalificativPractica);
+            var result = _repo.TipCalificativPracticaGet(idTipCalificativPractica);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipCalificativPracticaListGet()
         {
-            var repo = new TipCalificativPracticaRepo();
-            var result = repo.TipCalificativPracticaListGet();
+            var result = _repo.TipCalificativPracticaList();
             return Ok(result);
-        }
-
-        [HttpPost]
-        public IHttpActionResult TipCalificativPracticaAdd([FromBody] TipCalificativPractica tipCalificativPractica)
-        {
-            var repo = new TipCalificativPracticaRepo();
-            var id = repo.TipCalificativPracticaAdd(tipCalificativPractica);
-            return Ok(id);
-        }
-
-        [HttpDelete]
-        public IHttpActionResult TipCalificativPracticaDelete(long idTipCalificativPractica)
-        {
-            var repo = new TipCalificativPracticaRepo();
-            repo.TipCalificativPracticaDelete(idTipCalificativPractica);
-            return Ok();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
@@ -9,53 +10,185 @@ namespace UniApi.Controllers
 {
     public class PachetAbsolvireController : DnnApiController
     {
-        private readonly PachetAbsolvireRepo _repo;
+        private readonly IPachetAbsolvireRepo _repo = new PachetAbsolvireRepo();
 
         public PachetAbsolvireController()
         {
-            _repo = new PachetAbsolvireRepo();
+
+        }
+
+        public PachetAbsolvireController(IPachetAbsolvireRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
         public IHttpActionResult PachetAbsolvireGet(long idPachetAbsolvire)
         {
-            var result = _repo.PachetAbsolvireGet(idPachetAbsolvire);
-            return Ok(result);
+            try
+            {
+                var result = _repo.PachetAbsolvireGet(idPachetAbsolvire);
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult PachetAbsolvireListGet()
         {
-            var result = _repo.PachetAbsolvireListGet();
-            return Ok(result);
+            try
+            {
+                var result = _repo.PachetAbsolvireListGet();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult PachetAbsolvireGetByAnUnivIdSpecializare(long idAnUniv, long idSpecializare)
+        {
+            try
+            {
+                var result = _repo.PachetAbsolvireGetByAnUnivIdSpecializare(idAnUniv, idSpecializare);
+                if (result == null || result.Count == 0)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log error (e.g., using ILogger)
+                return InternalServerError(ex);
+            }
+        }
+
+
+        [HttpGet]
+        public IHttpActionResult PachetAbsolvireGetByStudent(long idStudent)
+        {
+            try
+            {
+                var result = _repo.PachetAbsolvireGetByStudent(idStudent);
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult PachetAbsolvireListByAnUnivAndSpecializareGet(long idAnUniv, long idSpecializare)
+        public IHttpActionResult PachetAbsolvireGetByAnUnivIdSpecializareActivaInscriereStudenti(long idAnUniv, long idSpecializare)
         {
-            var result = _repo.PachetAbsolvireListByAnUnivAndSpecializareGet(idAnUniv, idSpecializare);
-            return Ok(result);
+            try
+            {
+                var result = _repo.PachetAbsolvireGetByAnUnivIdSpecializareActivaInscriereStudenti(idAnUniv, idSpecializare);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult PachetAbsolvireGetByAnUnivUsernameSecretar(long idAnUniv, string usernameSecretar)
+        {
+            try
+            {
+                var result = _repo.PachetAbsolvireGetByAnUnivUsernameSecretar(idAnUniv, usernameSecretar);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult PachetAbsolvireListSesiuneAbsolvire()
+        {
+            try
+            {
+                var result = _repo.PachetAbsolvireListSesiuneAbsolvire();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult PachetAbsolvireListByIdSpecIdAnUniv(long idSpecializare, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.PachetAbsolvireListByIdSpecIdAnUniv(idSpecializare, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
         public IHttpActionResult PachetAbsolvireAdd([FromBody] PachetAbsolvireInfo pachetAbs)
         {
-            var id = _repo.PachetAbsolvireAdd(pachetAbs);
-            return Ok(id);
+            try
+            {
+                if (pachetAbs == null)
+                    return BadRequest("Obiectul PachetAbsolvireInfo nu poate fi null");
+
+                var id = _repo.PachetAbsolvireAdd(pachetAbs);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
         public IHttpActionResult PachetAbsolvireUpdate([FromBody] PachetAbsolvireInfo pachetAbs)
         {
-            _repo.PachetAbsolvireUpdate(pachetAbs);
-            return Ok();
+            try
+            {
+                if (pachetAbs == null)
+                    return BadRequest("Obiectul PachetAbsolvireInfo nu poate fi null");
+
+                _repo.PachetAbsolvireUpdate(pachetAbs);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult PachetAbsolvireDelete(long idPachetAbsolvire)
+        public IHttpActionResult PachetAbsolvireDeleteByIdPachetAbsolvire(long idPachetAbsolvire)
         {
-            _repo.PachetAbsolvireDelete(idPachetAbsolvire);
-            return Ok();
+            try
+            {
+                _repo.PachetAbsolvireDeleteByIdPachetAbsolvire(idPachetAbsolvire);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

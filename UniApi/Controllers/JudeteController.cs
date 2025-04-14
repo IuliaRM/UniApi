@@ -1,69 +1,136 @@
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
+using System.Data;
 
 namespace UniApi.Controllers
 {
     public class JudeteController : DnnApiController
     {
-        private readonly JudeteRepo _repo = new JudeteRepo();
+        private readonly IJudeteRepo _repo = new JudeteRepo();
 
-        [HttpGet]
-        public IHttpActionResult JudeteGet(string ID_Judet)
+        public JudeteController()
         {
-            var judet = _repo.JudeteGet(ID_Judet);
-            return Ok(judet);
+
+        }
+
+        public JudeteController(IJudeteRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult JudeteByID_N_JudetGet(int ID_N_Judet)
+        public IHttpActionResult JudeteGet(string idJudet)
         {
-            var judet = _repo.JudeteByID_N_JudetGet(ID_N_Judet);
-            return Ok(judet);
+            try
+            {
+                var result = _repo.JudeteGet(idJudet);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult JudeteListGet()
+        public IHttpActionResult JudeteByID_N_JudetGet(int idNJudet)
         {
-            var judete = _repo.JudeteListGet();
-            return Ok(judete);
+            try
+            {
+                var result = _repo.JudeteGetByID_N_Judet(idNJudet);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult JudeteListByCaractereGet(string Caractere, int TopN)
+        public IHttpActionResult JudeteByDenumireGet(string denumireJudet)
         {
-            var judete = _repo.JudeteListByCaractereGet(Caractere, TopN);
-            return Ok(judete);
+            try
+            {
+                var result = _repo.JudeteGetByDenumire(denumireJudet);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult JudeteList()
+        {
+            try
+            {
+                var result = _repo.JudeteList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult JudeteListByCaractere(string caractere, int topN)
+        {
+            try
+            {
+                var result = _repo.JudeteListByCaractere(caractere, topN);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult JudeteAdd([FromBody] JudeteInfo objJudete)
+        public IHttpActionResult JudeteAdd([FromBody] JudeteInfo info)
         {
-            var id = _repo.JudeteAdd(objJudete);
-            return Ok(id);
+            try
+            {
+                var id = _repo.JudeteAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult JudeteUpdate([FromBody] JudeteInfo objJudete)
+        public IHttpActionResult JudeteUpdate([FromBody] JudeteInfo info)
         {
-            _repo.JudeteUpdate(objJudete);
-            return Ok();
+            try
+            {
+                _repo.JudeteUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult JudeteDelete([FromBody] JudeteInfo objJudete)
+        public IHttpActionResult JudeteDelete([FromBody] JudeteInfo info)
         {
-            _repo.JudeteDelete(objJudete);
-            return Ok();
-        }
-
-        [HttpGet]
-        public IHttpActionResult JudeteByDenumireGet(string DenumireJudet)
-        {
-            var judet = _repo.JudeteByDenumireGet(DenumireJudet);
-            return Ok(judet);
+            try
+            {
+                _repo.JudeteDelete(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

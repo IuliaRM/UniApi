@@ -1,81 +1,108 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class ConferintaController : DnnApiController
     {
-        private readonly ConferintaRepo _repo = new ConferintaRepo();
+        private readonly IConferintaRepo _repo = new ConferintaRepo();
 
-        [HttpGet]
-        public IHttpActionResult ConferintaList()
+        public ConferintaController()
         {
-            var conferinte = _repo.ConferintaList();
-            return Ok(conferinte);
+
+        }
+
+            public ConferintaController(IConferintaRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
         public IHttpActionResult ConferintaGet(long idConferinta)
         {
-            var repo = new ConferintaRepo(); // Ensure repository is initialized
-            var conferinta = repo.ConferintaGet(idConferinta); // Fetch data
-
-            if (conferinta != null)
+            try
             {
-                return Ok(conferinta);
+                var conferinta = _repo.ConferintaGet(idConferinta);
+                return conferinta != null ? (IHttpActionResult)Ok(conferinta) : NotFound();
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
         }
 
+        [HttpGet]
+        public IHttpActionResult ConferintaList()
+        {
+            try
+            {
+                var list = _repo.ConferintaList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
 
         [HttpGet]
         public IHttpActionResult ConferintaListByAnCalendaristic(int anCalendaristic)
         {
-            var conferinte = _repo.ConferintaListByAnCalendaristic(anCalendaristic);
-            return Ok(conferinte);
+            try
+            {
+                var list = _repo.ConferintaListByAnCalendaristic(anCalendaristic);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult ConferintaListByFacultate(long idFacultate)
+        {
+            try
+            {
+                var list = _repo.ConferintaListByFacultate(idFacultate);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult ConferintaListByTipConferinta(long idTipConferinta)
         {
-            var conferinte = _repo.ConferintaListByTipConferinta(idTipConferinta);
-            return Ok(conferinte);
-        }
-
-        [HttpPost]
-        public IHttpActionResult ConferintaAdd([FromBody] ConferintaInfo conferinta)
-        {
-            long id = _repo.ConferintaAdd(conferinta);
-            return Ok(id);
+            try
+            {
+                var list = _repo.ConferintaListByTipConferinta(idTipConferinta);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
         public IHttpActionResult ConferintaUpdate([FromBody] ConferintaInfo conferinta)
         {
-            _repo.ConferintaUpdate(conferinta);
-            return Ok();
-        }
-
-        
-        [HttpDelete]
-        public IHttpActionResult ConferintaDelete(long idConferinta)
-        {
-            var conferinta = _repo.ConferintaGet(idConferinta);
-            if (conferinta == null)
+            try
             {
-                return NotFound();
+                _repo.ConferintaUpdate(conferinta);
+                return Ok();
             }
-
-            _repo.ConferintaDelete(conferinta.ID_Conferinta); // Pass the ID instead of the object
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
-
     }
 }

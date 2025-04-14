@@ -1,27 +1,53 @@
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
+using System.Data;
 
 namespace UniApi.Controllers
-{
+{  
+
     public class LegitTransportCFRController : DnnApiController
     {
-        private readonly LegitTransportCFRRepo _repo = new LegitTransportCFRRepo();
+        private readonly ILegitTransportCFRRepo _repo = new LegitTransportCFRRepo();
 
-        [HttpPost]
-        public IHttpActionResult LegitimatiiCFRMerge(long ID_StudentAnUniv, string SerieLegitimatie, string NumarLegitimatie, int UserIdModificare)
+        public LegitTransportCFRController()
         {
-            var result = _repo.LegitimatiiCFRMerge(ID_StudentAnUniv, SerieLegitimatie, NumarLegitimatie, UserIdModificare);
-            return Ok(result);
+
+        }
+
+        public LegitTransportCFRController(ILegitTransportCFRRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupaGet(long ID_AnUniv, long ID_Specializare, long ID_AnStudiu, long ID_Grupa)
+        public IHttpActionResult LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa(long idAnUniv, long idSpecializare, long idAnStudiu, long idGrupa)
         {
-            var legitimatii = _repo.LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupaGet(ID_AnUniv, ID_Specializare, ID_AnStudiu, ID_Grupa);
-            return Ok(legitimatii);
+            try
+            {
+                var result = _repo.LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa(idAnUniv, idSpecializare, idAnStudiu, idGrupa);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult LegitimatiiCFRMerge(long idStudentAnUniv, string serieLegitimatie, string numarLegitimatie, int userIdModificare)
+        {
+            try
+            {
+                var result = _repo.LegitimatiiCFRMerge(idStudentAnUniv, serieLegitimatie, numarLegitimatie, userIdModificare);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

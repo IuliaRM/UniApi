@@ -1,63 +1,157 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using UniApi.Models;
-using Microsoft.ApplicationBlocks.Data;
-using UniApi.Dal.Repos;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
 using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class ContUtilizatorRepo
+    public interface IContUtilizatorRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        ContUtilizatorInfo ContUtilizatorGet(long idContUtilizator);
+        ContUtilizatorInfo ContUtilizatorGetByCNP(string cnp);
+        List<ContUtilizatorInfo> ContUtilizatorList();
+        long ContUtilizatorAdd(ContUtilizatorInfo info);
+        void ContUtilizatorUpdate(ContUtilizatorInfo info);
+        void ContUtilizatorDelete(long idContUtilizator);
+        void ContUtilizatorDeleteByCNP(string cnp);
+    }
+
+    public class ContUtilizatorRepo : IContUtilizatorRepo
+    {
+        private readonly string _connectionString;
+
+        public ContUtilizatorRepo()
+        {
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
+        }
 
         public ContUtilizatorInfo ContUtilizatorGet(long idContUtilizator)
         {
-            return CBO.FillObject<ContUtilizatorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "ContUtilizatorGet", idContUtilizator));
-        }
-
-        public List<ContUtilizatorInfo> ContUtilizatorList()
-        {
-            return CBO.FillCollection<ContUtilizatorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "ContUtilizatorList"));
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "ContUtilizatorGet", idContUtilizator))
+                {
+                    return CBO.FillObject<ContUtilizatorInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea utilizatorului.", ex);
+            }
         }
 
         public ContUtilizatorInfo ContUtilizatorGetByCNP(string cnp)
         {
-            return CBO.FillObject<ContUtilizatorInfo>(SqlHelper.ExecuteReader(_ConnectionString, "ContUtilizatorGetByCNP", cnp));
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "ContUtilizatorGetByCNP", cnp))
+                {
+                    return CBO.FillObject<ContUtilizatorInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la căutarea utilizatorului după CNP.", ex);
+            }
         }
 
-        public long ContUtilizatorAdd(ContUtilizatorInfo objContUtilizator)
+        public List<ContUtilizatorInfo> ContUtilizatorList()
         {
-            object o = SqlHelper.ExecuteScalar(_ConnectionString, "ContUtilizatorAdd",
-                objContUtilizator.Nume, objContUtilizator.Prenume, objContUtilizator.Username,
-                objContUtilizator.EmailAlternativ, objContUtilizator.CNP, objContUtilizator.Marca,
-                objContUtilizator.TipUtilizator, objContUtilizator.TipIncadrare, objContUtilizator.TipPersonal,
-                objContUtilizator.FacultateServiciu, objContUtilizator.DepartamentCompartiment,
-                objContUtilizator.Functie, objContUtilizator.RolPrincipal);
-            return Convert.ToInt64(o);
+            try
+            {
+                return CBO.FillCollection<ContUtilizatorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "ContUtilizatorList"));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea utilizatorilor.", ex);
+            }
         }
 
-        public void ContUtilizatorUpdate(ContUtilizatorInfo objContUtilizator)
+        public long ContUtilizatorAdd(ContUtilizatorInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "ContUtilizatorUpdate",
-                objContUtilizator.ID_ContUtilizator, objContUtilizator.Nume, objContUtilizator.Prenume,
-                objContUtilizator.Username, objContUtilizator.EmailAlternativ, objContUtilizator.CNP,
-                objContUtilizator.Marca, objContUtilizator.TipUtilizator, objContUtilizator.TipIncadrare,
-                objContUtilizator.TipPersonal, objContUtilizator.FacultateServiciu,
-                objContUtilizator.DepartamentCompartiment, objContUtilizator.Functie,
-                objContUtilizator.RolPrincipal);
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                return Convert.ToInt64(SqlHelper.ExecuteScalar(_connectionString, "ContUtilizatorAdd",
+                    info.Nume,
+                    info.Prenume,
+                    info.Username,
+                    info.EmailAlternativ,
+                    info.CNP,
+                    info.Marca,
+                    info.TipUtilizator,
+                    info.TipIncadrare,
+                    info.TipPersonal,
+                    info.FacultateServiciu,
+                    info.DepartamentCompartiment,
+                    info.Functie,
+                    info.RolPrincipal));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la adăugarea utilizatorului.", ex);
+            }
+        }
+
+        public void ContUtilizatorUpdate(ContUtilizatorInfo info)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "ContUtilizatorUpdate",
+                    info.ID_ContUtilizator,
+                    info.Nume,
+                    info.Prenume,
+                    info.Username,
+                    info.EmailAlternativ,
+                    info.CNP,
+                    info.Marca,
+                    info.TipUtilizator,
+                    info.TipIncadrare,
+                    info.TipPersonal,
+                    info.FacultateServiciu,
+                    info.DepartamentCompartiment,
+                    info.Functie,
+                    info.RolPrincipal);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la actualizarea utilizatorului.", ex);
+            }
         }
 
         public void ContUtilizatorDelete(long idContUtilizator)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "ContUtilizatorDelete", idContUtilizator);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "ContUtilizatorDelete", idContUtilizator);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la ștergerea utilizatorului.", ex);
+            }
         }
 
         public void ContUtilizatorDeleteByCNP(string cnp)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "ContUtilizatorDeleteByCNP", cnp);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "ContUtilizatorDeleteByCNP", cnp);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la ștergerea utilizatorului după CNP.", ex);
+            }
         }
     }
 }

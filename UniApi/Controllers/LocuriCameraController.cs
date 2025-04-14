@@ -1,68 +1,151 @@
-using System.Collections.Generic;
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
+using System.Data;
 
 namespace UniApi.Controllers
 {
+
     public class LocuriCameraController : DnnApiController
     {
+        private readonly ILocuriCameraRepo _repo = new LocuriCameraRepo();
+
+        public LocuriCameraController()
+        {
+
+        }
+
+        public LocuriCameraController(ILocuriCameraRepo repo)
+        {
+            _repo = repo;
+        }
+
         [HttpGet]
         public IHttpActionResult LocuriCameraGet(long idLocuriCamera)
         {
-            var repo = new LocuriCameraRepo();
-            var result = repo.LocuriCameraGet(idLocuriCamera);
-            return Ok(result);
+            try
+            {
+                var result = _repo.LocuriCameraGet(idLocuriCamera);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult LocuriCameraList()
         {
-            var repo = new LocuriCameraRepo();
-            var result = repo.LocuriCameraList();
-            return Ok(result);
+            try
+            {
+                var result = _repo.LocuriCameraList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult LocuriCameraListByAnUniversitar(long idAnUniversitar)
         {
-            var repo = new LocuriCameraRepo();
-            var result = repo.LocuriCameraListByAnUniversitar(idAnUniversitar);
-            return Ok(result);
+            try
+            {
+                var result = _repo.LocuriCameraListByAnUniversitar(idAnUniversitar);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult LocuriCameraListByCamera(long idCamera)
         {
-            var repo = new LocuriCameraRepo();
-            var result = repo.LocuriCameraListByCamera(idCamera);
-            return Ok(result);
+            try
+            {
+                var result = _repo.LocuriCameraListByCamera(idCamera);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult LocuriCameraAdd([FromBody] LocuriCameraInfo locuriCameraInfo)
+        public IHttpActionResult LocuriCameraAdd([FromBody] LocuriCameraInfo info)
         {
-            var repo = new LocuriCameraRepo();
-            var id = repo.LocuriCameraAdd(locuriCameraInfo);
-            return Ok(id);
+            try
+            {
+                var id = _repo.LocuriCameraAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult LocuriCameraUpdate([FromBody] LocuriCameraInfo locuriCameraInfo)
+        public IHttpActionResult LocuriCameraUpdate([FromBody] LocuriCameraInfo info)
         {
-            var repo = new LocuriCameraRepo();
-            repo.LocuriCameraUpdate(locuriCameraInfo);
-            return Ok();
+            try
+            {
+                _repo.LocuriCameraUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult LocuriCameraDelete(long idLocuriCamera)
         {
-            var repo = new LocuriCameraRepo();
-            repo.LocuriCameraDelete(idLocuriCamera);
-            return Ok();
+            try
+            {
+                _repo.LocuriCameraDelete(idLocuriCamera);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult LocuriCameraMerge([FromBody] LocuriCameraInfo info)
+        {
+            try
+            {
+                _repo.LocuriCameraMerge(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult LocuriCameraImportDinAltAnUniv(long idAnUnivSursa, long idAnUnivDestinatie)
+        {
+            try
+            {
+                _repo.LocuriCameraImportDinAltAnUniv(idAnUnivSursa, idAnUnivDestinatie);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

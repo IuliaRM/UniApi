@@ -1,55 +1,109 @@
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
+
     public class OfertaPracticaController : DnnApiController
     {
-        private readonly OfertaPracticaRepo _repo = new OfertaPracticaRepo();
+        private readonly IOfertaPracticaRepo _repo = new OfertaPracticaRepo();
 
-        [HttpGet]
-        public IHttpActionResult OfertaPracticaGet(long ID_OfertaPractica)
+        public OfertaPracticaController()
         {
-            var oferta = _repo.OfertaPracticaGet(ID_OfertaPractica);
-            return Ok(oferta);
+
+        }
+
+        public OfertaPracticaController(IOfertaPracticaRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult OfertaPracticaListGet()
+        public IHttpActionResult OfertaPracticaGet(long idOfertaPractica)
         {
-            var oferte = _repo.OfertaPracticaListGet();
-            return Ok(oferte);
+            try
+            {
+                var result = _repo.OfertaPracticaGet(idOfertaPractica);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult OfertaPracticaListByUserIDPortalGet(int ID_UserPortal)
+        public IHttpActionResult OfertaPracticaList()
         {
-            var oferte = _repo.OfertaPracticaListByUserIDPortalGet(ID_UserPortal);
-            return Ok(oferte);
+            try
+            {
+                var result = _repo.OfertaPracticaListGet();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult OfertaPracticaListByUserIDPortal(int idUserPortal)
+        {
+            try
+            {
+                var result = _repo.OfertaPracticaListByUserIDPortalGet(idUserPortal);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult OfertaPracticaAdd([FromBody] OfertaPractica objOfertaPractica)
+        public IHttpActionResult OfertaPracticaAdd([FromBody] OfertaPractica info)
         {
-            _repo.OfertaPracticaAdd(objOfertaPractica);
-            return Ok();
+            try
+            {
+                var id = _repo.OfertaPracticaAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult OfertaPracticaUpdate([FromBody] OfertaPractica objOfertaPractica)
+        public IHttpActionResult OfertaPracticaUpdate([FromBody] OfertaPractica info)
         {
-            _repo.OfertaPracticaUpdate(objOfertaPractica);
-            return Ok();
+            try
+            {
+                _repo.OfertaPracticaUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult OfertaPracticaDelete(long ID_OfertaPractica)
+        public IHttpActionResult OfertaPracticaDelete(long idOfertaPractica)
         {
-            _repo.OfertaPracticaDelete(ID_OfertaPractica);
-            return Ok();
+            try
+            {
+                _repo.OfertaPracticaDelete(idOfertaPractica);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

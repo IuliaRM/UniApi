@@ -9,59 +9,70 @@ namespace UniApi.Controllers
 {
     public class TipReducereController : DnnApiController
     {
+        private readonly ITipReducereRepo _repo = new TipReducereRepo();
+
+        public TipReducereController()
+        {
+
+        }
         [HttpGet]
         public IHttpActionResult TipReducereGet(long idTipReducere)
         {
-            var repo = new TipReducereRepo();
-            var result = repo.TipReducereGet(idTipReducere);
+            var result = _repo.TipReducereGet(idTipReducere);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipReducereListGet()
         {
-            var repo = new TipReducereRepo();
-            var result = repo.TipReducereListGet();
+            var result = _repo.TipReducereList();
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipReducereListByTaxaGet(long idTaxa)
         {
-            var repo = new TipReducereRepo();
-            var result = repo.TipReducereListByTaxaGet(idTaxa);
+            var result = _repo.TipReducereListByTaxa(idTaxa);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipReducereListByTaxaStudentGet(long idTaxaStudent)
         {
-            var repo = new TipReducereRepo();
-            var result = repo.TipReducereListByTaxaStudentGet(idTaxaStudent);
+            var result = _repo.TipReducereListByTaxaStudent(idTaxaStudent);
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult TipReducereAdd([FromBody] TipReducereInfo tipReducereInfo)
         {
-            var repo = new TipReducereRepo();
-            var id = repo.TipReducereAdd(tipReducereInfo);
+            if (tipReducereInfo == null || string.IsNullOrEmpty(tipReducereInfo.DenumireTipReducere))
+            {
+                return BadRequest("Obiectul tipReducereInfo nu poate fi null și DenumireTipReducere nu poate fi null sau gol.");
+            }
+            var id = _repo.TipReducereAdd(tipReducereInfo);
             return Ok(id);
         }
 
         [HttpPut]
         public IHttpActionResult TipReducereUpdate([FromBody] TipReducereInfo tipReducereInfo)
         {
-            var repo = new TipReducereRepo();
-            repo.TipReducereUpdate(tipReducereInfo);
+            if (tipReducereInfo == null || tipReducereInfo.ID_TipReducere <= 0 || string.IsNullOrEmpty(tipReducereInfo.DenumireTipReducere))
+            {
+                return BadRequest("Obiectul tipReducereInfo nu poate fi null, ID_TipReducere trebuie să fie valid și DenumireTipReducere nu poate fi null sau gol.");
+            }
+            _repo.TipReducereUpdate(tipReducereInfo);
             return Ok();
         }
 
         [HttpDelete]
         public IHttpActionResult TipReducereDelete([FromBody] TipReducereInfo tipReducereInfo)
         {
-            var repo = new TipReducereRepo();
-            repo.TipReducereDelete(tipReducereInfo);
+            if (tipReducereInfo == null || tipReducereInfo.ID_TipReducere <= 0)
+            {
+                return BadRequest("Obiectul tipReducereInfo nu poate fi null și ID_TipReducere trebuie să fie valid.");
+            }
+            _repo.TipReducereDelete(tipReducereInfo.ID_TipReducere);
             return Ok();
         }
     }

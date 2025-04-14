@@ -1,90 +1,248 @@
+using System;
 using System.Web.Http;
+using System.Data;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class FacultateCameraController : DnnApiController
     {
-        private readonly FacultateCameraRepo _repo = new FacultateCameraRepo();
+        private readonly IFacultateCameraRepo _repo = new FacultateCameraRepo();
 
-        [HttpGet]
-        public IHttpActionResult FacultateCameraGet(long ID_FacultateCamera)
+        public FacultateCameraController()
         {
-            var camera = _repo.FacultateCameraGet(ID_FacultateCamera);
-            return Ok(camera);
+
+        }
+
+        public FacultateCameraController(IFacultateCameraRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult FacultateCameraByFacultateCameraGet(long ID_Facultate, long ID_Camera, long ID_AnUniv)
+        public IHttpActionResult FacultateCameraGet(long idFacultateCamera)
         {
-            var camera = _repo.FacultateCameraByFacultateCameraGet(ID_Facultate, ID_Camera, ID_AnUniv);
-            return Ok(camera);
+            try
+            {
+                var result = _repo.FacultateCameraGet(idFacultateCamera);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FacultateCameraListGet()
+        public IHttpActionResult FacultateCameraByFacultateCameraGet(long idFacultate, long idCamera, long idAnUniv)
         {
-            var camere = _repo.FacultateCameraListGet();
-            return Ok(camere);
+            try
+            {
+                var result = _repo.FacultateCameraGetByFacultateCamera(idFacultate, idCamera, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FacultateCameraListByAnUniversitarGet(long ID_AnUniv)
+        public IHttpActionResult FacultateCameraList()
         {
-            var camere = _repo.FacultateCameraListByAnUniversitarGet(ID_AnUniv);
-            return Ok(camere);
+            try
+            {
+                var result = _repo.FacultateCameraList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FacultateCameraListByFacultateGet(long ID_Facultate)
+        public IHttpActionResult FacultateCameraListByAnUniversitar(long idAnUniv)
         {
-            var camere = _repo.FacultateCameraListByFacultateGet(ID_Facultate);
-            return Ok(camere);
+            try
+            {
+                var result = _repo.FacultateCameraListByAnUniversitar(idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FacultateCameraListByFacultateAnUnivGet(long ID_Facultate, long ID_AnUniv)
+        public IHttpActionResult FacultateCameraListByFacultate(long idFacultate)
         {
-            var camere = _repo.FacultateCameraListByFacultateAnUnivGet(ID_Facultate, ID_AnUniv);
-            return Ok(camere);
+            try
+            {
+                var result = _repo.FacultateCameraListByFacultate(idFacultate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FacultateCameraListByCameraGet(long ID_Camera)
+        public IHttpActionResult FacultateCameraListByFacultateAnUniv(long idFacultate, long idAnUniv)
         {
-            var camere = _repo.FacultateCameraListByCameraGet(ID_Camera);
-            return Ok(camere);
+            try
+            {
+                var result = _repo.FacultateCameraListByFacultateAnUniv(idFacultate, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByFacultateAnUnivCamin(long idFacultate, long idAnUniv, long idCamin)
+        {
+            try
+            {
+                var result = _repo.FacultateCameraListByFacultateAnUnivCamin(idFacultate, idAnUniv, idCamin);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByFacultateCaminEtajAnUniv(long idFacultate, long idCamin, int etaj, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.FacultateCameraListByFacultateCaminEtajAnUniv(idFacultate, idCamin, etaj, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult FacultateCameraListByCamera(long idCamera)
+        {
+            try
+            {
+                var result = _repo.FacultateCameraListByCamera(idCamera);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult FacultateCameraRaportLocuriByCaminAnUniv(long idCamin, long idAnUniv)
+        {
+            try
+            {
+                var result = _repo.FacultateCameraRaportLocuriByCaminAnUniv(idCamin, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult FacultateCameraAdd([FromBody] FacultateCameraInfo objFacultateCamera)
+        public IHttpActionResult FacultateCameraAdd([FromBody] FacultateCameraInfo info)
         {
-            var id = _repo.FacultateCameraAdd(objFacultateCamera);
-            return Ok(id);
+            try
+            {
+                var id = _repo.FacultateCameraAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult FacultateCameraUpdate([FromBody] FacultateCameraInfo objFacultateCamera)
+        public IHttpActionResult FacultateCameraUpdate([FromBody] FacultateCameraInfo info)
         {
-            _repo.FacultateCameraUpdate(objFacultateCamera);
-            return Ok();
+            try
+            {
+                _repo.FacultateCameraUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult FacultateCameraMerge([FromBody] FacultateCameraInfo info)
+        {
+            try
+            {
+                _repo.FacultateCameraMerge(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult FacultateCameraImportDinAltAnUniv(long idAnUnivSursa, long idAnUnivDestinatie)
+        {
+            try
+            {
+                _repo.FacultateCameraImportDinAltAnUniv(idAnUnivSursa, idAnUnivDestinatie);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult FacultateCameraDelete([FromBody] FacultateCameraInfo objFacultateCamera)
+        public IHttpActionResult FacultateCameraDelete([FromBody] FacultateCameraInfo info)
         {
-            _repo.FacultateCameraDelete(objFacultateCamera);
-            return Ok();
+            try
+            {
+                _repo.FacultateCameraDelete(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult FacultateCameraDeleteByFacultateCamera(long ID_Facultate, long ID_Camera)
+        public IHttpActionResult FacultateCameraDeleteByFacultateCamera(long idFacultate, long idCamera)
         {
-            _repo.FacultateCameraDeleteByFacultateCamera(ID_Facultate, ID_Camera);
-            return Ok();
+            try
+            {
+                _repo.FacultateCameraDeleteByFacultateCamera(idFacultate, idCamera);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

@@ -5,13 +5,43 @@ using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi.Info;
 
+
 namespace UniApi.DAL.Repos
 {
-    public class ValoareTipBursaFacultateRepo
+
+    public interface IValoareTipBursaFacultateRepo
+    {
+        ValoareTipBursaFacultateInfo ValoareTipBursaFacultateGet(long id);
+        List<ValoareTipBursaFacultateInfo> ValoareTipBursaFacultateList();
+        List<ValoareTipBursaFacultateInfo> ValoareTipBursaFacultateGetByFTL(long idFacultate, long idTipBursa, long idAnUnivBursa);
+        long ValoareTipBursaFacultateAdd(ValoareTipBursaFacultateInfo valoareTipBursa);
+        void ValoareTipBursaFacultateUpdate(ValoareTipBursaFacultateInfo valoareTipBursa);
+        void ValoareTipBursaFacultateDelete(long id);
+    }
+
+    public class ValoareTipBursaFacultateRepo : IValoareTipBursaFacultateRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public long AddValoareTipBursaFacultate(ValoareTipBursaFacultateInfo valoareTipBursa)
+        public ValoareTipBursaFacultateInfo ValoareTipBursaFacultateGet(long id)
+        {
+            return CBO.FillObject<ValoareTipBursaFacultateInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateGet", id));
+        }
+
+        public List<ValoareTipBursaFacultateInfo> ValoareTipBursaFacultateList()
+        {
+            return CBO.FillCollection<ValoareTipBursaFacultateInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateList"));
+        }
+
+        public List<ValoareTipBursaFacultateInfo> ValoareTipBursaFacultateGetByFTL(long idFacultate, long idTipBursa, long idAnUnivBursa)
+        {
+            return CBO.FillCollection<ValoareTipBursaFacultateInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateGetByFTL", idFacultate, idTipBursa, idAnUnivBursa));
+        }
+
+        public long ValoareTipBursaFacultateAdd(ValoareTipBursaFacultateInfo valoareTipBursa)
         {
             object id = SqlHelper.ExecuteScalar(_connectionString, "ValoareTipBursaFacultateAdd",
                 valoareTipBursa.ID_Facultate,
@@ -19,11 +49,10 @@ namespace UniApi.DAL.Repos
                 valoareTipBursa.NumarLuna,
                 valoareTipBursa.ValoareTipBursa,
                 valoareTipBursa.ID_AnUnivBursa);
-
             return Convert.ToInt64(id);
         }
 
-        public void UpdateValoareTipBursaFacultate(ValoareTipBursaFacultateInfo valoareTipBursa)
+        public void ValoareTipBursaFacultateUpdate(ValoareTipBursaFacultateInfo valoareTipBursa)
         {
             SqlHelper.ExecuteNonQuery(_connectionString, "ValoareTipBursaFacultateUpdate",
                 valoareTipBursa.ID_ValoareTipBursaFacultate,
@@ -34,39 +63,9 @@ namespace UniApi.DAL.Repos
                 valoareTipBursa.ID_AnUnivBursa);
         }
 
-        public void DeleteValoareTipBursaFacultate(long id)
+        public void ValoareTipBursaFacultateDelete(long id)
         {
             SqlHelper.ExecuteNonQuery(_connectionString, "ValoareTipBursaFacultateDelete", id);
-        }
-
-        public ValoareTipBursaFacultateInfo GetValoareTipBursaFacultate(long id)
-        {
-            return CBO.FillObject<ValoareTipBursaFacultateInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateGet", id));
-        }
-
-        public List<ValoareTipBursaFacultateInfo> GetValoareTipBursaFacultateList()
-        {
-            return CBO.FillCollection<ValoareTipBursaFacultateInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateList"));
-        }
-
-        public List<ValoareTipBursaFacultateInfo> GetValoareTipBursaFacultateByTipBursa(long idTipBursa)
-        {
-            return CBO.FillCollection<ValoareTipBursaFacultateInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateListByTipBursa", idTipBursa));
-        }
-
-        public List<ValoareTipBursaFacultateInfo> GetValoareTipBursaFacultateByLuna(int numarLuna)
-        {
-            return CBO.FillCollection<ValoareTipBursaFacultateInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateListByLuna", numarLuna));
-        }
-
-        public List<ValoareTipBursaFacultateInfo> GetValoareTipBursaFacultateByFacultate(long idFacultate)
-        {
-            return CBO.FillCollection<ValoareTipBursaFacultateInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "ValoareTipBursaFacultateListByFacultate", idFacultate));
         }
     }
 }

@@ -1,39 +1,34 @@
 using System;
 using System.Collections.Generic;
 using DotNetNuke.Common.Utilities;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class TipCalificativPracticaRepo
+
+    public interface ITipCalificativPracticaRepo
+    {
+        TipCalificativPractica TipCalificativPracticaGet(long idTipCalificativPractica);
+        List<TipCalificativPractica> TipCalificativPracticaList();
+    }
+
+    public class TipCalificativPracticaRepo : ITipCalificativPracticaRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public TipCalificativPractica TipCalificativPracticaGet(long idTipCalificativPractica)
         {
             return CBO.FillObject<TipCalificativPractica>(
-                SqlHelper.ExecuteReader(_connectionString, "TipCalificativPracticaeGet", idTipCalificativPractica));
+                SqlHelper.ExecuteReader(_connectionString, "TipCalificativPracticaGet", idTipCalificativPractica));
         }
 
-        public List<TipCalificativPractica> TipCalificativPracticaListGet()
+        public List<TipCalificativPractica> TipCalificativPracticaList()
         {
             return CBO.FillCollection<TipCalificativPractica>(
                 SqlHelper.ExecuteReader(_connectionString, "TipCalificativPracticaList"));
-        }
-
-        public long TipCalificativPracticaAdd(TipCalificativPractica tipCalificativPractica)
-        {
-            object id = SqlHelper.ExecuteScalar(_connectionString, "TipCalificativPracticaAdd",
-                tipCalificativPractica.DenumireTipCalificativPractica);
-
-            return Convert.ToInt64(id);
-        }
-
-        public void TipCalificativPracticaDelete(long idTipCalificativPractica)
-        {
-            SqlHelper.ExecuteNonQuery(_connectionString, "TipCalificativPracticaDelete", idTipCalificativPractica);
         }
     }
 }

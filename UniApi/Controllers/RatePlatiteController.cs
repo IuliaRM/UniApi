@@ -6,52 +6,94 @@ using UniApi;
 using DotNetNuke.Web.Api;
 using UniApi.Info;
 
+
 namespace UniApi.Controllers
 {
     public class RatePlatiteController : DnnApiController
     {
-        private readonly RatePlatiteRepo _repo = new RatePlatiteRepo();
+        private readonly IRatePlatiteRepo _repo = new RatePlatiteRepo();
+
+        public RatePlatiteController()
+        {
+
+        }
 
         [HttpGet]
-        public IHttpActionResult RatePlatiteListByTaxeStudentGet(long ID_TaxaStudent, long ID_AnUniv)
+        public IHttpActionResult RatePlatiteGet(long idRatePlatite)
         {
-            var result = _repo.RatePlatiteListByTaxeStudentGet(ID_TaxaStudent, ID_AnUniv);
+            var result = _repo.RatePlatiteGet(idRatePlatite);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult RatePlatiteListByStudentGet(long ID_Student, long ID_AnUniv)
+        public IHttpActionResult RatePlatiteGetByContContabil(long idContContabil)
         {
-            var result = _repo.RatePlatiteListByStudentGet(ID_Student, ID_AnUniv);
+            var result = _repo.RatePlatiteGetByContContabil(idContContabil);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult RatePlatiteByRataTaxaGet(long ID_RataTaxa)
+        public IHttpActionResult RatePlatiteGetByRataTaxa(long idRataTaxa)
         {
-            var result = _repo.RatePlatiteByRataTaxaGet(ID_RataTaxa);
+            var result = _repo.RatePlatiteGetByRataTaxa(idRataTaxa);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult RatePlatiteGet(long ID_RatePlatite)
+        public IHttpActionResult RatePlatiteList()
         {
-            var result = _repo.RatePlatiteGet(ID_RatePlatite);
+            var result = _repo.RatePlatiteList();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult RatePlatiteListByStudentGet(long idStudent, long idAnUniv)
+        {
+            var result = _repo.RatePlatiteListByStudent(idStudent, idAnUniv);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult RatePlatiteListByTaxeStudentGet(long idTaxaStudent, long idAnUniv)
+        {
+            var result = _repo.RatePlatiteListByTaxeStudent(idTaxaStudent, idAnUniv);
             return Ok(result);
         }
 
         [HttpPost]
-        public IHttpActionResult RatePlatiteNextReceiptNumberUpdate(long ID_RatePlatite, long NumarChitanta, long UserID, DateTime DataPentruModificare, bool crescator)
+        public IHttpActionResult RatePlatiteAdd([FromBody] RatePlatiteInfo ratePlatite)
         {
-            var result = _repo.RatePlatiteNextReceiptNumberUpdate(ID_RatePlatite, NumarChitanta, UserID, DataPentruModificare, crescator);
-            return Ok(result);
+            if (ratePlatite == null)
+            {
+                return BadRequest("Obiectul ratePlatite nu poate fi null.");
+            }
+            var id = _repo.RatePlatiteAdd(ratePlatite);
+            return Ok(id);
+        }
+
+        [HttpDelete]
+        public IHttpActionResult RatePlatiteDelete(long idRatePlatite)
+        {
+            _repo.RatePlatiteDelete(idRatePlatite);
+            return Ok();
         }
 
         [HttpPut]
-        public IHttpActionResult RatePlatiteUpdate([FromBody] RatePlatiteInfo ratePlatiteInfo)
+        public IHttpActionResult RatePlatiteUpdate([FromBody] RatePlatiteInfo ratePlatite)
         {
-            _repo.RatePlatiteUpdate(ratePlatiteInfo.Data_Plata, ratePlatiteInfo.SumaPlatita, ratePlatiteInfo.SerieChitanta, ratePlatiteInfo.NumarChitanta,  ratePlatiteInfo.ID_ContContabil, ratePlatiteInfo.ID_Utilizator, ratePlatiteInfo.PortalID);
+            if (ratePlatite == null)
+            {
+                return BadRequest("Obiectul ratePlatite nu poate fi null.");
+            }
+            _repo.RatePlatiteUpdate(ratePlatite);
             return Ok();
+        }
+
+        [HttpPost]
+        public IHttpActionResult RatePlatiteUpdateUrmatoareleNumereDeChitanta(long idRatePlatite, long numarChitanta, long userId, DateTime dataPentruModificare, bool crescator)
+        {
+            var result = _repo.RatePlatiteUpdateUrmatoareleNumereDeChitanta(idRatePlatite, numarChitanta, userId, dataPentruModificare, crescator);
+            return Ok(result);
         }
     }
 }

@@ -1,25 +1,44 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class LegitTransportCFRRepo
+    public interface ILegitTransportCFRRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        long LegitimatiiCFRMerge(long idStudentAnUniv, string serieLegitimatie, string numarLegitimatie, int userIdModificare);
+        DataTable LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa(long idAnUniv, long idSpecializare, long idAnStudiu, long idGrupa);
+    }
 
-        public long LegitimatiiCFRMerge(long ID_StudentAnUniv, string SerieLegitimatie, string NumarLegitimatie, int UserIdModificare)
+    public class LegitTransportCFRRepo : ILegitTransportCFRRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public long LegitimatiiCFRMerge(long idStudentAnUniv, string serieLegitimatie, string numarLegitimatie, int userIdModificare)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "LegitimatiiCFR_Merge", ID_StudentAnUniv, SerieLegitimatie, NumarLegitimatie, UserIdModificare);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "LegitimatiiCFR_Merge", idStudentAnUniv, serieLegitimatie, numarLegitimatie, userIdModificare);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la LegitimatiiCFRMerge", ex);
+            }
         }
 
-        public List<LegitTransportCFRInfo> LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupaGet(long ID_AnUniv, long ID_Specializare, long ID_AnStudiu, long ID_Grupa)
+        public DataTable LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa(long idAnUniv, long idSpecializare, long idAnStudiu, long idGrupa)
         {
-            return CBO.FillCollection<LegitTransportCFRInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "LegitimatiiCFR_GetListByAnUnivSpecializareAnStudiuGrupa", ID_AnUniv, ID_Specializare, ID_AnStudiu, ID_Grupa));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "LegitimatiiCFR_GetListByAnUnivSpecializareAnStudiuGrupa", idAnUniv, idSpecializare, idAnStudiu, idGrupa).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la LegitimatiiCFRListByAnUnivSpecializareAnStudiuGrupa", ex);
+            }
         }
     }
 }

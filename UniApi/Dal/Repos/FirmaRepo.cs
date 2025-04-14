@@ -1,43 +1,85 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Models;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Controllers;
 using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class FirmaRepo
+    public interface IFirmaRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        Firma FirmaGet(long idFirma);
+        Firma FirmaGetByUserIdPortal(int idUserPortal);
+        DataTable FirmaList();
+        long FirmaAdd(Firma info);
+        void FirmaUpdate(Firma info);
+    }
+    public class FirmaRepo : IFirmaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
-        public Firma FirmaGet(long ID_Firma)
+        public Firma FirmaGet(long idFirma)
         {
-            return CBO.FillObject<Firma>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Firma_GetFirma", ID_Firma));
+            try
+            {
+                return CBO.FillObject<Firma>(
+                    SqlHelper.ExecuteReader(_connectionString, "Firma_GetFirma", idFirma));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FirmaGet", ex);
+            }
         }
 
-        public List<Firma> FirmaListGet()
+        public Firma FirmaGetByUserIdPortal(int idUserPortal)
         {
-            return CBO.FillCollection<Firma>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Firma_GetFirmaList"));
+            try
+            {
+                return CBO.FillObject<Firma>(
+                    SqlHelper.ExecuteReader(_connectionString, "Firma_GetFirmaByUserIdPortal", idUserPortal));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FirmaGetByUserIdPortal", ex);
+            }
         }
 
-        public Firma FirmaByUserIdPortalGet(int ID_UserPortal)
+        public DataTable FirmaList()
         {
-            return CBO.FillObject<Firma>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Firma_GetFirmaByUserIdPortal", ID_UserPortal));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "Firma_GetFirmaList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FirmaList", ex);
+            }
         }
 
-        public void FirmaAdd(Firma objFirma)
+        public long FirmaAdd(Firma info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Firma_AddFirma", objFirma);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "Firma_AddFirma", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FirmaAdd", ex);
+            }
         }
 
-        public void FirmaUpdate(Firma objFirma)
+        public void FirmaUpdate(Firma info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Firma_UpdateFirma", objFirma);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Firma_UpdateFirma", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la FirmaUpdate", ex);
+            }
         }
     }
 }

@@ -1,101 +1,154 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
+    
+
     public class AplicatieOfertaPracticaController : DnnApiController
     {
-        private readonly AplicatieOfertaPracticaController _controller = new AplicatieOfertaPracticaController();
+        private readonly IAplicatieOfertaPracticaRepo _repo = new AplicatieOfertaPracticaRepo();
 
-        // Adaugă o aplicație pentru oferta de practică
+        public AplicatieOfertaPracticaController()
+        {
+        }
+
+        public AplicatieOfertaPracticaController(IAplicatieOfertaPracticaRepo repo)
+        {
+            _repo = repo;
+        }
+
         [HttpPost]
         public IHttpActionResult AplicatieOfertaPracticaAdd([FromBody] AplicatieOfertaPractica aplicatie)
         {
-            _controller.AplicatieOfertaPracticaAdd(aplicatie);
-            return Ok();
-        }
-
-        // Obține o aplicație pentru oferta de practică după ID
-        [HttpGet]
-        public IHttpActionResult AplicatieOfertaPracticaGet(long idAplicatie)
-        {
-            var repo = new AplicatieOfertaPracticaRepo(); // Use repository instead of a controller
-            var aplicatie = repo.AplicatieOfertaPracticaGet(idAplicatie); // Fetch the application
-
-            if (aplicatie != null)
+            try
             {
-                return Ok(aplicatie);
+                _repo.AplicatieOfertaPracticaAdd(aplicatie);
+                return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
         }
 
-
-        // Obține lista tuturor aplicațiilor pentru oferta de practică
-        [HttpGet]
-        public IHttpActionResult AplicatieOfertaPracticaList()
-        {
-            var aplicatii = _controller.AplicatieOfertaPracticaList();
-            return Ok(aplicatii);
-        }
-
-        // Obține lista aplicațiilor pentru o anumită ofertă de practică
-        [HttpGet]
-        public IHttpActionResult AplicatieOfertaPracticaListByIDOfPracFac(long idOfertaPracticaFacultate)
-        {
-            var aplicatii = _controller.AplicatieOfertaPracticaListByIDOfPracFac(idOfertaPracticaFacultate);
-            return Ok(aplicatii);
-        }
-
-        // Obține lista aplicațiilor unui anumit student
-        [HttpGet]
-        public IHttpActionResult AplicatieOfertaPracticaListByStudent(long idStudent)
-        {
-            var aplicatii = _controller.AplicatieOfertaPracticaListByStudent(idStudent);
-            return Ok(aplicatii);
-        }
-
-        // Actualizează o aplicație pentru oferta de practică
         [HttpPut]
         public IHttpActionResult AplicatieOfertaPracticaUpdate([FromBody] AplicatieOfertaPractica aplicatie)
         {
-            _controller.AplicatieOfertaPracticaUpdate(aplicatie);
-            return Ok();
+            try
+            {
+                _repo.AplicatieOfertaPracticaUpdate(aplicatie);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-        // Șterge o aplicație pentru oferta de practică
-        
         [HttpDelete]
         public IHttpActionResult AplicatieOfertaPracticaDelete(long idAplicatie)
         {
-            var repo = new AplicatieOfertaPracticaRepo(); // Use repository instead of a controller
-            var aplicatie = repo.AplicatieOfertaPracticaGet(idAplicatie); // Check if the application exists
-
-            if (aplicatie == null)
+            try
             {
-                return NotFound();
+                _repo.AplicatieOfertaPracticaDelete(idAplicatie);
+                return Ok();
             }
-
-            repo.AplicatieOfertaPracticaDelete(idAplicatie); // Delete by ID
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-
-        // Obține numărul total de aplicații pentru o anumită ofertă de practică
         [HttpGet]
-        public IHttpActionResult AplicatieOfertaPracticaGetTotalCountByIDOfPracticaFac(long idOfertaPracticaFacultate)
+        public IHttpActionResult AplicatieOfertaPracticaGet(long idAplicatie)
         {
-            var repo = new AplicatieOfertaPracticaRepo(); // Use repository instead of controller
-            int total = repo.AplicatieOfertaPracticaGetTotalCountByIDOfPracticaFac(idOfertaPracticaFacultate); // Get total count
+            try
+            {
+                var aplicatie = _repo.AplicatieOfertaPracticaGet(idAplicatie);
+                if (aplicatie == null)
+                    return NotFound();
 
-            return Ok(total); // Return count wrapped in Ok() response
+                return Ok(aplicatie);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
+        [HttpGet]
+        public IHttpActionResult AplicatieOfertaPracticaList()
+        {
+            try
+            {
+                var list = _repo.AplicatieOfertaPracticaList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AplicatieOfertaPracticaListByIDFirma(long idFirma)
+        {
+            try
+            {
+                var list = _repo.AplicatieOfertaPracticaListByIDFirma(idFirma);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AplicatieOfertaPracticaListIDOfPracFac(long idOfertaPracticaFacultate)
+        {
+            try
+            {
+                var list = _repo.AplicatieOfertaPracticaListIDOfPracFac(idOfertaPracticaFacultate);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AplicatieOfertaPracticaListByStudent(long idStudent)
+        {
+            try
+            {
+                var list = _repo.AplicatieOfertaPracticaListByStudent(idStudent);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AplicatieOfertaPracticaGetTotalCountByIDOPracticaFac(long idOfertaPracticaFacultate)
+        {
+            try
+            {
+                int count = _repo.AplicatieOfertaPracticaGetTotalCountByIDOPracticaFac(idOfertaPracticaFacultate);
+                return Ok(count);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

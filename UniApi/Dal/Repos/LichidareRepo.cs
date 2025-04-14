@@ -1,34 +1,71 @@
 using System;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class LichidareRepo
+    public interface ILichidareRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        void LichidareSecretariatMerge(long idLichidare, long idAbsolvent, long idStudent, long idAnUniv, long idSpecializare, string usernameInitiere);
+        void LichidareInitiereAutomata();
+        void LichidareSecretariatDeselecteaza(long idLichidare, string username, string coloanaDebifata);
+        LichidareInfo LichidareStudentGetByID(long idLichidare);
+    }
 
-        public void LichidareSecretariatMerge(long ID_Lichidare, long ID_Absolvent, long ID_Student, long ID_AnUniv, long ID_Specializare, string UsernameInitiere)
+    public class LichidareRepo : ILichidareRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public void LichidareSecretariatMerge(long idLichidare, long idAbsolvent, long idStudent, long idAnUniv, long idSpecializare, string usernameInitiere)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Lichidare_SecretariatMerge", ID_Lichidare, ID_Absolvent, ID_Student, ID_AnUniv, ID_Specializare, UsernameInitiere);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Lichidare_SecretariatMerge", idLichidare, idAbsolvent, idStudent, idAnUniv, idSpecializare, usernameInitiere);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la LichidareSecretariatMerge", ex);
+            }
         }
 
         public void LichidareInitiereAutomata()
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Lichidare_InitiereAutomata");
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Lichidare_InitiereAutomata");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la LichidareInitiereAutomata", ex);
+            }
         }
 
-        public void LichidareSecretariatDeselecteaza(long ID_Lichidare, string Username, string ColoanaDebifata)
+        public void LichidareSecretariatDeselecteaza(long idLichidare, string username, string coloanaDebifata)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Lichidare_SecretariatDeselecteaza", ID_Lichidare, Username, ColoanaDebifata);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Lichidare_SecretariatDeselecteaza", idLichidare, username, coloanaDebifata);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la LichidareSecretariatDeselecteaza", ex);
+            }
         }
 
-        public LichidareInfo LichidareStudentByIDGet(long ID_Lichidare)
+        public LichidareInfo LichidareStudentGetByID(long idLichidare)
         {
-            return CBO.FillObject<LichidareInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Lichidare_GetStudentByID", ID_Lichidare));
+            try
+            {
+                return CBO.FillObject<LichidareInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "Lichidare_GetStudentByID", idLichidare));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la LichidareStudentGetByID", ex);
+            }
         }
     }
 }

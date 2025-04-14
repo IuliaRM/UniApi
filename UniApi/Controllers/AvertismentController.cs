@@ -1,90 +1,126 @@
-using System.Collections.Generic;
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
 using UniApi.Dal.Repos;
 using UniApi.Info;
+using System.Collections.Generic;
 
 namespace UniApi.Controllers
 {
+    
+
     public class AvertismentController : DnnApiController
     {
-        private readonly AvertismentRepo _repo = new AvertismentRepo();
+        private readonly IAvertismentRepo _repo = new AvertismentRepo();
 
-       
-        [HttpGet]
-        public IHttpActionResult AvertismentGet(long idAvertisment)
+        public AvertismentController()
         {
-            var repo = new AvertismentRepo(); // Ensure repository is properly instantiated
-            var avertisment = repo.AvertismentGet(idAvertisment); // Fetch data
-
-            if (avertisment != null)
-            {
-                return Ok(avertisment);
-            }
-            else
-            {
-                return NotFound();
-            }
         }
 
-
-        [HttpGet]
-        public IHttpActionResult AvertismentList()
+        public AvertismentController(IAvertismentRepo repo)
         {
-            var avertismente = _repo.AvertismentList();
-            return Ok(avertismente);
-        }
-
-        [HttpGet]
-        public IHttpActionResult AvertismentListByCazare(long idCazare)
-        {
-            var avertismente = _repo.AvertismentListByCazare(idCazare);
-            return Ok(avertismente);
-        }
-
-        [HttpGet]
-        public IHttpActionResult AvertismentListByTipAvertisment(long idTipAvertisment)
-        {
-            var avertismente = _repo.AvertismentListByTipAvertisment(idTipAvertisment);
-            return Ok(avertismente);
+            _repo = repo;
         }
 
         [HttpPost]
         public IHttpActionResult AvertismentAdd([FromBody] AvertismentInfo avertisment)
         {
-            var repo = new AvertismentRepo(); // Ensure repository is properly instantiated
-            int id = repo.AvertismentAdd(avertisment); // Insert the record and get the ID
-
-            if (id > 0)
+            try
             {
-                return Ok(id); // Return the new ID if successful
+                int id = _repo.AvertismentAdd(avertisment);
+                return Ok(id);
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Eroare la adãugarea avertismentului."); // Handle insert failure
+                return InternalServerError(ex);
             }
         }
-
 
         [HttpPut]
         public IHttpActionResult AvertismentUpdate([FromBody] AvertismentInfo avertisment)
         {
-            _repo.AvertismentUpdate(avertisment);
-            return Ok();
+            try
+            {
+                _repo.AvertismentUpdate(avertisment);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult AvertismentDelete(long idAvertisment)
         {
-            var avertisment = _repo.AvertismentGet(idAvertisment);
-            if (avertisment == null)
+            try
             {
-                return NotFound();
+                _repo.AvertismentDelete(idAvertisment);
+                return Ok();
             }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
 
-            _repo.AvertismentDelete(idAvertisment);
-            return Ok();
+        [HttpGet]
+        public IHttpActionResult AvertismentGet(long idAvertisment)
+        {
+            try
+            {
+                var avertisment = _repo.AvertismentGet(idAvertisment);
+                if (avertisment == null)
+                    return NotFound();
+
+                return Ok(avertisment);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AvertismentList()
+        {
+            try
+            {
+                var list = _repo.AvertismentList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AvertismentListByCazare(long idCazare)
+        {
+            try
+            {
+                var list = _repo.AvertismentListByCazare(idCazare);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult AvertismentListByTipAvertisment(long idTipAvertisment)
+        {
+            try
+            {
+                var list = _repo.AvertismentListByTipAvertisment(idTipAvertisment);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

@@ -2,49 +2,61 @@ using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
+using UniApi;
 using UniApi.Info;
+
 
 namespace UniApi.Controllers
 {
     public class TipAvertismentController : DnnApiController
     {
-        [HttpGet]
+        private readonly ITipAvertismentRepo _repo = new TipAvertismentRepo();
+
+        public TipAvertismentController()
+        {
+
+        }
+
+            [HttpGet]
         public IHttpActionResult TipAvertismentGet(long idTipAvertisment)
         {
-            var repo = new TipAvertismentRepo();
-            var result = repo.TipAvertismentGet(idTipAvertisment);
+            var result = _repo.TipAvertismentGet(idTipAvertisment);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipAvertismentListGet()
         {
-            var repo = new TipAvertismentRepo();
-            var result = repo.TipAvertismentListGet();
+            var result = _repo.TipAvertismentList();
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult TipAvertismentAdd([FromBody] TipAvertismentInfo tipAvertisment)
         {
-            var repo = new TipAvertismentRepo();
-            var id = repo.TipAvertismentAdd(tipAvertisment);
+            if (tipAvertisment == null)
+            {
+                return BadRequest("Obiectul tipAvertisment nu poate fi null.");
+            }
+            var id = _repo.TipAvertismentAdd(tipAvertisment);
             return Ok(id);
         }
 
         [HttpPut]
         public IHttpActionResult TipAvertismentUpdate([FromBody] TipAvertismentInfo tipAvertisment)
         {
-            var repo = new TipAvertismentRepo();
-            repo.TipAvertismentUpdate(tipAvertisment);
+            if (tipAvertisment == null)
+            {
+                return BadRequest("Obiectul tipAvertisment nu poate fi null.");
+            }
+            _repo.TipAvertismentUpdate(tipAvertisment);
             return Ok();
         }
 
         [HttpDelete]
         public IHttpActionResult TipAvertismentDelete(long idTipAvertisment)
         {
-            var repo = new TipAvertismentRepo();
-            repo.TipAvertismentDelete(idTipAvertisment);
+            _repo.TipAvertismentDelete(idTipAvertisment);
             return Ok();
         }
     }

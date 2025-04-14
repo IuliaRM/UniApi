@@ -2,59 +2,59 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
-using UniApi.Info;
+using UniApi;
 
 namespace UniApi.Controllers
 {
+    [AllowAnonymous]
     public class TipTaraController : DnnApiController
     {
+        private readonly ITipTaraRepo _repo = new TipTaraRepo();
+
+        public TipTaraController() { }
+
         [HttpGet]
-        public IHttpActionResult TipTaraGet(long idTipTara)
+        [Route("{idTipTara:long}")]
+        public IHttpActionResult Get(long idTipTara)
         {
-            var repo = new TipTaraRepo();
-            var result = repo.TipTaraGet(idTipTara);
+            var result = _repo.TipTaraGet(idTipTara);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult TipTaraByID_N_TaraGet(long idNTipTara)
+        [Route("by-n-tara/{idNTipTara:long}")]
+        public IHttpActionResult GetById_N_Tara(long idNTipTara)
         {
-            var repo = new TipTaraRepo();
-            var result = repo.TipTaraByID_N_TaraGet(idNTipTara);
+            var result = _repo.TipTaraGetById_N_Tara(idNTipTara);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult TipTaraByCodeGet(string codTara)
+        [Route("by-code/{codTara}")]
+        public IHttpActionResult GetByCode(string codTara)
         {
-            var repo = new TipTaraRepo();
-            var result = repo.TipTaraByCodeGet(codTara);
+            var result = _repo.TipTaraGetByCode(codTara);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult TipTaraListGet()
+        [Route("list")]
+        public IHttpActionResult List()
         {
-            var repo = new TipTaraRepo();
-            var result = repo.TipTaraListGet();
+            var result = _repo.TipTaraList();
             return Ok(result);
-        }
-
-        [HttpPost]
-        public IHttpActionResult TipTaraAdd([FromBody] TipTaraInfo tipTaraInfo)
-        {
-            var repo = new TipTaraRepo();
-            var id = repo.TipTaraAdd(tipTaraInfo);
-            return Ok(id);  
-        }
-
-
-        [HttpDelete]
-        public IHttpActionResult TipTaraDelete(long idTipTara)
-        {
-            var repo = new TipTaraRepo();
-            repo.TipTaraDelete(idTipTara);
-            return Ok();  
         }
     }
 }

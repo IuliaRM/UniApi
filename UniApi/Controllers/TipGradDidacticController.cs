@@ -9,43 +9,57 @@ namespace UniApi.Controllers
 {
     public class TipGradDidacticController : DnnApiController
     {
+        private readonly ITipGradDidacticRepo _repo = new TipGradDidacticRepo();
+
+        public TipGradDidacticController()
+        {
+
+        }
+
         [HttpGet]
         public IHttpActionResult TipGradDidacticGet(long idTipGradDidactic)
         {
-            var repo = new TipGradDidacticRepo();
-            var result = repo.TipGradDidacticGet(idTipGradDidactic);
+            var result = _repo.TipGradDidacticGet(idTipGradDidactic);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult TipGradDidacticListGet()
         {
-            var repo = new TipGradDidacticRepo();
-            var result = repo.TipGradDidacticListGet();
+            var result = _repo.TipGradDidacticList();
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult TipGradDidacticAdd([FromBody] TipGradDidacticInfo tipGradDidacticInfo)
         {
-            var repo = new TipGradDidacticRepo();
-            var id = repo.TipGradDidacticAdd(tipGradDidacticInfo);
+            if (tipGradDidacticInfo == null || string.IsNullOrEmpty(tipGradDidacticInfo.DenumireGradDidactic))
+            {
+                return BadRequest("Obiectul tipGradDidacticInfo nu poate fi null și DenumireGradDidactic nu poate fi null sau gol.");
+            }
+            var id = _repo.TipGradDidacticAdd(tipGradDidacticInfo);
             return Ok(id);
         }
 
         [HttpPut]
         public IHttpActionResult TipGradDidacticUpdate([FromBody] TipGradDidacticInfo tipGradDidacticInfo)
         {
-            var repo = new TipGradDidacticRepo();
-            repo.TipGradDidacticUpdate(tipGradDidacticInfo);
+            if (tipGradDidacticInfo == null || tipGradDidacticInfo.ID_TipGradDidactic <= 0 || string.IsNullOrEmpty(tipGradDidacticInfo.DenumireGradDidactic))
+            {
+                return BadRequest("Obiectul tipGradDidacticInfo nu poate fi null, ID_TipGradDidactic trebuie să fie valid și DenumireGradDidactic nu poate fi null sau gol.");
+            }
+            _repo.TipGradDidacticUpdate(tipGradDidacticInfo);
             return Ok();
         }
 
         [HttpDelete]
         public IHttpActionResult TipGradDidacticDelete(long idTipGradDidactic)
         {
-            var repo = new TipGradDidacticRepo();
-            repo.TipGradDidacticDelete(idTipGradDidactic);
+            if (idTipGradDidactic <= 0)
+            {
+                return BadRequest("ID_TipGradDidactic trebuie să fie valid.");
+            }
+            _repo.TipGradDidacticDelete(idTipGradDidactic);
             return Ok();
         }
     }

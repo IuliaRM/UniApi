@@ -1,82 +1,141 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class DepartamentProfesorController : DnnApiController
     {
-        private readonly DepartamentProfesorRepo _repo = new DepartamentProfesorRepo();
+        private readonly IDepartamentProfesorRepo _repo = new DepartamentProfesorRepo();
+
+        public DepartamentProfesorController()
+        {
+
+        }
+
+
+        public DepartamentProfesorController(IDepartamentProfesorRepo repo)
+        {
+            _repo = repo;
+        }
 
         [HttpGet]
         public IHttpActionResult DepartamentProfesorGet(long idDepartamentProfesor)
         {
-            var departamentProfesor = _repo.DepartamentProfesorGet(idDepartamentProfesor);
-            if (departamentProfesor != null)
+            try
             {
-                return Ok(departamentProfesor);
+                var result = _repo.DepartamentProfesorGet(idDepartamentProfesor);
+                return result != null ? (IHttpActionResult)Ok(result) : NotFound();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult DepartamentProfesorGetByProfesor(long idProfesor)
         {
-            var departamentProfesor = _repo.DepartamentProfesorGetByProfesor(idProfesor);
-            if (departamentProfesor != null)
+            try
             {
-                return Ok(departamentProfesor);
+                var result = _repo.DepartamentProfesorGetByProfesor(idProfesor);
+                return result != null ? (IHttpActionResult)Ok(result) : NotFound();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult DepartamentProfesorList()
         {
-            var lista = _repo.DepartamentProfesorList();
-            return Ok(lista);
+            try
+            {
+                var list = _repo.DepartamentProfesorList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult DepartamentProfesorListByDepartament(long idDepartament)
         {
-            var lista = _repo.DepartamentProfesorListByDepartament(idDepartament);
-            return Ok(lista);
+            try
+            {
+                var list = _repo.DepartamentProfesorListByDepartament(idDepartament);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult DepartamentProfesorListByProfesor(long idProfesor)
         {
-            var lista = _repo.DepartamentProfesorListByProfesor(idProfesor);
-            return Ok(lista);
+            try
+            {
+                var list = _repo.DepartamentProfesorListByProfesor(idProfesor);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult DepartamentProfesorAdd([FromBody] DepartamentProfesorInfo objDepartamentProfesor)
+        public IHttpActionResult DepartamentProfesorAdd([FromBody] DepartamentProfesorInfo info)
         {
-            int id = _repo.DepartamentProfesorAdd(objDepartamentProfesor);
-            return Ok(id);
+            try
+            {
+                var id = _repo.DepartamentProfesorAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult DepartamentProfesorUpdate([FromBody] DepartamentProfesorInfo objDepartamentProfesor)
+        public IHttpActionResult DepartamentProfesorUpdate([FromBody] DepartamentProfesorInfo info)
         {
-            _repo.DepartamentProfesorUpdate(objDepartamentProfesor);
-            return Ok();
+            try
+            {
+                _repo.DepartamentProfesorUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult DepartamentProfesorDelete(long idDepartamentProfesor)
         {
-            var departamentProfesor = _repo.DepartamentProfesorGet(idDepartamentProfesor);
-            if (departamentProfesor == null)
+            try
             {
-                return NotFound();
+                var existing = _repo.DepartamentProfesorGet(idDepartamentProfesor);
+                if (existing == null)
+                    return NotFound();
+
+                _repo.DepartamentProfesorDelete(idDepartamentProfesor);
+                return Ok();
             }
-            _repo.DepartamentProfesorDelete(idDepartamentProfesor);
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

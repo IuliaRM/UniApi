@@ -1,76 +1,149 @@
+using System;
 using System.Web.Http;
+using System.Data;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class IntervalChitantaController : DnnApiController
     {
-        private readonly IntervalChitantaRepo _repo = new IntervalChitantaRepo();
+        private readonly IIntervalChitantaRepo _repo = new IntervalChitantaRepo();
 
-        [HttpGet]
-        public IHttpActionResult IntervalChitantaGet(long ID_IntervalChitanta)
+        public IntervalChitantaController()
         {
-            var chitanta = _repo.IntervalChitantaGet(ID_IntervalChitanta);
-            return Ok(chitanta);
+
+        }
+        public IntervalChitantaController(IIntervalChitantaRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult IntervalChitantaByUtilizatorGet(int ID_Utilizator)
+        public IHttpActionResult IntervalChitantaGet(long id)
         {
-            var chitanta = _repo.IntervalChitantaByUtilizatorGet(ID_Utilizator);
-            return Ok(chitanta);
+            try
+            {
+                var result = _repo.IntervalChitantaGet(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult UltimulNumarDeChitantaGet(int ID_Utilizator)
+        public IHttpActionResult IntervalChitantaGetIntervalActiv(int idUtilizator)
         {
-            var numar = _repo.UltimulNumarDeChitantaGet(ID_Utilizator);
-            return Ok(numar);
+            try
+            {
+                var result = _repo.IntervalChitantaGetIntervalActiv(idUtilizator);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult IntervalChitantaListGet()
+        public IHttpActionResult IntervalChitantaGetUltimulNumarDeChitanta(int idUtilizator)
         {
-            var chitante = _repo.IntervalChitantaListGet();
-            return Ok(chitante);
+            try
+            {
+                var result = _repo.IntervalChitantaGetUltimulNumarDeChitanta(idUtilizator);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult IntervalChitantaListByUtilizatorGet(int ID_Utilizator)
+        public IHttpActionResult IntervalChitantaList()
         {
-            var chitante = _repo.IntervalChitantaListByUtilizatorGet(ID_Utilizator);
-            return Ok(chitante);
+            try
+            {
+                var result = _repo.IntervalChitantaList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult IntervalChitantaListByUtilizator(int idUtilizator)
+        {
+            try
+            {
+                var result = _repo.IntervalChitantaListByID_Utilizator(idUtilizator);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult IntervalChitantaAdd([FromBody] IntervalChitantaInfo objIntervalChitanta)
+        public IHttpActionResult IntervalChitantaAdd([FromBody] IntervalChitantaInfo info)
         {
-            var id = _repo.IntervalChitantaAdd(objIntervalChitanta);
-            return Ok(id);
+            try
+            {
+                var id = _repo.IntervalChitantaAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult IntervalChitantaUpdate([FromBody] IntervalChitantaInfo objIntervalChitanta)
+        public IHttpActionResult IntervalChitantaUpdate([FromBody] IntervalChitantaInfo info)
         {
-            _repo.IntervalChitantaUpdate(objIntervalChitanta);
-            return Ok();
+            try
+            {
+                _repo.IntervalChitantaUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult IntervalChitantaDelete([FromBody] IntervalChitantaInfo objIntervalChitanta)
+        public IHttpActionResult IntervalChitantaDelete([FromBody] IntervalChitantaInfo info)
         {
-            _repo.IntervalChitantaDelete(objIntervalChitanta);
-            return Ok();
+            try
+            {
+                _repo.IntervalChitantaDelete(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult SeteazaUrmatorulNumarDeChitanta(int ID_Utilizator)
+        public IHttpActionResult IntervalChitantaSeteazaUrmatorulNumarDeChitanta(int idUtilizator)
         {
-            var numar = _repo.SeteazaUrmatorulNumarDeChitanta(ID_Utilizator);
-            return Ok(numar);
+            try
+            {
+                var numar = _repo.IntervalChitantaSeteazaUrmatorulNumarDeChitanta(idUtilizator);
+                return Ok(numar);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

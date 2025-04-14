@@ -1,74 +1,192 @@
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class CodEvaluareController : DnnApiController
     {
-        private readonly CodEvaluareRepo _repo = new CodEvaluareRepo();
+        private readonly ICodEvaluareRepo _repo = new CodEvaluareRepo();
 
-        [HttpGet]
-        public IHttpActionResult CodEvaluareList()
+        public CodEvaluareController()
         {
-            var coduri = _repo.CodEvaluareList();
-            return Ok(coduri);
+
         }
-        [HttpGet]
-        public IHttpActionResult CodEvaluareGet(long idCodEvaluare)
-        {
-            var repo = new CodEvaluareRepo(); // Ensure repository is initialized
-            var codEvaluare = repo.CodEvaluareGet(idCodEvaluare); // Fetch data
 
-            if (codEvaluare != null)
-            {
-                return Ok(codEvaluare);
-            }
-            else
-            {
-                return NotFound();
-            }
+        public CodEvaluareController(ICodEvaluareRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpPost]
-        public IHttpActionResult CodEvaluareAdd([FromBody] CodEvaluareInfo codEvaluare)
+        public IHttpActionResult CodEvaluareAdd([FromBody] CodEvaluareInfo info)
         {
-            var repo = new CodEvaluareRepo(); // Ensure correct repository is used
-            long id = repo.CodEvaluareAdd(codEvaluare);
-
-            if (id > 0)
+            try
             {
+                var id = _repo.CodEvaluareAdd(info);
                 return Ok(id);
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Eroare la adãugarea codului de evaluare.");
+                return InternalServerError(ex);
             }
         }
 
         [HttpPut]
-        public IHttpActionResult CodEvaluareUpdate([FromBody] CodEvaluareInfo codEvaluare)
+        public IHttpActionResult CodEvaluareUpdate([FromBody] CodEvaluareInfo info)
         {
-            var repo = new CodEvaluareRepo(); // Ensure correct repository is used
-            repo.CodEvaluareUpdate(codEvaluare);
-
-            return Ok();
+            try
+            {
+                _repo.CodEvaluareUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
-
 
         [HttpDelete]
         public IHttpActionResult CodEvaluareDelete(long idCodEvaluare)
         {
-            var codEvaluare = _repo.CodEvaluareGet(idCodEvaluare);
-            if (codEvaluare == null)
+            try
             {
-                return NotFound();
+                _repo.CodEvaluareDelete(idCodEvaluare);
+                return Ok();
             }
-            _repo.CodEvaluareDelete(idCodEvaluare);
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareGet(long idCodEvaluare)
+        {
+            try
+            {
+                var cod = _repo.CodEvaluareGet(idCodEvaluare);
+                return cod != null ? (IHttpActionResult)Ok(cod) : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareList()
+        {
+            try
+            {
+                var list = _repo.CodEvaluareList();
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareListByProfesor(long idProfesor)
+        {
+            try
+            {
+                var list = _repo.CodEvaluareListByProfesor(idProfesor);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareListBySefCatedra(long idSefCatedra)
+        {
+            try
+            {
+                var list = _repo.CodEvaluareListBySefCatedra(idSefCatedra);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareListBySpecializareSemestru(long idSpecializare, int semestru)
+        {
+            try
+            {
+                var list = _repo.CodEvaluareListBySpecializareSemestru(idSpecializare, semestru);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareListByUserIdRol(long idUser, long idRol)
+        {
+            try
+            {
+                var list = _repo.CodEvaluareListByUserIdRol(idUser, idRol);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareListByUsernameRole(string username, string role)
+        {
+            try
+            {
+                var list = _repo.CodEvaluareListByUsernameRole(username, role);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CodEvaluareExamneListByAnUnivSesiuneActiva(long idAnUniv)
+        {
+            try
+            {
+                var list = _repo.CodEvaluareExamneListByAnUnivSesiuneActiva(idAnUniv);
+                return Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult CodEvaluareUpdateDataEmail(long idCodEvaluare, DateTime dataTrimitere)
+        {
+            try
+            {
+                _repo.CodEvaluareUpdateDataEmail(idCodEvaluare, dataTrimitere);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

@@ -5,47 +5,65 @@ using UniApi.DAL.Repos;
 using UniApi;
 using UniApi.Info;
 
+
 namespace UniApi.Controllers
 {
     public class StudentStudiiAnterioareFacultateController : DnnApiController
     {
-        [HttpGet]
-        public IHttpActionResult StudentStudiiAnterioareFacultateGet(long id)
+        private readonly IStudentStudiiAnterioareFacultateRepo _repo = new StudentStudiiAnterioareFacultateRepo();
+
+        public StudentStudiiAnterioareFacultateController()
         {
-            var repo = new StudentStudiiAnterioareFacultateRepo();
-            var result = repo.StudentStudiiAnterioareFacultateGet(id);
-            return Ok(result);
+
         }
 
         [HttpGet]
-        public IHttpActionResult StudentStudiiAnterioareFacultateListGet()
+        public IHttpActionResult StudentStudiiAnterioareFacultateGet(long id)
         {
-            var repo = new StudentStudiiAnterioareFacultateRepo();
-            var result = repo.StudentStudiiAnterioareFacultateListGet();
+            var result = _repo.StudentStudiiAnterioareFacultateGet(id);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult StudentStudiiAnterioareFacultateListByStudentGet(long idStudent)
         {
-            var repo = new StudentStudiiAnterioareFacultateRepo();
-            var result = repo.StudentStudiiAnterioareFacultateListByStudentGet(idStudent);
+            var result = _repo.StudentStudiiAnterioareFacultateListByStudent(idStudent);
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult StudentStudiiAnterioareFacultateAdd([FromBody] StudentStudiiAnterioareFacultateInfo info)
         {
-            var repo = new StudentStudiiAnterioareFacultateRepo();
-            var id = repo.StudentStudiiAnterioareFacultateAdd(info);
+            if (info == null)
+            {
+                return BadRequest("Obiectul info nu poate fi null.");
+            }
+            var id = _repo.StudentStudiiAnterioareFacultateAdd(info);
             return Ok(id);
         }
 
         [HttpPut]
         public IHttpActionResult StudentStudiiAnterioareFacultateUpdate([FromBody] StudentStudiiAnterioareFacultateInfo info)
         {
-            var repo = new StudentStudiiAnterioareFacultateRepo();
-            repo.StudentStudiiAnterioareFacultateUpdate(info);
+            if (info == null)
+            {
+                return BadRequest("Obiectul info nu poate fi null.");
+            }
+            _repo.StudentStudiiAnterioareFacultateUpdate(info);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult StudentStudiiAnterioareFacultateDelete(long id)
+        {
+            _repo.StudentStudiiAnterioareFacultateDelete(id);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult StudentStudiiAnterioareFacultateDeleteByIdCandidatFacultate(long idCandidatFacultate)
+        {
+            _repo.StudentStudiiAnterioareFacultateDeleteByIdCandidatFacultate(idCandidatFacultate);
             return Ok();
         }
     }

@@ -1,37 +1,178 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using UniApi;
+using System.Web.Http;
+using DotNetNuke.Web.Api;
 using UniApi.Dal.Repos;
 using UniApi.Info;
 
 namespace UniApi.Controllers
 {
-    public partial class CerereAdeverintaController
+   public class CerereAdeverintaController : DnnApiController
     {
-        private readonly CerereAdeverintaRepo _repository = new CerereAdeverintaRepo();
+        private readonly ICerereAdeverintaRepo _repo = new CerereAdeverintaRepo();
 
-        [DataObjectMethod(DataObjectMethodType.Insert, true)]
-        public long CerereAdeverintaAdd(CerereAdeverintaInfo cerereAdevInfo)
+        public CerereAdeverintaController()
         {
-            return _repository.CerereAdeverintaAdd(cerereAdevInfo);
+
         }
 
-        public List<CerereAdeverintaInfo> CerereAdeverintaList(List<long> ID_Student, long ID_AnUniv)
+        public CerereAdeverintaController(ICerereAdeverintaRepo repo)
         {
-            return _repository.CerereAdeverintaList(ID_Student, ID_AnUniv);
+            _repo = repo;
         }
 
-        public List<MotivCerereAdevInfo> MotivCerereAdevList()
+        [HttpPost]
+        public IHttpActionResult CerereAdeverintaAdd([FromBody] CerereAdeverintaInfo info)
         {
-            return _repository.MotivCerereAdevList();
+            try
+            {
+                var id = _repo.CerereAdeverintaAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-        public List<TipCerereAdeverintaInfo> TipCerereAdeverintaList()
+        [HttpPost]
+        public IHttpActionResult CerereAdeverintaAprobareByIdCerereAdeverinta(long idCerere)
         {
-            return _repository.TipCerereAdeverintaList();
+            try
+            {
+                _repo.CerereAdeverintaAprobareByIdCerereAdeverinta(idCerere);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
-        // Other methods call corresponding methods from the repository
+        [HttpPost]
+        public IHttpActionResult CerereAdeverintaAprobareByIdCerereIdAnUniv(long idCerere, long idAnUniv)
+        {
+            try
+            {
+                _repo.CerereAdeverintaAprobareByIdCerereIdAnUniv(idCerere, idAnUniv);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CerereAdeverintaDetaliiGetByIdCerereIdAnUniv(long idCerere, long idAnUniv)
+        {
+            try
+            {
+                var info = _repo.CerereAdeverintaDetaliiGetByIdCerereIdAnUniv(idCerere, idAnUniv);
+                return Ok(info);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult CerereAdeverintaDetaliiUpdate([FromBody] CerereAdeverintaInfo info)
+        {
+            try
+            {
+                _repo.CerereAdeverintaDetaliiUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CerereAdeverintaEchivalareGetByIdCerereIdAnUniv(long idCerere, long idAnUniv)
+        {
+            try
+            {
+                var info = _repo.CerereAdeverintaEchivalareGetByIdCerereIdAnUniv(idCerere, idAnUniv);
+                return Ok(info);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult CerereAdeverintaEchivalareUpdate([FromBody] CerereAdeverintaInfo info)
+        {
+            try
+            {
+                _repo.CerereAdeverintaEchivalareUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult CerereAdeverintaStergereUpdate(long idCerere)
+        {
+            try
+            {
+                _repo.CerereAdeverintaStergereUpdate(idCerere);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult CerereAdeverintaSergeUpdate(long idCerere)
+        {
+            try
+            {
+                _repo.CerereAdeverintaSergeUpdate(idCerere);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPost]
+        public IHttpActionResult CerereAdeverintaTiparireByIdCerereAdevOdAnUniv(long idCerere, long idAnUniv)
+        {
+            try
+            {
+                _repo.CerereAdeverintaTiparireByIdCerereAdevOdAnUniv(idCerere, idAnUniv);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpPut]
+        public IHttpActionResult CerereAdeverintaTiparireByIdCerereAdevIdAnUnivUpdate(long idCerere, long idAnUniv)
+        {
+            try
+            {
+                _repo.CerereAdeverintaTiparireByIdCerereAdevIdAnUnivUpdate(idCerere, idAnUniv);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

@@ -1,45 +1,59 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.Controllers
 {
+    [AllowAnonymous]
     public class StudentInfoSuplimentareController : DnnApiController
     {
+        private readonly IStudentInfoSuplimentareRepo _repo = new StudentInfoSuplimentareRepo();
+
+        public StudentInfoSuplimentareController() { }
 
         [HttpPost]
-        public IHttpActionResult StudentInfoSuplimentaraAdd([FromBody] StudentInfoSuplimentare sis)
+        [Route("add")]
+        public IHttpActionResult Add([FromBody] StudentInfoSuplimentare sis)
         {
-            var id = StudentInfoSuplimentaraAdd(sis);
-            return Ok(id);
+            if (sis == null || sis.ID_Student <= 0 || string.IsNullOrEmpty(sis.TipInfoSuplimentara))
+            {
+                return BadRequest("Obiectul StudentInfoSuplimentare nu poate fi null, ID_Student trebuie să fie pozitiv, iar TipInfoSuplimentara nu poate fi null sau gol.");
+            }
+            var id = _repo.StudentInfoSuplimentareAdd(sis);
+            return Ok(new { ID = id });
         }
 
         [HttpPut]
-        public IHttpActionResult StudentInfoSuplimentaraUpdate([FromBody] StudentInfoSuplimentare sis)
+        [Route("update")]
+        public IHttpActionResult Update([FromBody] StudentInfoSuplimentare sis)
         {
-            var id = StudentInfoSuplimentaraUpdate(sis);
-            return Ok(id);
+            if (sis == null || sis.ID_StudentInformatii <= 0 || string.IsNullOrEmpty(sis.TipInfoSuplimentara))
+            {
+                return BadRequest("Obiectul StudentInfoSuplimentare nu poate fi null, ID_StudentInformatii trebuie să fie pozitiv, iar TipInfoSuplimentara nu poate fi null sau gol.");
+            }
+            var id = _repo.StudentInfoSuplimentareUpdate(sis);
+            return Ok(new { ID = id });
         }
 
         [HttpDelete]
-        public IHttpActionResult StudentInfoSuplimentaraDelete(long idStudentInfo)
+        [Route("delete/{idStudentInfo:long}")]
+        public IHttpActionResult Delete(long idStudentInfo)
         {
-            StudentInfoSuplimentaraDelete(idStudentInfo);
+            if (idStudentInfo <= 0)
+            {
+                return BadRequest("ID-ul trebuie să fie o valoare pozitivă.");
+            }
+            _repo.StudentInfoSuplimentareDelete(idStudentInfo);
             return Ok();
         }
 
         [HttpGet]
-        public IHttpActionResult StudentInfoSuplimentaraListGet(long idStudent)
+        [Route("list/{idStudent:long}")]
+        public IHttpActionResult List(long idStudent)
         {
-            var result = StudentInfoSuplimentaraListGet(idStudent);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public IHttpActionResult StudentInfoSuplimentaraListByTipGet(long idStudent, string tip)
-        {
-            var result = StudentInfoSuplimentaraListByTipGet(idStudent, tip);
+            var result = _repo.StudentInfoSuplimentareList(idStudent);
             return Ok(result);
         }
     }

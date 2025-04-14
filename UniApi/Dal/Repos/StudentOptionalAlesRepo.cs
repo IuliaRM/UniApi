@@ -1,49 +1,67 @@
 using System;
 using System.Collections.Generic;
+using DotNetNuke.Common.Utilities;
+using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
+using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class StudentOptionalAlesRepo
+
+    public interface IStudentOptionalAlesRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        StudentOptionalAlesInfo StudentOptionalAlesGet(long idStudentOptionalAles);
+        List<StudentOptionalAlesInfo> StudentOptionalAlesList();
+        List<StudentOptionalAlesInfo> StudentOptionalAlesListByStudent(long idStudent);
+        List<StudentOptionalAlesInfo> StudentOptionalAlesListByDetaliuPlanSemestru(long idDetaliuPlanSemestru);
+        long StudentOptionalAlesAdd(StudentOptionalAlesInfo studentOptionalAles);
+        void StudentOptionalAlesUpdate(StudentOptionalAlesInfo studentOptionalAles);
+        void StudentOptionalAlesDelete(long idStudentOptionalAles);
+    }
+
+    public class StudentOptionalAlesRepo : IStudentOptionalAlesRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public StudentOptionalAlesInfo StudentOptionalAlesGet(long idStudentOptionalAles)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<StudentOptionalAlesInfo>(
+            return CBO.FillObject<StudentOptionalAlesInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "StudentOptionalAlesGet", idStudentOptionalAles));
         }
 
-        public List<StudentOptionalAlesInfo> StudentOptionalAlesListGet()
+        public List<StudentOptionalAlesInfo> StudentOptionalAlesList()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<StudentOptionalAlesInfo>(
+            return CBO.FillCollection<StudentOptionalAlesInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "StudentOptionalAlesList"));
         }
 
-        public List<StudentOptionalAlesInfo> StudentOptionalAlesListByStudentGet(long idStudent)
+        public List<StudentOptionalAlesInfo> StudentOptionalAlesListByStudent(long idStudent)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<StudentOptionalAlesInfo>(
+            return CBO.FillCollection<StudentOptionalAlesInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "StudentOptionalAlesListByStudent", idStudent));
         }
 
-        public List<StudentOptionalAlesInfo> StudentOptionalAlesListByDetaliuPlanSemestruGet(long idDetaliuPlanSemestru)
+        public List<StudentOptionalAlesInfo> StudentOptionalAlesListByDetaliuPlanSemestru(long idDetaliuPlanSemestru)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<StudentOptionalAlesInfo>(
+            return CBO.FillCollection<StudentOptionalAlesInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "StudentOptionalAlesListByDetaliuPlanSemestru", idDetaliuPlanSemestru));
         }
 
         public long StudentOptionalAlesAdd(StudentOptionalAlesInfo studentOptionalAles)
         {
             object id = SqlHelper.ExecuteScalar(_connectionString, "StudentOptionalAlesAdd",
-                studentOptionalAles.ID_Student, studentOptionalAles.ID_DetaliuPlanSemestru);
+                studentOptionalAles.ID_Student,
+                studentOptionalAles.ID_DetaliuPlanSemestru);
             return Convert.ToInt64(id);
         }
 
         public void StudentOptionalAlesUpdate(StudentOptionalAlesInfo studentOptionalAles)
         {
             SqlHelper.ExecuteNonQuery(_connectionString, "StudentOptionalAlesUpdate",
-                studentOptionalAles.ID_StudentOptionalAles, studentOptionalAles.ID_Student, studentOptionalAles.ID_DetaliuPlanSemestru);
+                studentOptionalAles.ID_StudentOptionalAles,
+                studentOptionalAles.ID_Student,
+                studentOptionalAles.ID_DetaliuPlanSemestru);
         }
 
         public void StudentOptionalAlesDelete(long idStudentOptionalAles)

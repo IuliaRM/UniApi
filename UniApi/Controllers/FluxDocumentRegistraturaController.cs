@@ -1,62 +1,122 @@
+using System;
 using System.Web.Http;
+using System.Data;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class FluxDocumentRegistraturaController : DnnApiController
     {
-        private readonly FluxDocumentRegistraturaRepo _repo = new FluxDocumentRegistraturaRepo();
+        private readonly IFluxDocumentRegistraturaRepo _repo = new FluxDocumentRegistraturaRepo();
 
-        [HttpGet]
-        public IHttpActionResult FluxDocumentRegistraturaGet(long ID_FluxDocReg)
+        public FluxDocumentRegistraturaController()
         {
-            var flux = _repo.FluxDocumentRegistraturaGet(ID_FluxDocReg);
-            return Ok(flux);
+
+        }
+
+        public FluxDocumentRegistraturaController(IFluxDocumentRegistraturaRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult FluxDocumentRegistraturaListGet()
+        public IHttpActionResult FluxDocumentRegistraturaGet(long id)
         {
-            var fluxuri = _repo.FluxDocumentRegistraturaListGet();
-            return Ok(fluxuri);
+            try
+            {
+                var result = _repo.FluxDocumentRegistraturaGet(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FluxDocumentRegistraturaListByDocumentRegistraturaGet(long ID_DocReg, int AnCalendaristic)
+        public IHttpActionResult FluxDocumentRegistraturaList()
         {
-            var fluxuri = _repo.FluxDocumentRegistraturaListByDocumentRegistraturaGet(ID_DocReg, AnCalendaristic);
-            return Ok(fluxuri);
+            try
+            {
+                var result = _repo.FluxDocumentRegistraturaList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult FluxDocumentRegistraturaListByDocumentRegistratura(long idDocReg, int anCalendaristic)
+        {
+            try
+            {
+                var result = _repo.FluxDocumentRegistraturaListByDocumentRegistratura(idDocReg, anCalendaristic);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult FluxDocumentRegistraturaAdd([FromBody] FluxDocumentRegistraturaInfo objFluxDocumentRegistratura)
+        public IHttpActionResult FluxDocumentRegistraturaAdd([FromBody] FluxDocumentRegistraturaInfo info)
         {
-            var id = _repo.FluxDocumentRegistraturaAdd(objFluxDocumentRegistratura);
-            return Ok(id);
+            try
+            {
+                var id = _repo.FluxDocumentRegistraturaAdd(info);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult FluxDocumentRegistraturaUpdate([FromBody] FluxDocumentRegistraturaInfo objFluxDocumentRegistratura)
+        public IHttpActionResult FluxDocumentRegistraturaUpdate([FromBody] FluxDocumentRegistraturaInfo info)
         {
-            _repo.FluxDocumentRegistraturaUpdate(objFluxDocumentRegistratura);
-            return Ok();
+            try
+            {
+                _repo.FluxDocumentRegistraturaUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
-        public IHttpActionResult FluxDocumentRegistraturaDelete([FromBody] FluxDocumentRegistraturaInfo objFluxDocumentRegistratura)
+        public IHttpActionResult FluxDocumentRegistraturaDelete([FromBody] FluxDocumentRegistraturaInfo info)
         {
-            _repo.FluxDocumentRegistraturaDelete(objFluxDocumentRegistratura);
-            return Ok();
+            try
+            {
+                _repo.FluxDocumentRegistraturaDelete(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult FluxDocumentRegistraturaStatisticiByAnGet(int AnCalendaristic)
+        public IHttpActionResult FluxDocumentRegistraturaStatisticiByAn(int anCalendaristic)
         {
-            var statistici = _repo.FluxDocumentRegistraturaStatisticiByAnGet(AnCalendaristic);
-            return Ok(statistici);
+            try
+            {
+                var result = _repo.FluxDocumentRegistraturaStatisticiByAn(anCalendaristic);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

@@ -1,83 +1,160 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
-using UniApi.DAL.Repos;
 using DotNetNuke.Web.Api;
+using UniApi.DAL.Repos;
+using UniApi;
 using UniApi.Info;
+
 
 namespace UniApi.Controllers
 {
     public class PostProfesorController : DnnApiController
     {
-        private readonly PostProfesorRepo _repo = new PostProfesorRepo();
+        private readonly IPostProfesorRepo _repo = new PostProfesorRepo();
+
+        public PostProfesorController()
+        {
+
+        }
+
+        public PostProfesorController(IPostProfesorRepo repo)
+        {
+            _repo = repo;
+        }
 
         [HttpGet]
         public IHttpActionResult PostProfesorGet(long idPostProfesor)
         {
-            var result = _repo.PostProfesorGet(idPostProfesor);
-            return Ok(result);
+            try
+            {
+                var result = _repo.PostProfesorGet(idPostProfesor);
+                if (result == null)
+                    return NotFound();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult PostProfesorListGet()
         {
-            var result = _repo.PostProfesorListGet();
-            return Ok(result);
+            try
+            {
+                var result = _repo.PostProfesorListGet();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult PostProfesorListByDetaliuPlanSemestruGet(long idDetaliuPlanSemestru)
+        {
+            try
+            {
+                var result = _repo.PostProfesorListByDetaliuPlanSemestruGet(idDetaliuPlanSemestru);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult PostProfesorListByDetaliuPlanSemestruProfesorGet(long idDetaliuPlanSemestruProfesor)
         {
-            var result = _repo.PostProfesorListByDetaliuPlanSemestruProfesorGet(idDetaliuPlanSemestruProfesor);
-            return Ok(result);
+            try
+            {
+                var result = _repo.PostProfesorListByDetaliuPlanSemestruProfesorGet(idDetaliuPlanSemestruProfesor);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
         public IHttpActionResult PostProfesorListByPostGet(long idPost)
         {
-            var result = _repo.PostProfesorListByPostGet(idPost);
-            return Ok(result);
+            try
+            {
+                var result = _repo.PostProfesorListByPostGet(idPost);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult PostProfesorListByProfesorGet(long idProfesor)
+        {
+            try
+            {
+                var result = _repo.PostProfesorListByProfesorGet(idProfesor);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
         public IHttpActionResult PostProfesorAdd([FromBody] PostProfesorInfo postProfesorInfo)
         {
-            var id = _repo.PostProfesorAdd(postProfesorInfo);
-            return Ok(id);
+            try
+            {
+                if (postProfesorInfo == null)
+                    return BadRequest("Obiectul PostProfesorInfo nu poate fi null");
+
+                var id = _repo.PostProfesorAdd(postProfesorInfo);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
         public IHttpActionResult PostProfesorUpdate([FromBody] PostProfesorInfo postProfesorInfo)
         {
-            _repo.PostProfesorUpdate(postProfesorInfo);
-            return Ok();
+            try
+            {
+                if (postProfesorInfo == null)
+                    return BadRequest("Obiectul PostProfesorInfo nu poate fi null");
+
+                _repo.PostProfesorUpdate(postProfesorInfo);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult PostProfesorDelete(long idPostProfesor)
         {
-            _repo.PostProfesorDelete(idPostProfesor);
-            return Ok();
-        }
-
-        [HttpGet]
-        public IHttpActionResult ProcentOreConventionaleByProfesorGet(long idProfesor, long idAnUniv, long idScenariu)
-        {
-            var result = _repo.ProcentOreConventionaleByProfesorGet(idProfesor, idAnUniv, idScenariu);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public IHttpActionResult ProcentOreConventionaleByProfesorSemestruGet(long idProfesor, long idAnUniv, long idScenariu)
-        {
-            var result = _repo.ProcentOreConventionaleByProfesorSemestruGet(idProfesor, idAnUniv, idScenariu);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public IHttpActionResult ProcentOreConventionaleByPostProfesorGet(long idPost, long idProfesor, long idAnUniv, long idScenariu)
-        {
-            var result = _repo.ProcentOreConventionaleByPostProfesorGet(idPost, idProfesor, idAnUniv, idScenariu);
-            return Ok(result);
+            try
+            {
+                _repo.PostProfesorDelete(idPostProfesor);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

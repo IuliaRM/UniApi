@@ -1,61 +1,121 @@
+using System;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class DiplomaSupplementAdeverintaAbsolvireController : DnnApiController
     {
-        private readonly DiplomaSupplementAdeverintaAbsolvireRepo _repo = new DiplomaSupplementAdeverintaAbsolvireRepo();
+        private readonly IDiplomaSupplementAdeverintaAbsolvireRepo _repo = new DiplomaSupplementAdeverintaAbsolvireRepo();
 
-        [HttpGet]
-        public IHttpActionResult StudentGet(long ID_Student, long ID_Facultate, long ID_TipCiclu)
+        public DiplomaSupplementAdeverintaAbsolvireController()
         {
-            var student = _repo.StudentGet(ID_Student, ID_Facultate, ID_TipCiclu);
-            return Ok(student);
+
+        }
+
+        public DiplomaSupplementAdeverintaAbsolvireController(IDiplomaSupplementAdeverintaAbsolvireRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult ClasamentGet(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
+        public IHttpActionResult StudentGet(long idStudent, long idFacultate, long idTipCiclu)
         {
-            var clasament = _repo.ClasamentGet(ID_Student, ID_Facultate, ID_PlanInvatamant);
-            return Ok(clasament);
+            try
+            {
+                var result = _repo.StudentGet(idStudent, idFacultate, idTipCiclu);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult MedieGeneralaGet(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
+        public IHttpActionResult ClasamentGet(long idStudent, long idFacultate, long idPlanInvatamant)
         {
-            var medie = _repo.MedieGeneralaGet(ID_Student, ID_Facultate, ID_PlanInvatamant);
-            return Ok(medie);
+            try
+            {
+                var result = _repo.ClasamentGet(idStudent, idFacultate, idPlanInvatamant);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult MedieFinalaGet(long ID_Student, long ID_TipCiclu)
+        public IHttpActionResult MedieGeneralaGet(long idStudent, long idFacultate, long idPlanInvatamant)
         {
-            var medie = _repo.MedieFinalaGet(ID_Student, ID_TipCiclu);
-            return Ok(medie);
+            try
+            {
+                var result = _repo.MedieGeneralaGet(idStudent, idFacultate, idPlanInvatamant);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult SesiuneAbsolvireGet(long ID_Student, long ID_TipCiclu)
+        public IHttpActionResult MedieFinalaGet(long idStudent, long idTipCiclu)
         {
-            var sesiune = _repo.SesiuneAbsolvireGet(ID_Student, ID_TipCiclu);
-            return Ok(sesiune);
+            try
+            {
+                var result = _repo.MedieFinalaGet(idStudent, idTipCiclu);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult SpecializareGet(long ID_PlanInvatamant, long ID_Student)
+        public IHttpActionResult SesiuneAbsolvireGet(long idStudent, long idTipCiclu)
         {
-            var specializare = _repo.SpecializareGet(ID_PlanInvatamant, ID_Student);
-            return Ok(specializare);
+            try
+            {
+                var result = _repo.SesiuneAbsolvireGet(idStudent, idTipCiclu);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult MediiAnualeSiCrediteGet(long ID_Student, long ID_PlanInvatamant)
+        public IHttpActionResult SpecializareGet(long idPlanInvatamant, long idStudent)
         {
-            var medii = _repo.MediiAnualeSiCrediteGet(ID_Student, ID_PlanInvatamant);
-            return Ok(medii);
+            try
+            {
+                var result = _repo.SpecializareGet(idPlanInvatamant, idStudent);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult MediiAnualeSiCrediteGet(long idStudent, long idPlanInvatamant)
+        {
+            try
+            {
+                var result = _repo.MediiAnualeSiCrediteGet(idStudent, idPlanInvatamant);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

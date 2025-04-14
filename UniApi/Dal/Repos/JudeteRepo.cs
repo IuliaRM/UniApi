@@ -1,59 +1,125 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class JudeteRepo
+    public interface IJudeteRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        JudeteInfo JudeteGet(string idJudet);
+        JudeteInfo JudeteGetByID_N_Judet(int idNJudet);
+        JudeteInfo JudeteGetByDenumire(string denumireJudet);
+        DataTable JudeteList();
+        DataTable JudeteListByCaractere(string caractere, int topN);
+        int JudeteAdd(JudeteInfo info);
+        void JudeteUpdate(JudeteInfo info);
+        void JudeteDelete(JudeteInfo info);
+    }
 
-        public JudeteInfo JudeteGet(string ID_Judet)
+    public class JudeteRepo : IJudeteRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public JudeteInfo JudeteGet(string idJudet)
         {
-            return CBO.FillObject<JudeteInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Judete_Get", ID_Judet));
+            try
+            {
+                return CBO.FillObject<JudeteInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "Judete_Get", idJudet));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteGet", ex);
+            }
         }
 
-        public JudeteInfo JudeteByID_N_JudetGet(int ID_N_Judet)
+        public JudeteInfo JudeteGetByID_N_Judet(int idNJudet)
         {
-            return CBO.FillObject<JudeteInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetByID_N_Judet", ID_N_Judet));
+            try
+            {
+                return CBO.FillObject<JudeteInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "Judete_GetByID_N_Judet", idNJudet));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteGetByID_N_Judet", ex);
+            }
         }
 
-        public List<JudeteInfo> JudeteListGet()
+        public JudeteInfo JudeteGetByDenumire(string denumireJudet)
         {
-            return CBO.FillCollection<JudeteInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetList"));
+            try
+            {
+                return CBO.FillObject<JudeteInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "Judete_GetByDenumire", denumireJudet));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteGetByDenumire", ex);
+            }
         }
 
-        public List<JudeteInfo> JudeteListByCaractereGet(string Caractere, int TopN)
+        public DataTable JudeteList()
         {
-            return CBO.FillCollection<JudeteInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetListByCaractere", Caractere, TopN));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "Judete_GetList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteList", ex);
+            }
         }
 
-        public int JudeteAdd(JudeteInfo objJudete)
+        public DataTable JudeteListByCaractere(string caractere, int topN)
         {
-            return (int)SqlHelper.ExecuteScalar(_ConnectionString, "Judete_Add", objJudete);
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "Judete_GetListByCaractere", caractere, topN).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteListByCaractere", ex);
+            }
         }
 
-        public void JudeteUpdate(JudeteInfo objJudete)
+        public int JudeteAdd(JudeteInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Judete_Update", objJudete);
+            try
+            {
+                return (int)SqlHelper.ExecuteScalar(_connectionString, "Judete_Add", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteAdd", ex);
+            }
         }
 
-        public void JudeteDelete(JudeteInfo objJudete)
+        public void JudeteUpdate(JudeteInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Judete_Delete", objJudete);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Judete_Update", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteUpdate", ex);
+            }
         }
 
-        public JudeteInfo JudeteByDenumireGet(string DenumireJudet)
+        public void JudeteDelete(JudeteInfo info)
         {
-            return CBO.FillObject<JudeteInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Judete_GetByDenumire", DenumireJudet));
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Judete_Delete", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la JudeteDelete", ex);
+            }
         }
     }
 }

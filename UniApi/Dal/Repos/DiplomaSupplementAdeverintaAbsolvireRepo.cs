@@ -1,56 +1,123 @@
 using System;
-using UniApi.Models;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
+using Microsoft.ApplicationBlocks.Data;
 using DotNetNuke.Common.Utilities;
 using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class DiplomaSupplementAdeverintaAbsolvireRepo
+    public interface IDiplomaSupplementAdeverintaAbsolvireRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        DiplomaSupplementAdeverintaAbsolvireInfo StudentGet(long idStudent, long idFacultate, long idTipCiclu);
+        DiplomaSupplementAdeverintaAbsolvireInfo ClasamentGet(long idStudent, long idFacultate, long idPlanInvatamant);
+        DiplomaSupplementAdeverintaAbsolvireInfo MedieGeneralaGet(long idStudent, long idFacultate, long idPlanInvatamant);
+        DiplomaSupplementAdeverintaAbsolvireInfo MedieFinalaGet(long idStudent, long idTipCiclu);
+        DiplomaSupplementAdeverintaAbsolvireInfo SesiuneAbsolvireGet(long idStudent, long idTipCiclu);
+        PlanInvatamantInfo SpecializareGet(long idPlanInvatamant, long idStudent);
+        DiplomaSupplementAdeverintaAbsolvireInfo MediiAnualeSiCrediteGet(long idStudent, long idPlanInvatamant);
+    }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo StudentGet(long ID_Student, long ID_Facultate, long ID_TipCiclu)
+    public class DiplomaSupplementAdeverintaAbsolvireRepo : IDiplomaSupplementAdeverintaAbsolvireRepo
+    {
+        private readonly string _connectionString;
+
+        public DiplomaSupplementAdeverintaAbsolvireRepo()
         {
-            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "DiplomaSupplement_GetStudent_Adeverinta", ID_Student, ID_Facultate, ID_TipCiclu));
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo ClasamentGet(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
+        public DiplomaSupplementAdeverintaAbsolvireInfo StudentGet(long idStudent, long idFacultate, long idTipCiclu)
         {
-            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "DiplomaSupplement_GetClasament", ID_Student, ID_Facultate, ID_PlanInvatamant));
+            try
+            {
+                return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DiplomaSupplement_GetStudent_Adeverinta", idStudent, idFacultate, idTipCiclu));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea studentului pentru supliment diploma.", ex);
+            }
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo MedieGeneralaGet(long ID_Student, long ID_Facultate, long ID_PlanInvatamant)
+        public DiplomaSupplementAdeverintaAbsolvireInfo ClasamentGet(long idStudent, long idFacultate, long idPlanInvatamant)
         {
-            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "DiplomaSupplement_GetMedieGenerala", ID_Facultate, ID_Student, ID_PlanInvatamant));
+            try
+            {
+                return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DiplomaSupplement_GetClasament", idStudent, idFacultate, idPlanInvatamant));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea clasamentului.", ex);
+            }
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo MedieFinalaGet(long ID_Student, long ID_TipCiclu)
+        public DiplomaSupplementAdeverintaAbsolvireInfo MedieGeneralaGet(long idStudent, long idFacultate, long idPlanInvatamant)
         {
-            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "[NotaMediePacheteAbsolvireGetByStudent]", ID_Student, ID_TipCiclu));
+            try
+            {
+                return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DiplomaSupplement_GetMedieGenerala", idFacultate, idStudent, idPlanInvatamant));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea mediei generale.", ex);
+            }
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo SesiuneAbsolvireGet(long ID_Student, long ID_TipCiclu)
+        public DiplomaSupplementAdeverintaAbsolvireInfo MedieFinalaGet(long idStudent, long idTipCiclu)
         {
-            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "PachetAbsolvireGetByStudent", ID_Student, ID_TipCiclu));
+            try
+            {
+                return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "NotaMediePacheteAbsolvireGetByStudent", idStudent, idTipCiclu));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea mediei finale.", ex);
+            }
         }
 
-        public PlanInvatamantInfo SpecializareGet(long ID_PlanInvatamant, long ID_Student)
+        public DiplomaSupplementAdeverintaAbsolvireInfo SesiuneAbsolvireGet(long idStudent, long idTipCiclu)
         {
-            return CBO.FillObject<PlanInvatamantInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "DiplomaSupplement_GetSpecializare", ID_PlanInvatamant, ID_Student));
+            try
+            {
+                return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "PachetAbsolvireGetByStudent", idStudent, idTipCiclu));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea sesiunii de absolvire.", ex);
+            }
         }
 
-        public DiplomaSupplementAdeverintaAbsolvireInfo MediiAnualeSiCrediteGet(long ID_Student, long ID_PlanInvatamant)
+        public PlanInvatamantInfo SpecializareGet(long idPlanInvatamant, long idStudent)
         {
-            return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Rap_Absolvire_GetPerioadaSiMediiAnuale", ID_Student, ID_PlanInvatamant));
+            try
+            {
+                return CBO.FillObject<PlanInvatamantInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DiplomaSupplement_GetSpecializare", idPlanInvatamant, idStudent));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea specializarii.", ex);
+            }
+        }
+
+        public DiplomaSupplementAdeverintaAbsolvireInfo MediiAnualeSiCrediteGet(long idStudent, long idPlanInvatamant)
+        {
+            try
+            {
+                return CBO.FillObject<DiplomaSupplementAdeverintaAbsolvireInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "Rap_Absolvire_GetPerioadaSiMediiAnuale", idStudent, idPlanInvatamant));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea mediilor anuale si a creditelor.", ex);
+            }
         }
     }
 }

@@ -1,36 +1,72 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class IntervalPunctajBursaRepo
+    public interface IIntervalPunctajBursaRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        IntervalPunctajBursaInfo IntervalPunctajBursaGet(long id);
+        long IntervalPunctajBursaAddOrUpdate(IntervalPunctajBursaInfo info);
+        void IntervalPunctajBursaDelete(IntervalPunctajBursaInfo info);
+        DataTable IntervalPunctajBursaListByTipBursaAnUnivFCFDAS(long idTipBursa, long idAnUniv, long idAnUnivBursa, long nrSemBursa, long nrSemCalculPunctaj, long idFC, long idFCForma, long idDomeniu, long idAnStudiu, long idSpecializare);
+    }
 
-        public List<IntervalPunctajBursaInfo> IntervalPunctajBursaListByTipBursaAnUnivFCFDASGet(long ID_TipBursa, long ID_AnUniv, long ID_AnUnivBursa, long NumarSemestruBursa, long NumarSemestruCalculPunctaj, long ID_FC, long ID_FCForma, long ID_Domeniu, long ID_AnStudiu, long ID_Specializare)
+    public class IntervalPunctajBursaRepo : IIntervalPunctajBursaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public IntervalPunctajBursaInfo IntervalPunctajBursaGet(long id)
         {
-            return CBO.FillCollection<IntervalPunctajBursaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalPunctajBursa_GetListByTipBursaAnUnivFCFDAS", ID_TipBursa, ID_AnUniv, ID_AnUnivBursa, NumarSemestruBursa, NumarSemestruCalculPunctaj, ID_FC, ID_FCForma, ID_Domeniu, ID_AnStudiu, ID_Specializare));
+            try
+            {
+                return CBO.FillObject<IntervalPunctajBursaInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "IntervalPunctajBursa_Get", id));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalPunctajBursaGet", ex);
+            }
         }
 
-        public void IntervalPunctajBursaDelete(IntervalPunctajBursaInfo objIntervalPunctajBursa)
+        public long IntervalPunctajBursaAddOrUpdate(IntervalPunctajBursaInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalPunctajBursa_Delete", objIntervalPunctajBursa);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "IntervalPunctajBursa_AddOrUpdate", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalPunctajBursaAddOrUpdate", ex);
+            }
         }
 
-        public IntervalPunctajBursaInfo IntervalPunctajBursaGet(long ID_IntervalPunctajBursa)
+        public void IntervalPunctajBursaDelete(IntervalPunctajBursaInfo info)
         {
-            return CBO.FillObject<IntervalPunctajBursaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalPunctajBursa_Get", ID_IntervalPunctajBursa));
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "IntervalPunctajBursa_Delete", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalPunctajBursaDelete", ex);
+            }
         }
 
-        public long IntervalPunctajBursaAddOrUpdate(IntervalPunctajBursaInfo objIntervalPunctajBursa)
+        public DataTable IntervalPunctajBursaListByTipBursaAnUnivFCFDAS(long idTipBursa, long idAnUniv, long idAnUnivBursa, long nrSemBursa, long nrSemCalculPunctaj, long idFC, long idFCForma, long idDomeniu, long idAnStudiu, long idSpecializare)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "IntervalPunctajBursa_AddOrUpdate", objIntervalPunctajBursa);
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "IntervalPunctajBursa_GetListByTipBursaAnUnivFCFDAS",
+                    idTipBursa, idAnUniv, idAnUnivBursa, nrSemBursa, nrSemCalculPunctaj, idFC, idFCForma, idDomeniu, idAnStudiu, idSpecializare).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalPunctajBursaListByTipBursaAnUnivFCFDAS", ex);
+            }
         }
     }
 }

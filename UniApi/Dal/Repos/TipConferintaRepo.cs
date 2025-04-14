@@ -1,36 +1,51 @@
 using System;
 using System.Collections.Generic;
+using DotNetNuke.Common.Utilities;
+using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class TipConferintaRepo
+
+    public interface ITipConferintaRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        TipConferintaInfo TipConferintaGet(long idTipConferinta);
+        List<TipConferintaInfo> TipConferintaList();
+        long TipConferintaAdd(TipConferintaInfo tipConferinta);
+        void TipConferintaUpdate(TipConferintaInfo tipConferinta);
+        void TipConferintaDelete(long idTipConferinta);
+    }
+
+    public class TipConferintaRepo : ITipConferintaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public TipConferintaInfo TipConferintaGet(long idTipConferinta)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<TipConferintaInfo>(
+            return CBO.FillObject<TipConferintaInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipConferintaGet", idTipConferinta));
         }
 
-        public List<TipConferintaInfo> TipConferintaListGet()
+        public List<TipConferintaInfo> TipConferintaList()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<TipConferintaInfo>(
+            return CBO.FillCollection<TipConferintaInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipConferintaList"));
         }
 
-        public long TipConferintaAdd(string denumireTipConferinta)
+        public long TipConferintaAdd(TipConferintaInfo tipConferinta)
         {
-            object id = SqlHelper.ExecuteScalar(_connectionString, "TipConferintaAdd", denumireTipConferinta);
+            object id = SqlHelper.ExecuteScalar(_connectionString, "TipConferintaAdd",
+                tipConferinta.DenumireTipConferinta);
             return Convert.ToInt64(id);
         }
 
-        public void TipConferintaUpdate(long idTipConferinta, string denumireTipConferinta)
+        public void TipConferintaUpdate(TipConferintaInfo tipConferinta)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "TipConferintaUpdate", idTipConferinta, denumireTipConferinta);
+            SqlHelper.ExecuteNonQuery(_connectionString, "TipConferintaUpdate",
+                tipConferinta.ID_TipConferinta,
+                tipConferinta.DenumireTipConferinta);
         }
 
         public void TipConferintaDelete(long idTipConferinta)

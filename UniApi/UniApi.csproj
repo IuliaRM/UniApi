@@ -396,6 +396,7 @@
     <Compile Include="Info\ConferintaDomeniuFundamentalInfo.cs" />
     <Compile Include="Info\ConferintaInfo.cs" />
     <Compile Include="Info\ConferintaSectiuneInfo.cs" />
+    <Compile Include="Info\ContContabilInfo.cs" />
     <Compile Include="Info\ContUtilizatorInfo.cs" />
     <Compile Include="Info\CORInfo.cs" />
     <Compile Include="Info\CriteriuEvaluareInfo.cs" />
@@ -489,9 +490,6 @@
     <Compile Include="Info\ValoareBursaStudentInfo.cs" />
     <Compile Include="Info\ValoareTipBursaFacultateInfo.cs" />
     <Compile Include="Info\VenitCheltuialaDiverseInfo.cs" />
-    <Compile Include="Models\Facultate.cs" />
-    <Compile Include="Models\Specializare.cs" />
-    <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteMapper.cs" />
   </ItemGroup>

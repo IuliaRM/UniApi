@@ -1,94 +1,154 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
+using System.Data;
 using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-
 
 namespace UniApi.Dal.Repos
 {
-    public class AvertismentRepo
+    public interface IAvertismentRepo
     {
+        int AvertismentAdd(AvertismentInfo avertisment);
+        bool AvertismentUpdate(AvertismentInfo avertisment);
+        bool AvertismentDelete(long idAvertisment);
+        AvertismentInfo AvertismentGet(long idAvertisment);
+        List<AvertismentInfo> AvertismentList();
+        List<AvertismentInfo> AvertismentListByCazare(long idCazare);
+        List<AvertismentInfo> AvertismentListByTipAvertisment(long idTipAvertisment);
+    }
+
+    public class AvertismentRepo : IAvertismentRepo
+    {
+        private readonly string _connectionString;
+
+        public AvertismentRepo()
+        {
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
+        }
+
+        public int AvertismentAdd(AvertismentInfo avertisment)
+        {
+            if (avertisment == null)
+                throw new ArgumentNullException(nameof(avertisment));
+
+            try
+            {
+                var id = SqlHelper.ExecuteScalar(_connectionString, "AvertismentAdd",
+                    avertisment.ID_TipAvertisment,
+                    avertisment.ID_Cazare,
+                    avertisment.DataAvertisment,
+                    avertisment.Motiv,
+                    avertisment.ID_AnUniv
+                );
+
+                return Convert.ToInt32(id);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la adăugarea avertismentului.", ex);
+            }
+        }
+
+        public bool AvertismentUpdate(AvertismentInfo avertisment)
+        {
+            if (avertisment == null)
+                throw new ArgumentNullException(nameof(avertisment));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "AvertismentUpdate",
+                    avertisment.ID_Avertisment,
+                    avertisment.ID_TipAvertisment,
+                    avertisment.ID_Cazare,
+                    avertisment.DataAvertisment,
+                    avertisment.Motiv,
+                    avertisment.ID_AnUniv
+                );
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la actualizarea avertismentului.", ex);
+            }
+        }
+
+        public bool AvertismentDelete(long idAvertisment)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "AvertisemnDelete", idAvertisment);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la ștergerea avertismentului.", ex);
+            }
+        }
+
         public AvertismentInfo AvertismentGet(long idAvertisment)
         {
-            using (var dr = SqlHelper.ExecuteReader(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentGet",
-                idAvertisment))
+            try
             {
-                return CBO.FillObject<AvertismentInfo>(dr);
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AvertismentGet", idAvertisment))
+                {
+                    return CBO.FillObject<AvertismentInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea avertismentului.", ex);
             }
         }
 
         public List<AvertismentInfo> AvertismentList()
         {
-            using (var dr = SqlHelper.ExecuteReader(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentList"))
+            try
             {
-                return CBO.FillCollection<AvertismentInfo>(dr);
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AvertismentList"))
+                {
+                    return CBO.FillCollection<AvertismentInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea avertismentelor.", ex);
             }
         }
 
         public List<AvertismentInfo> AvertismentListByCazare(long idCazare)
         {
-            using (var dr = SqlHelper.ExecuteReader(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentListByCazare",
-                idCazare))
+            try
             {
-                return CBO.FillCollection<AvertismentInfo>(dr);
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AvertisemntListByCazare", idCazare))
+                {
+                    return CBO.FillCollection<AvertismentInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea avertismentelor pentru cazare.", ex);
             }
         }
 
         public List<AvertismentInfo> AvertismentListByTipAvertisment(long idTipAvertisment)
         {
-            using (var dr = SqlHelper.ExecuteReader(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentListByTipAvertisment",
-                idTipAvertisment))
+            try
             {
-                return CBO.FillCollection<AvertismentInfo>(dr);
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AvertismentListByTipAvertisment", idTipAvertisment))
+                {
+                    return CBO.FillCollection<AvertismentInfo>(dr);
+                }
             }
-        }
-
-        public int AvertismentAdd(AvertismentInfo avertisment)
-        {
-            return Convert.ToInt32(SqlHelper.ExecuteScalar(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentAdd",
-                avertisment.ID_Cazare,
-                avertisment.ID_TipAvertisment,
-                avertisment.Motiv, // Updated from Descriere to Motiv
-                avertisment.DataAvertisment, // Updated from Data to DataAvertisment
-                avertisment.ID_AnUniv // Added missing field
-            ));
-        }
-
-        public void AvertismentUpdate(AvertismentInfo avertisment)
-        {
-            SqlHelper.ExecuteNonQuery(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentUpdate",
-                avertisment.ID_Avertisment,
-                avertisment.ID_Cazare,
-                avertisment.ID_TipAvertisment,
-                avertisment.Motiv, // Updated from Descriere to Motiv
-                avertisment.DataAvertisment, // Updated from Data to DataAvertisment
-                avertisment.ID_AnUniv // Added missing field
-            );
-        }
-
-        public void AvertismentDelete(long idAvertisment)
-        {
-            SqlHelper.ExecuteNonQuery(
-                ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString,
-                "AvertismentDelete",
-                idAvertisment);
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea avertismentelor după tip.", ex);
+            }
         }
     }
 }

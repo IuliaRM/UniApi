@@ -3,98 +3,111 @@ using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using UniApi.DAL.Repos;
+using UniApi;
 using UniApi.Info;
+
 
 namespace UniApi.Controllers
 {
     public class ScenariuController : DnnApiController
     {
+        private readonly IScenariuRepo _repo = new ScenariuRepo();
+
+        public ScenariuController()
+        {
+
+        }
+
         [HttpGet]
         public IHttpActionResult ScenariuGet(long idScenariu)
         {
-            var repo = new ScenariuRepo();
-            var result = repo.ScenariuGet(idScenariu);
+            var result = _repo.ScenariuGet(idScenariu);
             return Ok(result);
         }
 
         [HttpGet]
-        public IHttpActionResult ScenariuActivGet(long idCatedra, long idAnUniv)
+        public IHttpActionResult ScenariuGetScenariuActiv(long idCatedra, long idAnUniv)
         {
-            var repo = new ScenariuRepo();
-            var result = repo.ScenariuActivGet(idCatedra, idAnUniv);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public IHttpActionResult ScenariuListGet()
-        {
-            var repo = new ScenariuRepo();
-            var result = repo.ScenariuListGet();
+            var result = _repo.ScenariuGetScenariuActiv(idCatedra, idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult ScenariuListByAnUniversitarGet(long idAnUniv)
         {
-            var repo = new ScenariuRepo();
-            var result = repo.ScenariuListByAnUniversitarGet(idAnUniv);
+            var result = _repo.ScenariuListByAnUniversitar(idAnUniv);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult ScenariuListByCatedraGet(long idCatedra)
         {
-            var repo = new ScenariuRepo();
-            var result = repo.ScenariuListByCatedraGet(idCatedra);
+            var result = _repo.ScenariuListByCatedra(idCatedra);
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult ScenariuListByCatedraAnUnivGet(long idCatedra, long idAnUniv)
         {
-            var repo = new ScenariuRepo();
-            var result = repo.ScenariuListByCatedraAnUnivGet(idCatedra, idAnUniv);
+            var result = _repo.ScenariuListByCatedraAnUniv(idCatedra, idAnUniv);
             return Ok(result);
         }
 
         [HttpPost]
         public IHttpActionResult ScenariuAdd([FromBody] ScenariuInfo scenariuInfo)
         {
-            var repo = new ScenariuRepo();
-            var id = repo.ScenariuAdd(scenariuInfo);
+            if (scenariuInfo == null)
+            {
+                return BadRequest("Obiectul scenariuInfo nu poate fi null.");
+            }
+            var id = _repo.ScenariuAdd(scenariuInfo);
             return Ok(id);
         }
 
         [HttpPost]
-        public IHttpActionResult ScenariuDinAltScenariuAdd([FromBody] ScenariuInfo scenariuInfo)
+        public IHttpActionResult ScenariuAddDinAltScenariu([FromBody] ScenariuAddDinAltScenariuRequest request)
         {
-            var repo = new ScenariuRepo();
-            var id = repo.ScenariuDinAltScenariuAdd(scenariuInfo.ID_Scenariu, scenariuInfo.DenumireScenariu,
-                                                    scenariuInfo.ID_AnUniv, scenariuInfo.ID_Catedra, scenariuInfo.ID_Utilizator);
+            if (request == null)
+            {
+                return BadRequest("Obiectul request nu poate fi null.");
+            }
+            var id = _repo.ScenariuAddDinAltScenariu(request.IdScenariuSursa, request.DenumireScenariu,
+                request.IdAnUnivCurent, request.IdCatedra, request.IdUtilizator);
             return Ok(id);
+        }
+
+        // Am creat o clasă separată pentru a primi parametrii necesari pentru ScenariuAddDinAltScenariu
+        public class ScenariuAddDinAltScenariuRequest
+        {
+            public long IdScenariuSursa { get; set; }
+            public string DenumireScenariu { get; set; }
+            public long IdAnUnivCurent { get; set; }
+            public long IdCatedra { get; set; }
+            public long IdUtilizator { get; set; }
         }
 
         [HttpPut]
         public IHttpActionResult ScenariuUpdate([FromBody] ScenariuInfo scenariuInfo)
         {
-            var repo = new ScenariuRepo();
-            repo.ScenariuUpdate(scenariuInfo);
+            if (scenariuInfo == null)
+            {
+                return BadRequest("Obiectul scenariuInfo nu poate fi null.");
+            }
+            _repo.ScenariuUpdate(scenariuInfo);
             return Ok();
         }
 
         [HttpPut]
-        public IHttpActionResult ScenariuActivUpdate([FromBody] ScenariuInfo scenariuInfo)
+        public IHttpActionResult ScenariuUpdateScenariuActiv(long idScenariu, bool scenariuActiv, long idCatedra, long idAnUniv, DateTime dataModificare, long idUtilizator)
         {
-            var repo = new ScenariuRepo();
-            repo.ScenariuActivUpdate(scenariuInfo);
+            _repo.ScenariuUpdateScenariuActiv(idScenariu, scenariuActiv, idCatedra, idAnUniv, dataModificare, idUtilizator);
             return Ok();
         }
 
         [HttpDelete]
-        public IHttpActionResult ScenariuDelete([FromBody] ScenariuInfo scenariuInfo)
+        public IHttpActionResult ScenariuDelete(long idScenariu)
         {
-            var repo = new ScenariuRepo();
-            repo.ScenariuDelete(scenariuInfo);
+            _repo.ScenariuDelete(idScenariu);
             return Ok();
         }
     }

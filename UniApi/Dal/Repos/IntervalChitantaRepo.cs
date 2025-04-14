@@ -1,64 +1,137 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class IntervalChitantaRepo
+    public interface IIntervalChitantaRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        IntervalChitantaInfo IntervalChitantaGet(long id);
+        IntervalChitantaInfo IntervalChitantaGetIntervalActiv(int idUtilizator);
+        int IntervalChitantaGetUltimulNumarDeChitanta(int idUtilizator);
+        DataTable IntervalChitantaList();
+        DataTable IntervalChitantaListByID_Utilizator(int idUtilizator);
+        long IntervalChitantaAdd(IntervalChitantaInfo info);
+        void IntervalChitantaUpdate(IntervalChitantaInfo info);
+        void IntervalChitantaDelete(IntervalChitantaInfo info);
+        int IntervalChitantaSeteazaUrmatorulNumarDeChitanta(int idUtilizator);
+    }
 
-        public IntervalChitantaInfo IntervalChitantaGet(long ID_IntervalChitanta)
+    public class IntervalChitantaRepo : IIntervalChitantaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public IntervalChitantaInfo IntervalChitantaGet(long id)
         {
-            return CBO.FillObject<IntervalChitantaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitanta", ID_IntervalChitanta));
+            try
+            {
+                return CBO.FillObject<IntervalChitantaInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "IntervalChitanta_GetIntervalChitanta", id));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaGet", ex);
+            }
         }
 
-        public IntervalChitantaInfo IntervalChitantaByUtilizatorGet(int ID_Utilizator)
+        public IntervalChitantaInfo IntervalChitantaGetIntervalActiv(int idUtilizator)
         {
-            return CBO.FillObject<IntervalChitantaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitantaByUtilizator", ID_Utilizator));
+            try
+            {
+                return CBO.FillObject<IntervalChitantaInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "IntervalChitanta_GetIntervalChitantaByUtilizator", idUtilizator));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaGetIntervalActiv", ex);
+            }
         }
 
-        public IntervalChitantaInfo UltimulNumarDeChitantaGet(int ID_Utilizator)
+        public int IntervalChitantaGetUltimulNumarDeChitanta(int idUtilizator)
         {
-            return CBO.FillObject<IntervalChitantaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetUltimulNumarDeChitanta", ID_Utilizator));
+            try
+            {
+                return (int)SqlHelper.ExecuteScalar(_connectionString, "IntervalChitanta_GetUltimulNumarDeChitanta", idUtilizator);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaGetUltimulNumarDeChitanta", ex);
+            }
         }
 
-        public List<IntervalChitantaInfo> IntervalChitantaListGet()
+        public DataTable IntervalChitantaList()
         {
-            return CBO.FillCollection<IntervalChitantaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitantaList"));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "IntervalChitanta_GetIntervalChitantaList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaList", ex);
+            }
         }
 
-        public List<IntervalChitantaInfo> IntervalChitantaListByUtilizatorGet(int ID_Utilizator)
+        public DataTable IntervalChitantaListByID_Utilizator(int idUtilizator)
         {
-            return CBO.FillCollection<IntervalChitantaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "IntervalChitanta_GetIntervalChitantaListByUtilizator", ID_Utilizator));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "IntervalChitanta_GetIntervalChitantaListByUtilizator", idUtilizator).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaListByID_Utilizator", ex);
+            }
         }
 
-        public long IntervalChitantaAdd(IntervalChitantaInfo objIntervalChitanta)
+        public long IntervalChitantaAdd(IntervalChitantaInfo info)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "IntervalChitanta_AddIntervalChitanta", objIntervalChitanta);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "IntervalChitanta_AddIntervalChitanta", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaAdd", ex);
+            }
         }
 
-        public void IntervalChitantaUpdate(IntervalChitantaInfo objIntervalChitanta)
+        public void IntervalChitantaUpdate(IntervalChitantaInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalChitanta_UpdateIntervalChitanta", objIntervalChitanta);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "IntervalChitanta_UpdateIntervalChitanta", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaUpdate", ex);
+            }
         }
 
-        public void IntervalChitantaDelete(IntervalChitantaInfo objIntervalChitanta)
+        public void IntervalChitantaDelete(IntervalChitantaInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "IntervalChitanta_DeleteIntervalChitanta", objIntervalChitanta);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "IntervalChitanta_DeleteIntervalChitanta", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaDelete", ex);
+            }
         }
 
-        public long SeteazaUrmatorulNumarDeChitanta(int ID_Utilizator)
+        public int IntervalChitantaSeteazaUrmatorulNumarDeChitanta(int idUtilizator)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "IntervalChitanta_SeteazaUrmatorulNumarDeChitanta", ID_Utilizator);
+            try
+            {
+                return (int)SqlHelper.ExecuteScalar(_connectionString, "IntervalChitanta_SeteazaUrmatorulNumarDeChitanta", idUtilizator);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la IntervalChitantaSeteazaUrmatorulNumarDeChitanta", ex);
+            }
         }
     }
 }

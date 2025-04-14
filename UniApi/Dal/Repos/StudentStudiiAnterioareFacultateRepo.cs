@@ -1,30 +1,37 @@
 using System;
 using System.Collections.Generic;
+using DotNetNuke.Common.Utilities;
+using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class StudentStudiiAnterioareFacultateRepo
+
+    public interface IStudentStudiiAnterioareFacultateRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        StudentStudiiAnterioareFacultateInfo StudentStudiiAnterioareFacultateGet(long id);
+        List<StudentStudiiAnterioareFacultateInfo> StudentStudiiAnterioareFacultateListByStudent(long idStudent);
+        long StudentStudiiAnterioareFacultateAdd(StudentStudiiAnterioareFacultateInfo info);
+        void StudentStudiiAnterioareFacultateUpdate(StudentStudiiAnterioareFacultateInfo info);
+        void StudentStudiiAnterioareFacultateDelete(long id);
+        void StudentStudiiAnterioareFacultateDeleteByIdCandidatFacultate(long idCandidatFacultate);
+    }
+
+    public class StudentStudiiAnterioareFacultateRepo : IStudentStudiiAnterioareFacultateRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public StudentStudiiAnterioareFacultateInfo StudentStudiiAnterioareFacultateGet(long id)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<StudentStudiiAnterioareFacultateInfo>(
+            return CBO.FillObject<StudentStudiiAnterioareFacultateInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "StudentStudiiAnterioareFacultateGet", id));
         }
 
-        public List<StudentStudiiAnterioareFacultateInfo> StudentStudiiAnterioareFacultateListGet()
+        public List<StudentStudiiAnterioareFacultateInfo> StudentStudiiAnterioareFacultateListByStudent(long idStudent)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<StudentStudiiAnterioareFacultateInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "StudentStudiiAnterioareFacultateList"));
-        }
-
-        public List<StudentStudiiAnterioareFacultateInfo> StudentStudiiAnterioareFacultateListByStudentGet(long idStudent)
-        {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<StudentStudiiAnterioareFacultateInfo>(
+            return CBO.FillCollection<StudentStudiiAnterioareFacultateInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "StudentStudiiAnterioareFacultateListByStudent", idStudent));
         }
 
@@ -47,7 +54,6 @@ namespace UniApi.DAL.Repos
                 info.Text_FormaInvFacultateAbsolvita, info.Text_ProgramSpecializareFacultateAbsolvita,
                 info.Text_TitluObtinutFacultateAbsolvita, info.Text_UniversitateEmitentaDiplomaFacultateAbsolvita,
                 info.Text_CicluStudii, info.NrCrediteFacultateAbsolvita);
-
             return Convert.ToInt64(id);
         }
 
@@ -70,6 +76,16 @@ namespace UniApi.DAL.Repos
                 info.Text_DomeniuStudiuFacultateAbsolvita, info.Text_FormaInvFacultateAbsolvita,
                 info.Text_ProgramSpecializareFacultateAbsolvita, info.Text_TitluObtinutFacultateAbsolvita,
                 info.Text_UniversitateEmitentaDiplomaFacultateAbsolvita, info.Text_CicluStudii, info.NrCrediteFacultateAbsolvita);
+        }
+
+        public void StudentStudiiAnterioareFacultateDelete(long id)
+        {
+            SqlHelper.ExecuteNonQuery(_connectionString, "StudentStudiiAnterioareFacultateDelete", id);
+        }
+
+        public void StudentStudiiAnterioareFacultateDeleteByIdCandidatFacultate(long idCandidatFacultate)
+        {
+            SqlHelper.ExecuteNonQuery(_connectionString, "StudentStudiiAnterioareFacultateDeleteByIdCandidatFacultate", idCandidatFacultate);
         }
     }
 }

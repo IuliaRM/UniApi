@@ -1,31 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi;
-using UniApi.Dal.Repos;
-using UniApi.Info; 
-
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class AnunturiRepo
+    public interface IAnunturiRepo
     {
-        private string _connectionString;
+        bool AnunturiAdd(AnunturiInfo anunturiInfo);
+        bool AnunturiUpdate(AnunturiInfo anunturiInfo);
+        bool AnunturiDelete(long idAnunt);
+        AnunturiInfo AnunturiGet(long idAnunt);
+        AnunturiInfo AnunturiGetByIdStudentAnUniv(long idStudent, long idAnUniv);
+        List<AnunturiInfo> AnunturiList();
+        List<AnunturiInfo> AnunturiListByIdStudnetAnUniv(long idStudent, long idAnUniv);
+        List<AnunturiInfo> AnunturiListByStudentAnUniv(long idStudent, long idAnUniv);
+        List<AnunturiInfo> AnunturiListByUsernameStudentAnUniv(string username, long idAnUniv);
+    }
+
+    public class AnunturiRepo : IAnunturiRepo
+    {
+        private readonly string _connectionString;
 
         public AnunturiRepo()
         {
-            // Poți să setezi _connectionString în constructor, dacă dorești
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
         }
 
-        // Add a new announcement
         public bool AnunturiAdd(AnunturiInfo anunturiInfo)
         {
+            if (anunturiInfo == null)
+                throw new ArgumentNullException(nameof(anunturiInfo));
+
             try
             {
                 var id = SqlHelper.ExecuteScalar(_connectionString, "AnunturiAdd",
-                  anunturiInfo.TitluAnunt,
+                    anunturiInfo.TitluAnunt,
                     anunturiInfo.MesajAnunt,
                     anunturiInfo.DataPostare,
                     anunturiInfo.DataExpirare,
@@ -43,42 +59,22 @@ namespace UniApi.Dal.Repos
                     anunturiInfo.PortalID,
                     anunturiInfo.UserID,
                     anunturiInfo.TipFisier,
-                    anunturiInfo.CaleFisier);
+                    anunturiInfo.CaleFisier
+                );
+
                 return Convert.ToInt64(id) > 0;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                throw new DataException("Eroare la adăugarea anunțului.", ex);
             }
         }
 
-        // Get an announcement by its ID
-        public AnunturiInfo AnunturiGet(long idAnunt)
-        {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiGet", idAnunt))
-            {
-                return (AnunturiInfo)CBO.FillObject(dr, typeof(AnunturiInfo));
-            }
-        }
-
-        // Get a list of all announcements
-        public List<AnunturiInfo> AnunturiList()
-        {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiList"))
-            {
-                return CBO.FillCollection<AnunturiInfo>(dr);
-            }
-        }
-
-        // Delete an announcement
-        public void AnunturiDelete(long idAnunt)
-        {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnunturiDelete", idAnunt);
-        }
-
-        // Update an existing announcement
         public bool AnunturiUpdate(AnunturiInfo anunturiInfo)
         {
+            if (anunturiInfo == null)
+                throw new ArgumentNullException(nameof(anunturiInfo));
+
             try
             {
                 SqlHelper.ExecuteNonQuery(_connectionString, "AnunturiUpdate",
@@ -101,40 +97,117 @@ namespace UniApi.Dal.Repos
                     anunturiInfo.PortalID,
                     anunturiInfo.UserID,
                     anunturiInfo.TipFisier,
-                    anunturiInfo.CaleFisier);
+                    anunturiInfo.CaleFisier
+                );
+
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                throw new DataException("Eroare la actualizarea anunțului.", ex);
             }
         }
 
-        // Get announcements for a specific university year and faculty
-        public List<AnunturiInfo> AnunturiListByAnUniv_Facultate(long idAnUniv, long idFacultate)
+        public bool AnunturiDelete(long idAnunt)
         {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiListByAnUniv_Facultate", idAnUniv, idFacultate))
+            try
             {
-                return CBO.FillCollection<AnunturiInfo>(dr);
+                SqlHelper.ExecuteNonQuery(_connectionString, "AnunturiDelete", idAnunt);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la ștergerea anunțului.", ex);
             }
         }
 
-        // Get announcements for a specific student based on multiple criteria
-        public List<AnunturiInfo> AnunturiListByStudent(long idAnUniv, long idAnStudiu, long idFacultate, long idFC, long idFCForma, long idDomeniu, long idSpecializare, long idGrupe)
+        public AnunturiInfo AnunturiGet(long idAnunt)
         {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiListByStudent", idAnUniv, idAnStudiu, idFacultate, idFC, idFCForma, idDomeniu, idSpecializare, idGrupe))
+            try
             {
-                return CBO.FillCollection<AnunturiInfo>(dr);
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiGet", idAnunt))
+                {
+                    return CBO.FillObject<AnunturiInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea anunțului.", ex);
             }
         }
 
-        // Get paginated list of announcements
-        public List<AnunturiInfo> AnunturiListPaged(int pageIndex, int pageSize, ref int totalRecords)
+        public AnunturiInfo AnunturiGetByIdStudentAnUniv(long idStudent, long idAnUniv)
         {
-            using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiListPaged", pageIndex, pageSize))
+            try
             {
-                totalRecords = Convert.ToInt32(SqlHelper.ExecuteScalar(_connectionString, "AnunturiCount"));
-                return CBO.FillCollection<AnunturiInfo>(dr);
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiGetByIdStudentAnUniv", idStudent, idAnUniv))
+                {
+                    return CBO.FillObject<AnunturiInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea anunțului pentru student.", ex);
+            }
+        }
+
+        public List<AnunturiInfo> AnunturiList()
+        {
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiList"))
+                {
+                    return CBO.FillCollection<AnunturiInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea anunțurilor.", ex);
+            }
+        }
+
+        public List<AnunturiInfo> AnunturiListByIdStudnetAnUniv(long idStudent, long idAnUniv)
+        {
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiListByIdStudnetAnUniv", idStudent, idAnUniv))
+                {
+                    return CBO.FillCollection<AnunturiInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea anunțurilor după ID student și an univ.", ex);
+            }
+        }
+
+        public List<AnunturiInfo> AnunturiListByStudentAnUniv(long idStudent, long idAnUniv)
+        {
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiListByStudentAnUniv", idStudent, idAnUniv))
+                {
+                    return CBO.FillCollection<AnunturiInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea anunțurilor pentru student și an universitar.", ex);
+            }
+        }
+
+        public List<AnunturiInfo> AnunturiListByUsernameStudentAnUniv(string username, long idAnUniv)
+        {
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "AnunturiListByUsernameStudentAnUniv", username, idAnUniv))
+                {
+                    return CBO.FillCollection<AnunturiInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea anunțurilor după username și an universitar.", ex);
             }
         }
     }

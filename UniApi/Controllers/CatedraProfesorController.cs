@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi;
 using UniApi.Dal.Repos;
 using UniApi.Info;
 
@@ -9,89 +9,219 @@ namespace UniApi.Controllers
 {
     public class CatedraProfesorController : DnnApiController
     {
-        private readonly CatedraProfesorRepo _repo = new CatedraProfesorRepo();
+        private readonly ICatedraProfesorRepo _repo = new CatedraProfesorRepo();
 
-        [HttpGet]
-        public IHttpActionResult CatedraProfesorGet(long idCatedraProfesor)
+        public CatedraProfesorController()
         {
-            var repo = new CatedraProfesorRepo(); // Use CatedraProfesorRepo, not CatedraRepo
-            var catedraProfesor = repo.CatedraProfesorGet(idCatedraProfesor); // Fetch data
 
-            if (catedraProfesor != null)
-            {
-                return Ok(catedraProfesor);
-            }
-            else
-            {
-                return NotFound();
-            }
         }
 
-
-
-        [HttpGet]
-        public IHttpActionResult CatedraProfesorList()
+        public CatedraProfesorController(ICatedraProfesorRepo repo)
         {
-            var catedreProfesori = _repo.CatedraProfesorList();
-            return Ok(catedreProfesori);
-        }
-
-        [HttpGet]
-        public IHttpActionResult CatedraProfesorListByCatedra(long idCatedra)
-        {
-            var catedreProfesori = _repo.CatedraProfesorListByCatedra(idCatedra);
-            return Ok(catedreProfesori);
-        }
-
-        [HttpGet]
-        public IHttpActionResult CatedraProfesorListByCatedraAnUniv(long idCatedra, long idAnUniv)
-        {
-            var catedreProfesori = _repo.CatedraProfesorListByCatedraAnUniv(idCatedra, idAnUniv);
-            return Ok(catedreProfesori);
-        }
-
-        [HttpGet]
-        public IHttpActionResult CatedraProfesorListByProfesor(long idProfesor)
-        {
-            var catedreProfesori = _repo.CatedraProfesorListByProfesor(idProfesor);
-            return Ok(catedreProfesori);
+            _repo = repo;
         }
 
         [HttpPost]
-        public IHttpActionResult CatedraProfesorAdd([FromBody] CatedraProfesorInfo catedraProfesor)
+        public IHttpActionResult CatedraProfesorAdd([FromBody] CatedraProfesorInfo info)
         {
-            var repo = new CatedraProfesorRepo(); // Use CatedraProfesorRepo, not CatedraRepo
-            long id = repo.CatedraProfesorAdd(catedraProfesor); // Call the correct method
-
-            if (id > 0)
+            try
             {
-                return Ok(id); // Return the new ID if successful
+                long id = _repo.CatedraProfesorAdd(info);
+                return Ok(id);
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Eroare la adãugarea profesorului în catedrã."); // Handle failure
+                return InternalServerError(ex);
             }
         }
 
-
-
         [HttpPut]
-        public IHttpActionResult CatedraProfesorUpdate([FromBody] CatedraProfesorInfo catedraProfesor)
+        public IHttpActionResult CatedraProfesorUpdate([FromBody] CatedraProfesorInfo info)
         {
-            _repo.CatedraProfesorUpdate(catedraProfesor);
-            return Ok();
+            try
+            {
+                _repo.CatedraProfesorUpdate(info);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpDelete]
         public IHttpActionResult CatedraProfesorDelete(long idCatedraProfesor)
         {
-            var catedraProfesor = _repo.CatedraProfesorGet(idCatedraProfesor);
-            if (catedraProfesor == null)
+            try
             {
-                return NotFound();
+                var profesor = _repo.CatedraProfesorGet(idCatedraProfesor);
+                if (profesor == null)
+                    return NotFound();
+
+                _repo.CatedraProfesorDelete(idCatedraProfesor);
+                return Ok();
             }
-            _repo.CatedraProfesorDelete(idCatedraProfesor);
-            return Ok();
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorGet(long idCatedraProfesor)
+        {
+            try
+            {
+                var profesor = _repo.CatedraProfesorGet(idCatedraProfesor);
+                if (profesor == null)
+                    return NotFound();
+
+                return Ok(profesor);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorGetByProfesor(long idProfesor)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorGetByProfesor(idProfesor);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorGetByProfesorAnUniv(long idProfesor, long idAnUniv)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorGetByProfesorAnUniv(idProfesor, idAnUniv);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedra(long idCatedra)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedra(idCatedra);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedraAnUniv(long idCatedra, long idAnUniv)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedraAnUniv(idCatedra, idAnUniv);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedraAnCalendaristicFRACSActiv(long idCatedra, long idAnCalendaristic)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedraAnCalendaristicFRACSActiv(idCatedra, idAnCalendaristic);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedraCercetator(long idCatedra)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedraCercetator(idCatedra);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedraProfesorActiv(long idCatedra)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedraProfesorActiv(idCatedra);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedraProfesorInactiv(long idCatedra)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedraProfesorInactiv(idCatedra);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListByCatedraProfesorTitularByAnUniv(long idCatedra, long idAnUniv)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListByCatedraProfesorTitularByAnUniv(idCatedra, idAnUniv);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        public IHttpActionResult CatedraProfesorListbyProfesor(long idProfesor)
+        {
+            try
+            {
+                var lista = _repo.CatedraProfesorListbyProfesor(idProfesor);
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

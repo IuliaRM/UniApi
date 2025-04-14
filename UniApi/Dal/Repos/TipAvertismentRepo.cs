@@ -1,37 +1,51 @@
 using System;
 using System.Collections.Generic;
+using DotNetNuke.Common.Utilities;
+using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class TipAvertismentRepo
+
+    public interface ITipAvertismentRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        TipAvertismentInfo TipAvertismentGet(long idTipAvertisment);
+        List<TipAvertismentInfo> TipAvertismentList();
+        long TipAvertismentAdd(TipAvertismentInfo tipAvertisment);
+        void TipAvertismentUpdate(TipAvertismentInfo tipAvertisment);
+        void TipAvertismentDelete(long idTipAvertisment);
+    }
+
+    public class TipAvertismentRepo : ITipAvertismentRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public TipAvertismentInfo TipAvertismentGet(long idTipAvertisment)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<TipAvertismentInfo>(
+            return CBO.FillObject<TipAvertismentInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipAvertismentGet", idTipAvertisment));
         }
 
-        public List<TipAvertismentInfo> TipAvertismentListGet()
+        public List<TipAvertismentInfo> TipAvertismentList()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<TipAvertismentInfo>(
+            return CBO.FillCollection<TipAvertismentInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipAvertismentList"));
         }
 
-        public int TipAvertismentAdd(TipAvertismentInfo tipAvertisment)
+        public long TipAvertismentAdd(TipAvertismentInfo tipAvertisment)
         {
-            object id = SqlHelper.ExecuteScalar(_connectionString, "TipAvertismentAdd", tipAvertisment.DenumireAvertisment);
-            return Convert.ToInt32(id);
+            object id = SqlHelper.ExecuteScalar(_connectionString, "TipAvertismentAdd",
+                tipAvertisment.DenumireAvertisment);
+            return Convert.ToInt64(id);
         }
 
         public void TipAvertismentUpdate(TipAvertismentInfo tipAvertisment)
         {
             SqlHelper.ExecuteNonQuery(_connectionString, "TipAvertismentUpdate",
-                tipAvertisment.ID_TipAvertisment, tipAvertisment.DenumireAvertisment);
+                tipAvertisment.ID_TipAvertisment,
+                tipAvertisment.DenumireAvertisment);
         }
 
         public void TipAvertismentDelete(long idTipAvertisment)

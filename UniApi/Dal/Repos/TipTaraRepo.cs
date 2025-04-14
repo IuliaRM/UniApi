@@ -1,48 +1,47 @@
 using System;
 using System.Collections.Generic;
+using DotNetNuke.Common.Utilities;
+using System.Configuration;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi.Info;
 
 namespace UniApi.DAL.Repos
 {
-    public class TipTaraRepo
+
+    public interface ITipTaraRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        TipTaraInfo TipTaraGet(long idTipTara);
+        TipTaraInfo TipTaraGetById_N_Tara(long idNTipTara);
+        TipTaraInfo TipTaraGetByCode(string codTara);
+        List<TipTaraInfo> TipTaraList();
+    }
+
+    public class TipTaraRepo : ITipTaraRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public TipTaraInfo TipTaraGet(long idTipTara)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<TipTaraInfo>(
+            return CBO.FillObject<TipTaraInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipTaraGet", idTipTara));
         }
 
-        public TipTaraInfo TipTaraByID_N_TaraGet(long idNTipTara)
+        public TipTaraInfo TipTaraGetById_N_Tara(long idNTipTara)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<TipTaraInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "TipTaraGetByID_N_Tara", idNTipTara));
+            return CBO.FillObject<TipTaraInfo>(
+                SqlHelper.ExecuteReader(_connectionString, "TipTaraGetById_N_Tara", idNTipTara));
         }
 
-        public TipTaraInfo TipTaraByCodeGet(string codTara)
+        public TipTaraInfo TipTaraGetByCode(string codTara)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<TipTaraInfo>(
+            return CBO.FillObject<TipTaraInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipTaraGetByCode", codTara));
         }
 
-        public List<TipTaraInfo> TipTaraListGet()
+        public List<TipTaraInfo> TipTaraList()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<TipTaraInfo>(
+            return CBO.FillCollection<TipTaraInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipTaraList"));
-        }
-
-        public long TipTaraAdd(TipTaraInfo tipTaraInfo)
-        {
-            object id = SqlHelper.ExecuteScalar(_connectionString, "TipTaraAdd",
-                tipTaraInfo.DenumireTara, tipTaraInfo.cod_tara);
-            return Convert.ToInt64(id);
-        }
-
-        public void TipTaraDelete(long idTipTara)
-        {
-            SqlHelper.ExecuteNonQuery(_connectionString, "TipTaraDelete", idTipTara);
         }
     }
 }

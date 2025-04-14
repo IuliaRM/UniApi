@@ -1,110 +1,194 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
-using UniApi.Models;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi.Info;
 using DotNetNuke.Common.Utilities;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class DetaliuPlanSemestruProfesorRepo
+    public interface IDetaliuPlanSemestruProfesorRepo
+    {
+        DetaliuPlanSemestruProfesorInfo DetaliuPlanSemestruProfesorGet(long id);
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorList();
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesor(long idProfesor, long idAnUniv, long idScenariu);
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByTipOrePredate(long idTipOrePredate);
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorComplet(long idProfesor, long idAnUniv, long idScenariu);
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(long idDetaliuPlanSemestru);
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(long idDomeniu, long idSpecializare, int nrSemestru);
+        List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorSpecializare(long idProfesor, long idDomeniu, long idSpecializare, int nrSemestru);
+        int DetaliuPlanSemestruProfesorAdd(DetaliuPlanSemestruProfesorInfo info);
+        void DetaliuPlanSemestruProfesorUpdate(DetaliuPlanSemestruProfesorInfo info);
+        void DetaliuPlanSemestruProfesorDelete(long id);
+    }
+
+    public class DetaliuPlanSemestruProfesorRepo : IDetaliuPlanSemestruProfesorRepo
     {
         private readonly string _connectionString;
 
         public DetaliuPlanSemestruProfesorRepo()
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
         }
 
-        public DetaliuPlanSemestruProfesorInfo DetaliuPlanSemestruProfesorGet(long ID_DetaliuPlanSemestruProfesor)
+        public DetaliuPlanSemestruProfesorInfo DetaliuPlanSemestruProfesorGet(long id)
         {
-            return CBO.FillObject<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorGet", ID_DetaliuPlanSemestruProfesor)
-            );
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorGet", id))
+                {
+                    return CBO.FillObject<DetaliuPlanSemestruProfesorInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obtinerea detaliului profesorului.", ex);
+            }
         }
 
         public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorList()
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorList")
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorList"));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea detaliilor profesorilor.", ex);
+            }
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesor(long ID_Profesor, long ID_AnUniv, long ID_Scenariu)
+        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesor(long idProfesor, long idAnUniv, long idScenariu)
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByProfesor", ID_Profesor, ID_AnUniv, ID_Scenariu)
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByProfesor", idProfesor, idAnUniv, idScenariu));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea dupa profesor.", ex);
+            }
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByTipOrePredate(long ID_TipOrePredate)
+        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByTipOrePredate(long idTipOrePredate)
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByTipOrePredate", ID_TipOrePredate)
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByTipOrePredate", idTipOrePredate));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea dupa tip ore predate.", ex);
+            }
         }
 
-        public int DetaliuPlanSemestruProfesorAdd(DetaliuPlanSemestruProfesorInfo objDetaliuPlanSemestruProfesor)
+        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorComplet(long idProfesor, long idAnUniv, long idScenariu)
         {
-            return (int)SqlHelper.ExecuteScalar(
-                _connectionString,
-                "DetaliuPlanSemestruProfesorAdd",
-                objDetaliuPlanSemestruProfesor.ID_DetaliuPlanSemestru,
-                objDetaliuPlanSemestruProfesor.ID_Profesor,
-                objDetaliuPlanSemestruProfesor.ID_TipOrePredate,
-                objDetaliuPlanSemestruProfesor.NumarOrePredateFizice
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByProfesorComplet", idProfesor, idAnUniv, idScenariu));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea completa dupa profesor.", ex);
+            }
         }
 
-        public void DetaliuPlanSemestruProfesorUpdate(DetaliuPlanSemestruProfesorInfo objDetaliuPlanSemestruProfesor)
+        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(long idDetaliuPlanSemestru)
         {
-            SqlHelper.ExecuteNonQuery(
-                _connectionString,
-                "DetaliuPlanSemestruProfesorUpdate",
-                objDetaliuPlanSemestruProfesor.ID_DetaliuPlanSemestruProfesor,
-                objDetaliuPlanSemestruProfesor.ID_DetaliuPlanSemestru,
-                objDetaliuPlanSemestruProfesor.ID_Profesor,
-                objDetaliuPlanSemestruProfesor.ID_TipOrePredate,
-                objDetaliuPlanSemestruProfesor.NumarOrePredateFizice
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru", idDetaliuPlanSemestru));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea dupa detaliu plan semestru.", ex);
+            }
         }
 
-        public void DetaliuPlanSemestruProfesorDelete(long ID_DetaliuPlanSemestruProfesor)
+        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(long idDomeniu, long idSpecializare, int nrSem)
         {
-            SqlHelper.ExecuteNonQuery(
-                _connectionString,
-                "DetaliuPlanSemestruProfesorDelete",
-                ID_DetaliuPlanSemestruProfesor
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv", idDomeniu, idSpecializare, nrSem));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea dupa specializare si semestru activ.", ex);
+            }
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorComplet(long ID_Profesor, long ID_AnUniv, long ID_Scenariu)
+        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorSpecializare(long idProfesor, long idDomeniu, long idSpecializare, int nrSem)
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByProfesorComplet", ID_Profesor, ID_AnUniv, ID_Scenariu)
-            );
+            try
+            {
+                return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByProfesorSpecializare", idProfesor, idDomeniu, idSpecializare, nrSem));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea dupa profesor si specializare.", ex);
+            }
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru(long ID_DetaliuPlanSemestru)
+        public int DetaliuPlanSemestruProfesorAdd(DetaliuPlanSemestruProfesorInfo info)
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByDetaliuPlanSemestru", ID_DetaliuPlanSemestru)
-            );
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                return Convert.ToInt32(SqlHelper.ExecuteScalar(_connectionString, "DetaliuPlanSemestruProfesorAdd",
+                    info.ID_DetaliuPlanSemestru,
+                    info.ID_Profesor,
+                    info.ID_TipOrePredate,
+                    info.NumarOrePredateFizice));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la adaugarea detaliului profesorului.", ex);
+            }
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv(long ID_Domeniu, long ID_Specializare, int nrSem)
+        public void DetaliuPlanSemestruProfesorUpdate(DetaliuPlanSemestruProfesorInfo info)
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListBySpecializareNrSemestruScenariuActiv", ID_Domeniu, ID_Specializare, nrSem)
-            );
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "DetaliuPlanSemestruProfesorUpdate",
+                    info.ID_DetaliuPlanSemestruProfesor,
+                    info.ID_DetaliuPlanSemestru,
+                    info.ID_Profesor,
+                    info.ID_TipOrePredate,
+                    info.NumarOrePredateFizice);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la actualizarea detaliului profesorului.", ex);
+            }
         }
 
-        public List<DetaliuPlanSemestruProfesorInfo> DetaliuPlanSemestruProfesorListByProfesorSpecializare(long ID_Profesor, long ID_Domeniu, long ID_Specializare, int nrSem)
+        public void DetaliuPlanSemestruProfesorDelete(long id)
         {
-            return CBO.FillCollection<DetaliuPlanSemestruProfesorInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "DetaliuPlanSemestruProfesorListByProfesorSpecializare", ID_Profesor, ID_Domeniu, ID_Specializare, nrSem)
-            );
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "DetaliuPlanSemestruProfesorDelete", id);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la stergerea detaliului profesorului.", ex);
+            }
         }
     }
 }

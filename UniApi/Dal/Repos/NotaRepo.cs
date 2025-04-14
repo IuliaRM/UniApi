@@ -1,82 +1,174 @@
 using System;
 using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
 using DotNetNuke.Common.Utilities;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class NotaRepo
+    public interface INotaRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        NotaInfo NotaGet(long idNota);
+        NotaInfo NotaByDetaliuPlanAndIdGet(long idDetaliuPlanSemestru, long idNota);
+        List<NotaInfo> NotaList();
+        List<NotaInfo> NotaListByDetaliuPlanSemestru(long idDetaliuPlanSemestru);
+        List<NotaInfo> NotaListByStudent(long idStudent);
+        List<NotaInfo> NotaListByStudent(long idStudent, long idAnUniv);
+        List<NotaInfo> NotaListByUserAnUniversitar(int userId, long idAnUniv);
+        List<NotaInfo> NotaListByUsernameAnUniversitar(string username, long idAnUniv);
+        long NotaAdd(NotaInfo info);
+        void NotaUpdate(NotaInfo info);
+        void NotaDelete(long idNota);
+        void NotaEchivaleaza(long idRestanta, long idEchivalare, long idStudent, int idUtilizator);
+    }
 
-        public NotaInfo NotaGet(long ID_Nota)
+    public class NotaRepo : INotaRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public NotaInfo NotaGet(long idNota)
         {
-            return CBO.FillObject<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_Get", ID_Nota));
+            try
+            {
+                return CBO.FillObject<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_Get", idNota));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaGet", ex);
+            }
         }
 
-        public List<NotaInfo> NotaListGet()
+        public NotaInfo NotaByDetaliuPlanAndIdGet(long idDetaliuPlanSemestru, long idNota)
         {
-            return CBO.FillCollection<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetList"));
+            try
+            {
+                return CBO.FillObject<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetByDetaliuPlanAndId", idDetaliuPlanSemestru, idNota));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaByDetaliuPlanAndIdGet", ex);
+            }
         }
 
-        public List<NotaInfo> NotaListByDetaliuPlanSemestruGet(long ID_DetaliuPlanSemestru)
+        public List<NotaInfo> NotaList()
         {
-            return CBO.FillCollection<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetListByDetaliuPlanSemestru", ID_DetaliuPlanSemestru));
+            try
+            {
+                return CBO.FillCollection<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetList"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaList", ex);
+            }
         }
 
-        public List<NotaInfo> NotaListByStudentGet(long ID_Student, long ID_AnUniv)
+        public List<NotaInfo> NotaListByDetaliuPlanSemestru(long idDetaliuPlanSemestru)
         {
-            return CBO.FillCollection<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetListByStudent", ID_Student, ID_AnUniv));
+            try
+            {
+                return CBO.FillCollection<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetListByDetaliuPlanSemestru", idDetaliuPlanSemestru));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaListByDetaliuPlanSemestru", ex);
+            }
         }
 
-        public long NotaAdd(NotaInfo NotaInfo)
+        public List<NotaInfo> NotaListByStudent(long idStudent)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "Nota_Add", NotaInfo);
+            try
+            {
+                return CBO.FillCollection<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetListByStudent", idStudent));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaListByStudent", ex);
+            }
         }
 
-        public void NotaUpdate(NotaInfo NotaInfo)
+        public List<NotaInfo> NotaListByStudent(long idStudent, long idAnUniv)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Nota_Update", NotaInfo);
+            try
+            {
+                return CBO.FillCollection<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetListByStudent", idStudent, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaListByStudent cu an universitar", ex);
+            }
         }
 
-        public void NotaDelete(long ID_Nota)
+        public List<NotaInfo> NotaListByUserAnUniversitar(int userId, long idAnUniv)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Nota_Delete", ID_Nota);
+            try
+            {
+                return CBO.FillCollection<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetListByUserAnUniversitar", userId, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaListByUserAnUniversitar", ex);
+            }
         }
 
-        public List<NotaInfo> NotaListByUserAnUniversitarGet(int UserId, long ID_AnUniversitar)
+        public List<NotaInfo> NotaListByUsernameAnUniversitar(string username, long idAnUniv)
         {
-            return CBO.FillCollection<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetListByUserAnUniversitar", UserId, ID_AnUniversitar));
+            try
+            {
+                return CBO.FillCollection<NotaInfo>(SqlHelper.ExecuteReader(_connectionString, "Nota_GetListByUsernameAnUniversitar", username, idAnUniv));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaListByUsernameAnUniversitar", ex);
+            }
         }
 
-        public List<NotaInfo> NotaListByUsernameAnUniversitarGet(string Username, long ID_AnUniversitar)
+        public long NotaAdd(NotaInfo info)
         {
-            return CBO.FillCollection<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetListByUsernameAnUniversitar", Username, ID_AnUniversitar));
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "Nota_Add", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaAdd", ex);
+            }
         }
 
-        public List<NotaInfo> NotaListByStudentGet(long ID_Student)
+        public void NotaUpdate(NotaInfo info)
         {
-            return CBO.FillCollection<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetListByStudent", ID_Student));
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Nota_Update", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaUpdate", ex);
+            }
         }
 
-        public NotaInfo NotaByDetaliuPlanAndIdGet(long ID_DetaliuPlanSemestru, long ID_Nota)
+        public void NotaDelete(long idNota)
         {
-            return CBO.FillObject<NotaInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "Nota_GetByDetaliuPlanAndId", ID_DetaliuPlanSemestru, ID_Nota));
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Nota_Delete", idNota);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaDelete", ex);
+            }
         }
 
-        public void NotaEchivaleaza(long ID_DetaliuPlanSemestruRestanta, long ID_NotaCuCareSeEchivaleaza, long ID_Student, int ID_Utilizator)
+        public void NotaEchivaleaza(long idRestanta, long idEchivalare, long idStudent, int idUtilizator)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "Nota_Echivaleaza", ID_DetaliuPlanSemestruRestanta, ID_NotaCuCareSeEchivaleaza, ID_Student, ID_Utilizator);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "Nota_Echivaleaza", idRestanta, idEchivalare, idStudent, idUtilizator);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la NotaEchivaleaza", ex);
+            }
         }
     }
 }

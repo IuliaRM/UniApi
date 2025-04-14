@@ -1,61 +1,110 @@
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Web.Http;
+using System.Data;
 using DotNetNuke.Common.Utilities;
-using DotNetNuke.Web.Api;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class MentorPracticaFirmaRepo
+    public interface IMentorPracticaFirmaRepo
+    {
+        MentorPracticaFirma MentorPracticaFirmaGet(long idMentorPracticaFirma);
+        DataTable MentorPracticaFirmaList();
+        DataTable MentorPracticaFirmaListByIDFirma(long idFirma);
+        long MentorPracticaFirmaAdd(MentorPracticaFirma info);
+        void MentorPracticaFirmaUpdate(MentorPracticaFirma info);
+        void MentorPracticaFirmaDelete(long idMentorPracticaFirma);
+    }
+
+    public class MentorPracticaFirmaRepo : IMentorPracticaFirmaRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public MentorPracticaFirma MentorPracticaFirmaGet(long idMentorPracticaFirma)
         {
-            return CBO.FillObject<MentorPracticaFirma>(SqlHelper.ExecuteReader(_connectionString, "MentorPracticaFirmaGet", idMentorPracticaFirma));
+            try
+            {
+                return CBO.FillObject<MentorPracticaFirma>(
+                    SqlHelper.ExecuteReader(_connectionString, "MentorPracticaFirmaGet", idMentorPracticaFirma));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MentorPracticaFirmaGet", ex);
+            }
         }
 
-        public List<MentorPracticaFirma> MentorPracticaFirmaList()
+        public DataTable MentorPracticaFirmaList()
         {
-            return CBO.FillCollection<MentorPracticaFirma>(SqlHelper.ExecuteReader(_connectionString, "MentorPracticaFirmaList"));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "MentorPracticaFirmaList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MentorPracticaFirmaList", ex);
+            }
         }
 
-        public List<MentorPracticaFirma> MentorPracticaFirmaListByIDFirma(long idFirma)
+        public DataTable MentorPracticaFirmaListByIDFirma(long idFirma)
         {
-            return CBO.FillCollection<MentorPracticaFirma>(SqlHelper.ExecuteReader(_connectionString, "MentorPracticaFirmaListByIDFirma", idFirma));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "MentorPracticaFirmaListByIDFirma", idFirma).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MentorPracticaFirmaListByIDFirma", ex);
+            }
         }
 
-        public void MentorPracticaFirmaAdd(MentorPracticaFirma objMentorPracticaFirma)
+        public long MentorPracticaFirmaAdd(MentorPracticaFirma info)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "MentorPracticaFirmaAdd",
-                objMentorPracticaFirma.ID_Firma,
-                objMentorPracticaFirma.NumeMentorPracticaFirma,
-                objMentorPracticaFirma.EmailMentorPracticaFirma,
-                objMentorPracticaFirma.TelefonMentorPracticaFirma,
-                objMentorPracticaFirma.DataModificare,
-                objMentorPracticaFirma.Status);
+            try
+            {
+                return (long)SqlHelper.ExecuteScalar(_connectionString, "MentorPracticaFirmaAdd",
+                    info.ID_Firma,
+                    info.NumeMentorPracticaFirma,
+                    info.EmailMentorPracticaFirma,
+                    info.TelefonMentorPracticaFirma,
+                    info.DataModificare,
+                    info.Status);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MentorPracticaFirmaAdd", ex);
+            }
         }
 
-        public void MentorPracticaFirmaUpdate(MentorPracticaFirma objMentorPracticaFirma)
+        public void MentorPracticaFirmaUpdate(MentorPracticaFirma info)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "MentorPracticaFirmaUpdate",
-                objMentorPracticaFirma.ID_MentorPracticaFirma,
-                objMentorPracticaFirma.ID_Firma,
-                objMentorPracticaFirma.NumeMentorPracticaFirma,
-                objMentorPracticaFirma.EmailMentorPracticaFirma,
-                objMentorPracticaFirma.TelefonMentorPracticaFirma,
-                objMentorPracticaFirma.DataModificare,
-                objMentorPracticaFirma.Status);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "MentorPracticaFirmaUpdate",
+                    info.ID_MentorPracticaFirma,
+                    info.ID_Firma,
+                    info.NumeMentorPracticaFirma,
+                    info.EmailMentorPracticaFirma,
+                    info.TelefonMentorPracticaFirma,
+                    info.DataModificare,
+                    info.Status);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MentorPracticaFirmaUpdate", ex);
+            }
         }
 
         public void MentorPracticaFirmaDelete(long idMentorPracticaFirma)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "MentorPracticaFirmaDelete", idMentorPracticaFirma);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "MentorPracticaFirmaDelete", idMentorPracticaFirma);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la MentorPracticaFirmaDelete", ex);
+            }
         }
     }
 }

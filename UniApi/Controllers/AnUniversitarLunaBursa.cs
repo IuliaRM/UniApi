@@ -1,61 +1,123 @@
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using UniApi;
 using UniApi.Dal.Repos;
 using UniApi.Info;
 
 namespace UniApi.Controllers
 {
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
     public class AnUniversitarLunaBursaController : DnnApiController
     {
-        [HttpGet]
-        public IHttpActionResult AnUniversitarLunaBursaGetByAnUniv(long idAnUniv)
+        private readonly IAnUniversitarLunaBursaRepo _repo = new AnUniversitarLunaBursaRepo();
+
+        public AnUniversitarLunaBursaController() { }
+
+        public AnUniversitarLunaBursaController(IAnUniversitarLunaBursaRepo repo)
         {
-            var repo = new AnUniversitarLunaBursaRepo();
-            var result = repo.AnUniversitarLunaBursaGetByAnUniv(idAnUniv);
-            return Ok(result);
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult AnUniversitarLunaBursaGetByAnUnivAndNumarLuna(long idAnUniv, int numarLuna)
+        [AllowAnonymous]
+        public IHttpActionResult AnUniversitarLunaBursaListaByAnUniv(long idAnUniv)
         {
-            var repo = new AnUniversitarLunaBursaRepo();
-            var result = repo.AnUniversitarLunaBursaGetByAnUnivAndNumarLuna(idAnUniv, numarLuna);
-            return Ok(result);
+            try
+            {
+                var result = _repo.AnUniversitarLunaBursaListaByAnUniv(idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult AnUniversitarLunaBursaGetByAnUnivAndOrdineLuna(long idAnUniv, int ordineLuna)
+        [AllowAnonymous]
+        public IHttpActionResult AnUniversitarLunaBursaGetByAnUniversitarNumarLuna(long idAnUniv, int numarLuna)
         {
-            var repo = new AnUniversitarLunaBursaRepo();
-            var result = repo.AnUniversitarLunaBursaGetByAnUnivAndOrdineLuna(idAnUniv, ordineLuna);
-            return Ok(result);
+            try
+            {
+                var result = _repo.AnUniversitarLunaBursaGetByAnUniversitarNumarLuna(idAnUniv, numarLuna);
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IHttpActionResult AnUniversitarLunaBursaGetByAnUnivOrdineLuna(long idAnUniv, int ordineLuna)
+        {
+            try
+            {
+                var result = _repo.AnUniversitarLunaBursaGetByAnUnivOrdineLuna(idAnUniv, ordineLuna);
+                if (result == null) return NotFound();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IHttpActionResult AnUniversitarLunaBursaUpdate([FromBody] AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            var repo = new AnUniversitarLunaBursaRepo();
-            repo.AnUniversitarLunaBursaUpdate(lunaBursaInfo);
-            return Ok();
+            try
+            {
+                if (lunaBursaInfo == null)
+                    return BadRequest("Obiectul AnUniversitarLunaBursaInfo nu poate fi null");
+
+                _repo.AnUniversitarLunaBursaUpdate(lunaBursaInfo);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndNumarLuna([FromBody] AnUniversitarLunaBursaInfo lunaBursaInfo)
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public IHttpActionResult AnUniversitarLunaBursaUpdateInchisaByAnUnivNumarLuna([FromBody] AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            var repo = new AnUniversitarLunaBursaRepo();
-            repo.AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndNumarLuna(lunaBursaInfo);
-            return Ok();
+            try
+            {
+                if (lunaBursaInfo == null)
+                    return BadRequest("Obiectul AnUniversitarLunaBursaInfo nu poate fi null");
+
+                _repo.AnUniversitarLunaBursaUpdateInchisaByAnUnivNumarLuna(lunaBursaInfo);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndOrdineLuna([FromBody] AnUniversitarLunaBursaInfo lunaBursaInfo)
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public IHttpActionResult AnUniversitarLunaBursaUpdateInchisaByAnUniv([FromBody] AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            var repo = new AnUniversitarLunaBursaRepo();
-            repo.AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndOrdineLuna(lunaBursaInfo);
-            return Ok();
+            try
+            {
+                if (lunaBursaInfo == null)
+                    return BadRequest("Obiectul AnUniversitarLunaBursaInfo nu poate fi null");
+
+                _repo.AnUniversitarLunaBursaUpdateInchisaByAnUniv(lunaBursaInfo);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

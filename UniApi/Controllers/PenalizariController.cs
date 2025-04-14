@@ -1,47 +1,79 @@
+using System;
 using System.Web.Http;
-using UniApi.DAL.Repos;
 using DotNetNuke.Web.Api;
+using UniApi.DAL.Repos;
 using UniApi.Info;
+
 
 namespace UniApi.Controllers
 {
     public class PenalizariController : DnnApiController
     {
-        private readonly PenalizariRepo _penalizariRepo = new PenalizariRepo();
+        private readonly IPenalizariRepo _penalizariRepo = new PenalizariRepo();
+
+        public PenalizariController()
+        {
+
+        }
+        public PenalizariController(IPenalizariRepo penalizariRepo)
+        {
+            _penalizariRepo = penalizariRepo;
+        }
 
         [HttpGet]
         public IHttpActionResult PenalizariGet(long id)
         {
-            var result = _penalizariRepo.PenalizariGet(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = _penalizariRepo.PenalizariGet(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPost]
-        public IHttpActionResult PenalizariAdd([FromBody]PenalizariInfo penalizare)
+        public IHttpActionResult PenalizariAdd([FromBody] PenalizariInfo penalizare)
         {
-            if (penalizare == null)
+            try
             {
-                return BadRequest("Invalid input");
-            }
+                if (penalizare == null)
+                {
+                    return BadRequest("Obiectul PenalizariInfo nu poate fi null");
+                }
 
-            var id = _penalizariRepo.PenalizariAdd(penalizare);
-            return Ok(id);
+                var id = _penalizariRepo.PenalizariAdd(penalizare);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpPut]
-        public IHttpActionResult PenalizariUpdate([FromBody] PenalizariInfo penalizare)
+        public IHttpActionResult PealizariUpdate([FromBody] PenalizariInfo penalizare)
         {
-            if (penalizare == null)
+            try
             {
-                return BadRequest("Invalid input");
-            }
+                if (penalizare == null)
+                {
+                    return BadRequest("Obiectul PenalizariInfo nu poate fi null");
+                }
 
-            _penalizariRepo.PenalizariUpdate(penalizare);
-            return Ok();
+                _penalizariRepo.PenalizariUpdate(penalizare);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

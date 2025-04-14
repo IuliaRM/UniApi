@@ -1,97 +1,80 @@
+using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-using System.Collections.Generic;
+using UniApi.Dal.Repos;
 
 namespace UniApi.Controllers
 {
     public class EvaluareController : DnnApiController
     {
-        private readonly EvaluareRepo _repo = new EvaluareRepo();
+        private readonly IEvaluareRepo _repo = new EvaluareRepo();
 
-        [HttpGet]
-        public IHttpActionResult MaterieListByUsernameAndIdAnUnivGet(string username, long ID_AnUniv, int NrSemestruEvaluare)
+        public EvaluareController()
         {
-            var materii = _repo.MaterieListByUsernameAndIdAnUnivGet(username, ID_AnUniv, NrSemestruEvaluare);
-            return Ok(materii);
+
+        }
+
+        public EvaluareController(IEvaluareRepo repo)
+        {
+            _repo = repo;
         }
 
         [HttpGet]
-        public IHttpActionResult MaterieStudentDetaliiGet(long ID_CodEvaluare)
+        public IHttpActionResult EvaluareGetIdsByUserIDAndRole(int userId, string role, long idAnUniv)
         {
-            var detalii = _repo.MaterieStudentDetaliiGet(ID_CodEvaluare);
-            return Ok(detalii);
-        }
-
-        [HttpPost]
-        public IHttpActionResult ChestionarEvaluatInsert(long ID_Chestionar, long ID_CodEvaluare)
-        {
-            var result = _repo.ChestionarEvaluatInsert(ID_Chestionar, ID_CodEvaluare);
-            return Ok(result);
-        }
-
-        [HttpPost]
-        public IHttpActionResult EvaluareInsert([FromBody] CriteriuEvaluareRaspunsInfo ceri)
-        {
-            _repo.EvaluareInsert(ceri);
-            return Ok();
+            try
+            {
+                var result = _repo.EvaluareGetIdsByUserIDAndRole(userId, role, idAnUniv);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult CriteriiEvaluareWithVarianteRaspunsGet(long ID_CodEvaluare)
+        public IHttpActionResult EvaluareGetRoleByUserId(int userId)
         {
-            var criterii = _repo.CriteriiEvaluareWithVarianteRaspunsGet(ID_CodEvaluare);
-            return Ok(criterii);
+            try
+            {
+                var result = _repo.EvaluareGetRoleByUserId(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult CriteriuEvaluareVarianteRaspunsByIdGet(long ID_CriteriuEvaluareVarianteRaspuns)
+        public IHttpActionResult EvaluareGetRoleByUsername(string username)
         {
-            var raspuns = _repo.CriteriuEvaluareVarianteRaspunsByIdGet(ID_CriteriuEvaluareVarianteRaspuns);
-            return Ok(raspuns);
+            try
+            {
+                var result = _repo.EvaluareGetRoleByUsername(username);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         [HttpGet]
-        public IHttpActionResult CodEvaluareListBySpecializareSemestruGet(long ID_Specializare, int NrSemestru)
+        public IHttpActionResult EvaluareListByIDDetaliuPlanSemestru(long idDetaliuPlanSemestru)
         {
-            var coduri = _repo.CodEvaluareListBySpecializareSemestruGet(ID_Specializare, NrSemestru);
-            return Ok(coduri);
-        }
-
-        [HttpGet]
-        public IHttpActionResult ChestionarAdaugareTest(long CodEvaluare)
-        {
-            var result = _repo.ChestionarAdaugareTest(CodEvaluare);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        public IHttpActionResult RoleByUserIdGet(int UserId)
-        {
-            var role = _repo.RoleByUserIdGet(UserId);
-            return Ok(role);
-        }
-
-        [HttpGet]
-        public IHttpActionResult RoleByUsernameGet(string Username)
-        {
-            var role = _repo.RoleByUsernameGet(Username);
-            return Ok(role);
-        }
-
-        [HttpGet]
-        public IHttpActionResult CodEvaluareListByUsernameRoleGet(string Username, string Role, long ID_AnUniv)
-        {
-            var coduri = _repo.CodEvaluareListByUsernameRoleGet(Username, Role, ID_AnUniv);
-            return Ok(coduri);
-        }
-
-        [HttpGet]
-        public IHttpActionResult SpecializariListByUsernameRoleGet(string Username, string Role, long ID_AnUniv)
-        {
-            var specializari = _repo.SpecializariListByUsernameRoleGet(Username, Role, ID_AnUniv);
-            return Ok(specializari);
+            try
+            {
+                var result = _repo.EvaluareListByIDDetaliuPlanSemestru(idDetaliuPlanSemestru);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

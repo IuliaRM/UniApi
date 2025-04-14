@@ -1,60 +1,136 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Web.Api;
+using System.Configuration;
+using System.Data;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi;
-using UniApi.Dal.Repos;
+using DotNetNuke.Common.Utilities;
 using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class AnUniversitarLunaBursaRepo
+    public interface IAnUniversitarLunaBursaRepo
     {
-        private readonly string _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        List<AnUniversitarLunaBursaInfo> AnUniversitarLunaBursaListaByAnUniv(long idAnUniv);
+        AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUniversitarNumarLuna(long idAnUniv, int numarLuna);
+        AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUnivOrdineLuna(long idAnUniv, int ordineLuna);
+        void AnUniversitarLunaBursaUpdate(AnUniversitarLunaBursaInfo lunaBursaInfo);
+        void AnUniversitarLunaBursaUpdateInchisaByAnUnivNumarLuna(AnUniversitarLunaBursaInfo lunaBursaInfo);
+        void AnUniversitarLunaBursaUpdateInchisaByAnUniv(AnUniversitarLunaBursaInfo lunaBursaInfo);
+    }
 
-        public List<AnUniversitarLunaBursaInfo> AnUniversitarLunaBursaGetByAnUniv(long idAnUniv)
+    public class AnUniversitarLunaBursaRepo : IAnUniversitarLunaBursaRepo
+    {
+        private readonly string _connectionString;
+
+        public AnUniversitarLunaBursaRepo()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<AnUniversitarLunaBursaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUniv", idAnUniv));
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
         }
 
-        public AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUnivAndNumarLuna(long idAnUniv, int numarLuna)
+        public List<AnUniversitarLunaBursaInfo> AnUniversitarLunaBursaListaByAnUniv(long idAnUniv)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<AnUniversitarLunaBursaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivAndNumarLuna", idAnUniv, numarLuna));
+            try
+            {
+                using (var reader = SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaListaByAnUniv", idAnUniv))
+                {
+                    return CBO.FillCollection<AnUniversitarLunaBursaInfo>(reader);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error retrieving list of months by AnUniversitar.", ex);
+            }
         }
 
-        public AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUnivAndOrdineLuna(long idAnUniv, int ordineLuna)
+        public AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUniversitarNumarLuna(long idAnUniv, int numarLuna)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<AnUniversitarLunaBursaInfo>(
-                SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivAndOrdineLuna", idAnUniv, ordineLuna));
+            try
+            {
+                using (var reader = SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUniversitarNumarLuna", idAnUniv, numarLuna))
+                {
+                    return CBO.FillObject<AnUniversitarLunaBursaInfo>(reader);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error retrieving luna bursa by numar luna.", ex);
+            }
+        }
+
+        public AnUniversitarLunaBursaInfo AnUniversitarLunaBursaGetByAnUnivOrdineLuna(long idAnUniv, int ordineLuna)
+        {
+            try
+            {
+                using (var reader = SqlHelper.ExecuteReader(_connectionString, "AnUniversitarLunaBursaGetByAnUnivOrdineLuna", idAnUniv, ordineLuna))
+                {
+                    return CBO.FillObject<AnUniversitarLunaBursaInfo>(reader);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error retrieving luna bursa by ordine luna.", ex);
+            }
         }
 
         public void AnUniversitarLunaBursaUpdate(AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdate",
-                lunaBursaInfo.ID_AnUnivLunaBursa,
-                lunaBursaInfo.LunaInchisa,
-                lunaBursaInfo.UserIDModificare);
+            if (lunaBursaInfo == null)
+                throw new ArgumentNullException(nameof(lunaBursaInfo));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdate",
+                    lunaBursaInfo.ID_AnUnivLunaBursa,
+                    lunaBursaInfo.LunaInchisa,
+                    lunaBursaInfo.UserIDModificare
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error updating luna bursa.", ex);
+            }
         }
 
-        public void AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndNumarLuna(AnUniversitarLunaBursaInfo lunaBursaInfo)
+        public void AnUniversitarLunaBursaUpdateInchisaByAnUnivNumarLuna(AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndNumarLuna",
-                lunaBursaInfo.ID_AnUniv,
-                lunaBursaInfo.NumarLuna,
-                lunaBursaInfo.LunaInchisa,
-                lunaBursaInfo.UserIDModificare);
+            if (lunaBursaInfo == null)
+                throw new ArgumentNullException(nameof(lunaBursaInfo));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateInchisaByAnUnivNumarLuna",
+                    lunaBursaInfo.ID_AnUniv,
+                    lunaBursaInfo.NumarLuna,
+                    lunaBursaInfo.LunaInchisa,
+                    lunaBursaInfo.UserIDModificare
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error updating inchidere luna by numar luna.", ex);
+            }
         }
 
-        public void AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndOrdineLuna(AnUniversitarLunaBursaInfo lunaBursaInfo)
+        public void AnUniversitarLunaBursaUpdateInchisaByAnUniv(AnUniversitarLunaBursaInfo lunaBursaInfo)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateLunaInchisaByAnUnivAndOrdineLuna",
-                lunaBursaInfo.ID_AnUniv,
-                lunaBursaInfo.OrdineLuna,
-                lunaBursaInfo.LunaInchisa,
-                lunaBursaInfo.UserIDModificare);
+            if (lunaBursaInfo == null)
+                throw new ArgumentNullException(nameof(lunaBursaInfo));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "AnUniversitarLunaBursaUpdateInchisaByAnUniv",
+                    lunaBursaInfo.ID_AnUniv,
+                    lunaBursaInfo.LunaInchisa,
+                    lunaBursaInfo.UserIDModificare
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Error updating inchidere pe toate lunile unui an.", ex);
+            }
         }
     }
 }

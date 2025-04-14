@@ -1,48 +1,124 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
-using UniApi;
-using UniApi.Dal.Repos;
 using UniApi.Info;
-
 
 namespace UniApi.Dal.Repos
 {
-    public class ConferintaSectiuneRepo
+    public interface IConferintaSectiuneRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        ConferintaSectiuneInfo ConferintaSectiuneGet(long idConferintaSectiune);
+        List<ConferintaSectiuneInfo> ConferintaSectiuneList();
+        List<ConferintaSectiuneInfo> ConferintaSectiuneListByConferinta(long idConferinta);
+        long ConferintaSectiuneAdd(ConferintaSectiuneInfo info);
+        void ConferintaSectiuneUpdate(ConferintaSectiuneInfo info);
+        void ConferintaSectiuneDelete(long idConferintaSectiune);
+    }
+
+    public class ConferintaSectiuneRepo : IConferintaSectiuneRepo
+    {
+        private readonly string _connectionString;
+
+        public ConferintaSectiuneRepo()
+        {
+            _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"]?.ConnectionString;
+            if (string.IsNullOrEmpty(_connectionString))
+                throw new InvalidOperationException("Connection string 'AGSISSqlServer' not found.");
+        }
 
         public ConferintaSectiuneInfo ConferintaSectiuneGet(long idConferintaSectiune)
         {
-            return CBO.FillObject<ConferintaSectiuneInfo>(SqlHelper.ExecuteReader(_ConnectionString, "ConferintaSectiuneGet", idConferintaSectiune));
+            try
+            {
+                using (var dr = SqlHelper.ExecuteReader(_connectionString, "ConferintaSectiuneGet", idConferintaSectiune))
+                {
+                    return CBO.FillObject<ConferintaSectiuneInfo>(dr);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la obținerea secțiunii conferinței.", ex);
+            }
         }
 
         public List<ConferintaSectiuneInfo> ConferintaSectiuneList()
         {
-            return CBO.FillCollection<ConferintaSectiuneInfo>(SqlHelper.ExecuteReader(_ConnectionString, "ConferintaSectiuneList"));
+            try
+            {
+                return CBO.FillCollection<ConferintaSectiuneInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "ConferintaSectiuneList"));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea secțiunilor conferinței.", ex);
+            }
         }
 
         public List<ConferintaSectiuneInfo> ConferintaSectiuneListByConferinta(long idConferinta)
         {
-            return CBO.FillCollection<ConferintaSectiuneInfo>(SqlHelper.ExecuteReader(_ConnectionString, "ConferintaSectiuneListByConferinta", idConferinta));
+            try
+            {
+                return CBO.FillCollection<ConferintaSectiuneInfo>(
+                    SqlHelper.ExecuteReader(_connectionString, "ConferintaSectiuneListByConferinta", idConferinta));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la listarea secțiunilor după conferință.", ex);
+            }
         }
 
-        public long ConferintaSectiuneAdd(ConferintaSectiuneInfo objConferintaSectiune)
+        public long ConferintaSectiuneAdd(ConferintaSectiuneInfo info)
         {
-            object o = SqlHelper.ExecuteScalar(_ConnectionString, "ConferintaSectiuneAdd", objConferintaSectiune.ID_Conferinta, objConferintaSectiune.DenumireSectiuneConferinta, objConferintaSectiune.NumarParticipantiSectiune, objConferintaSectiune.NumarLucrariSectiune);
-            return Convert.ToInt64(o);
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                return Convert.ToInt64(SqlHelper.ExecuteScalar(_connectionString, "ConferintaSectiuneAdd",
+                    info.ID_Conferinta,
+                    info.DenumireSectiuneConferinta,
+                    info.NumarParticipantiSectiune,
+                    info.NumarLucrariSectiune));
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la adăugarea secțiunii conferinței.", ex);
+            }
         }
 
-        public void ConferintaSectiuneUpdate(ConferintaSectiuneInfo objConferintaSectiune)
+        public void ConferintaSectiuneUpdate(ConferintaSectiuneInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "ConferintaSectiuneUpdate", objConferintaSectiune.ID_ConferintaSectiune, objConferintaSectiune.ID_Conferinta, objConferintaSectiune.DenumireSectiuneConferinta, objConferintaSectiune.NumarParticipantiSectiune, objConferintaSectiune.NumarLucrariSectiune);
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "ConferintaSectiuneUpdate",
+                    info.ID_ConferintaSectiune,
+                    info.ID_Conferinta,
+                    info.DenumireSectiuneConferinta,
+                    info.NumarParticipantiSectiune,
+                    info.NumarLucrariSectiune);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la actualizarea secțiunii conferinței.", ex);
+            }
         }
 
         public void ConferintaSectiuneDelete(long idConferintaSectiune)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "ConferintaSectiuneDelete", idConferintaSectiune);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "ConferintaSectiuneDelete", idConferintaSectiune);
+            }
+            catch (Exception ex)
+            {
+                throw new DataException("Eroare la ștergerea secțiunii conferinței.", ex);
+            }
         }
     }
 }

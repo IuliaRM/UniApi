@@ -1,47 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using DotNetNuke.Common.Utilities;
 using Microsoft.ApplicationBlocks.Data;
 using UniApi;
 using UniApi.Info;
 
+
 namespace UniApi.DAL.Repos
 {
-    public class TipReducereRepo
+
+    public interface ITipReducereRepo
+    {
+        TipReducereInfo TipReducereGet(long idTipReducere);
+        List<TipReducereInfo> TipReducereList();
+        List<TipReducereInfo> TipReducereListByTaxa(long idTaxa);
+        List<TipReducereInfo> TipReducereListByTaxaStudent(long idTaxaStudent);
+        int TipReducereAdd(TipReducereInfo tipReducereInfo);
+        void TipReducereUpdate(TipReducereInfo tipReducereInfo);
+        void TipReducereDelete(long idTipReducere);
+    }
+
+    public class TipReducereRepo : ITipReducereRepo
     {
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
 
         public TipReducereInfo TipReducereGet(long idTipReducere)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillObject<TipReducereInfo>(
+            return CBO.FillObject<TipReducereInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipReducereGet", idTipReducere));
         }
 
-        public List<TipReducereInfo> TipReducereListGet()
+        public List<TipReducereInfo> TipReducereList()
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<TipReducereInfo>(
+            return CBO.FillCollection<TipReducereInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipReducereList"));
         }
 
-        public List<TipReducereInfo> TipReducereListByTaxaGet(long idTaxa)
+        public List<TipReducereInfo> TipReducereListByTaxa(long idTaxa)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<TipReducereInfo>(
+            return CBO.FillCollection<TipReducereInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipReducereListByTaxa", idTaxa));
         }
 
-        public List<TipReducereInfo> TipReducereListByTaxaStudentGet(long idTaxaStudent)
+        public List<TipReducereInfo> TipReducereListByTaxaStudent(long idTaxaStudent)
         {
-            return DotNetNuke.Common.Utilities.CBO.FillCollection<TipReducereInfo>(
+            return CBO.FillCollection<TipReducereInfo>(
                 SqlHelper.ExecuteReader(_connectionString, "TipReducereListByTaxaStudent", idTaxaStudent));
         }
 
         public int TipReducereAdd(TipReducereInfo tipReducereInfo)
         {
-            return Convert.ToInt32(SqlHelper.ExecuteScalar(_connectionString, "TipReducereAdd",
+            object id = SqlHelper.ExecuteScalar(_connectionString, "TipReducereAdd",
                 tipReducereInfo.DenumireTipReducere,
                 tipReducereInfo.ProcentStandardReducere,
                 tipReducereInfo.ID_Taxe,
-                tipReducereInfo.ID_TipTaxa));
+                tipReducereInfo.ID_TipTaxa);
+            return Convert.ToInt32(id);
         }
 
         public void TipReducereUpdate(TipReducereInfo tipReducereInfo)
@@ -54,10 +69,9 @@ namespace UniApi.DAL.Repos
                 tipReducereInfo.ID_TipTaxa);
         }
 
-        public void TipReducereDelete(TipReducereInfo tipReducereInfo)
+        public void TipReducereDelete(long idTipReducere)
         {
-            SqlHelper.ExecuteNonQuery(_connectionString, "TipReducereDelete",
-                tipReducereInfo.ID_TipReducere);
+            SqlHelper.ExecuteNonQuery(_connectionString, "TipReducereDelete", idTipReducere);
         }
     }
 }

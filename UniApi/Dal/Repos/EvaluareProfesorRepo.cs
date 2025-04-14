@@ -1,63 +1,174 @@
 using System;
-using System.Collections.Generic;
-using UniApi.Info;
-using Microsoft.ApplicationBlocks.Data;
 using System.Configuration;
-using DotNetNuke.Common.Utilities;
+using System.Data;
+using Microsoft.ApplicationBlocks.Data;
+using UniApi.Controllers;
+using UniApi.Info;
 
 namespace UniApi.Dal.Repos
 {
-    public class EvaluareProfesorRepo
+    public interface IEvaluareProfesorRepo
     {
-        private readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+        void EvaluareProfesorAdd(EvaluareProfesorInfo info);
+        void EvaluareProfesorUpdate(EvaluareProfesorInfo info);
+        void EvaluareProfesorDelete(EvaluareProfesorInfo info);
+        void EvaluareProfesorDeleteBySpecializareSemestru(long idProf, long idSpecializare, int nrSemestru, long idDps);
+        void EvaluareProfesor_DeleteBySpecializareSemestru(long idSpecializare, int nrSemestru);
+        void EvaluareProfesorGenereazaCoduriEvaluare(long idAnUniv, int nrSemestru);
+        void EvaluareProfesorGenereazaCoduriEvaluare_OLD(long idAnUniv, int nrSemestru);
+        void EvaluareProfesorBifeazaProfesorDinStatImportatInDetaliuPlanSemestru(long idAnUniv);
+        DataTable EvaluareProfesorList();
+        DataTable EvaluareProfesorListNrChestionareCompletate(long idAnUniv, int nrSemestru);
+        DataTable EvaluareProfesorListNrChestionareCompletate_Prof(long idAnUniv, int nrSemestru);
+        DataTable EvaluareProfesorListProfiDeEvaluat(long idAnUniv, int nrSemestru);
+    }
 
-        public List<EvaluareProfesorInfo> EvaluareProfesorListGet()
+    public class EvaluareProfesorRepo : IEvaluareProfesorRepo
+    {
+        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["AGSISSqlServer"].ConnectionString;
+
+        public DataTable EvaluareProfesorList()
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorList"));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "EvaluareProfesor_GetEvaluareProfesorList").Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorList", ex);
+            }
         }
 
-        public List<EvaluareProfesorInfo> EvaluareProfesorListNrChestionareCompletateGet(long ID_AnUniv, int NrSemestru)
+        public DataTable EvaluareProfesorListNrChestionareCompletate(long idAnUniv, int nrSemestru)
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorListNrChestionareCompletate", ID_AnUniv, NrSemestru));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "EvaluareProfesor_GetEvaluareProfesorListNrChestionareCompletate", idAnUniv, nrSemestru).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorListNrChestionareCompletate", ex);
+            }
         }
 
-        public List<EvaluareProfesorInfo> EvaluareProfesorListNrChestionareCompletateProfGet(long ID_AnUniv, int NrSemestru)
+        public DataTable EvaluareProfesorListNrChestionareCompletate_Prof(long idAnUniv, int nrSemestru)
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorListNrChestionareCompletate_Prof", ID_AnUniv, NrSemestru));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "EvaluareProfesor_GetEvaluareProfesorListNrChestionareCompletate_Prof", idAnUniv, nrSemestru).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorListNrChestionareCompletate_Prof", ex);
+            }
         }
 
-        public List<EvaluareProfesorInfo> EvaluareProfesorListProfiDeEvaluatGet(long ID_AnUniv, int NrSemestru)
+        public DataTable EvaluareProfesorListProfiDeEvaluat(long idAnUniv, int nrSemestru)
         {
-            return CBO.FillCollection<EvaluareProfesorInfo>(
-                SqlHelper.ExecuteReader(_ConnectionString, "EvaluareProfesor_GetEvaluareProfesorListProfiDeEvaluat", ID_AnUniv, NrSemestru));
+            try
+            {
+                return SqlHelper.ExecuteDataset(_connectionString, "EvaluareProfesor_GetEvaluareProfesorListProfiDeEvaluat", idAnUniv, nrSemestru).Tables[0];
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorListProfiDeEvaluat", ex);
+            }
         }
 
-        public long EvaluareProfesorAdd(EvaluareProfesorInfo objEvaluareProfesor)
+        public void EvaluareProfesorAdd(EvaluareProfesorInfo info)
         {
-            return (long)SqlHelper.ExecuteScalar(_ConnectionString, "EvaluareProfesor_AddEvaluareProfesor", objEvaluareProfesor);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_AddEvaluareProfesor", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorAdd", ex);
+            }
         }
 
-        public void EvaluareProfesorUpdate(EvaluareProfesorInfo objEvaluareProfesor)
+        public void EvaluareProfesorUpdate(EvaluareProfesorInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_UpdateEvaluareProfesor", objEvaluareProfesor);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_UpdateEvaluareProfesor", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorUpdate", ex);
+            }
         }
 
-        public void EvaluareProfesorDelete(EvaluareProfesorInfo objEvaluareProfesor)
+        public void EvaluareProfesorDelete(EvaluareProfesorInfo info)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_DeleteEvaluareProfesor", objEvaluareProfesor);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_DeleteEvaluareProfesor", info);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorDelete", ex);
+            }
         }
 
-        public void EvaluareProfesorDeleteBySpecializareSemestru(long ID_Prof, long ID_Specializare, int NrSemestru, long ID_Dps)
+        public void EvaluareProfesorDeleteBySpecializareSemestru(long idProf, long idSpecializare, int nrSemestru, long idDps)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_DeleteEvaluareProfesorBySpecializareSemestru", ID_Prof, ID_Specializare, NrSemestru, ID_Dps);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_DeleteEvaluareProfesorBySpecializareSemestru", idProf, idSpecializare, nrSemestru, idDps);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorDeleteBySpecializareSemestru", ex);
+            }
         }
 
-        public void CoduriEvaluareGenerate(long ID_AnUniv, int NrSemestru)
+        public void EvaluareProfesor_DeleteBySpecializareSemestru(long idSpecializare, int nrSemestru)
         {
-            SqlHelper.ExecuteNonQuery(_ConnectionString, "EvaluareProfesor_GenerateCoduriEvaluare", ID_AnUniv, NrSemestru);
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_DeleteEvaluareProfesor_BySpecializareSemestru", idSpecializare, nrSemestru);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesor_DeleteBySpecializareSemestru", ex);
+            }
+        }
+
+        public void EvaluareProfesorGenereazaCoduriEvaluare(long idAnUniv, int nrSemestru)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_GenerateCoduriEvaluare", idAnUniv, nrSemestru);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorGenereazaCoduriEvaluare", ex);
+            }
+        }
+
+        public void EvaluareProfesorGenereazaCoduriEvaluare_OLD(long idAnUniv, int nrSemestru)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_GenerateCoduriEvaluare_OLD", idAnUniv, nrSemestru);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorGenereazaCoduriEvaluare_OLD", ex);
+            }
+        }
+
+        public void EvaluareProfesorBifeazaProfesorDinStatImportatInDetaliuPlanSemestru(long idAnUniv)
+        {
+            try
+            {
+                SqlHelper.ExecuteNonQuery(_connectionString, "EvaluareProfesor_BifeazaProfesorImportatInDps", idAnUniv);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Eroare la EvaluareProfesorBifeazaProfesorDinStatImportatInDetaliuPlanSemestru", ex);
+            }
         }
     }
 }
