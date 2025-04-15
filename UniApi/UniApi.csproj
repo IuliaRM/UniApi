@@ -254,6 +254,7 @@
     <Compile Include="Controllers\SportNeprofilController.cs" />
     <Compile Include="Controllers\SportNeprofilStudentController.cs" />
     <Compile Include="Controllers\StudentContController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\StudentInfoSuplimentareController.cs" />
     <Compile Include="Controllers\StudentOptionalAlesController.cs" />
     <Compile Include="Controllers\StudentStudiiAnterioareFacultateController.cs" />
@@ -345,6 +346,7 @@
     <Compile Include="Dal\Repos\StudentContRepo.cs" />
     <Compile Include="Dal\Repos\StudentInfoSuplimentareRepo.cs" />
     <Compile Include="Dal\Repos\StudentOptionalAlesRepo.cs" />
+    <Compile Include="Dal\Repos\StudentRepo.cs" />
     <Compile Include="Dal\Repos\StudentStudiiAnterioareFacultateRepo.cs" />
     <Compile Include="Dal\Repos\SumaPerioadaAcordareBursaSpecializareRepo.cs" />
     <Compile Include="Dal\Repos\TaxaDeScolarizareRepo.cs" />
